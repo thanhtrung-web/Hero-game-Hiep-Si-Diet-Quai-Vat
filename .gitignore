@@ -1,0 +1,31 @@
+# Thư mục tạm và cache của Unity
+**/[Ll]ibrary/
+**/[Tt]emp/
+**/[Oo]bj/
+**/[Bb]uild/
+**/[Bb]uilds/
+**/[Ll]ogs/
+**/[Uu]ser[Ss]ettings/
+**/[Mm]emoryCaptures/
+**/[Rr]ecordings/
+
+# File tạm của Visual Studio / VS Code
+**/.vs/
+**/.idea/
+**/.vscode/
+**/*.csproj
+**/*.unityproj
+**/*.sln
+**/*.suo
+**/*.user
+**/*.userprefs
+**/*.pidb
+**/*.booproj
+**/*.svd
+**/*.pdb
+**/*.opendb
+**/*.VC.db
+
+# Unity CrashHandler
+**/sysinfo.txt
+**/CrashReports/
