@@ -47,7 +47,7 @@ public class MainMenuController : MonoBehaviour
             backgroundMusic = BackgroundMusic.Instance;
 
         if (backgroundMusic == null)
-            backgroundMusic = FindAnyObjectByType<BackgroundMusic>();
+            backgroundMusic = FindFirstObjectByType<BackgroundMusic>();
 
         InitializeSettingsControls();
     }

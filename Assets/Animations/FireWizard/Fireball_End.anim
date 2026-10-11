@@ -22,17 +22,17 @@ AnimationClip:
     curve:
     - time: 0
       value: {fileID: -2250842547723467441, guid: a20504c24aacf584fb914048c7a37f84, type: 3}
-    - time: 0.06666667
+    - time: 0.05
       value: {fileID: -1474126701674958951, guid: a20504c24aacf584fb914048c7a37f84, type: 3}
-    - time: 0.083333336
+    - time: 0.1
       value: {fileID: 7925466270181125623, guid: a20504c24aacf584fb914048c7a37f84, type: 3}
     - time: 0.15
       value: {fileID: 639825769314155430, guid: a20504c24aacf584fb914048c7a37f84, type: 3}
-    - time: 0.21666667
+    - time: 0.18333334
       value: {fileID: 4341891054748664162, guid: a20504c24aacf584fb914048c7a37f84, type: 3}
-    - time: 0.25
+    - time: 0.23333333
       value: {fileID: -3529331707120109846, guid: a20504c24aacf584fb914048c7a37f84, type: 3}
-    - time: 0.3
+    - time: 0.28333333
       value: {fileID: -3617425639392512279, guid: a20504c24aacf584fb914048c7a37f84, type: 3}
     - time: 0.33333334
       value: {fileID: -3617425639392512279, guid: a20504c24aacf584fb914048c7a37f84, type: 3}
@@ -92,7 +92,7 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.2
+  - time: 0.33333334
     functionName: Finish
     data: 
     objectReferenceParameter: {fileID: 0}
