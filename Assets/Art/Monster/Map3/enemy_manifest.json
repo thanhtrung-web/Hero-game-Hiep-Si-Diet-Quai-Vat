@@ -1,0 +1,97 @@
+{
+  "characters": [
+    {
+      "name": "Goblin",
+      "ppu": 32,
+      "pivotX": 0.49666666666666665,
+      "pivotY": 0.32666666666666666,
+      "bodyWidth": 0.8250000000000001,
+      "bodyHeight": 1.0125,
+      "bodyCenterY": 0.50625,
+      "states": [
+        {
+          "name": "Idle",
+          "count": 4
+        },
+        {
+          "name": "Move",
+          "count": 8
+        },
+        {
+          "name": "Attack",
+          "count": 8
+        },
+        {
+          "name": "Hurt",
+          "count": 4
+        },
+        {
+          "name": "Dead",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "name": "Slime",
+      "ppu": 16,
+      "pivotX": 0.5,
+      "pivotY": 0.4423076923076923,
+      "bodyWidth": 2.2,
+      "bodyHeight": 1.125,
+      "bodyCenterY": 0.5625,
+      "states": [
+        {
+          "name": "Idle",
+          "count": 14
+        },
+        {
+          "name": "Move",
+          "count": 6
+        },
+        {
+          "name": "Attack",
+          "count": 19
+        },
+        {
+          "name": "Hurt",
+          "count": 3
+        },
+        {
+          "name": "Dead",
+          "count": 11
+        }
+      ]
+    },
+    {
+      "name": "Bat",
+      "ppu": 32,
+      "pivotX": 0.5459770114942529,
+      "pivotY": 0.5,
+      "bodyWidth": 1.675,
+      "bodyHeight": 1.546875,
+      "bodyCenterY": 0,
+      "states": [
+        {
+          "name": "Idle",
+          "count": 11
+        },
+        {
+          "name": "Move",
+          "count": 11
+        },
+        {
+          "name": "Attack",
+          "count": 11
+        },
+        {
+          "name": "Hurt",
+          "count": 3
+        },
+        {
+          "name": "Dead",
+          "count": 4
+        }
+      ]
+    }
+  ]
+}
