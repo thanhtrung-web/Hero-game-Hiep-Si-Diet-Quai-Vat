@@ -14,6 +14,7 @@ TagManager:
   - UI
   - Ground
   - BackGround
+  - Player
   - 
   - 
   - 
@@ -49,6 +50,9 @@ TagManager:
     locked: 0
   - name: Enemy
     uniqueID: 3139582961
+    locked: 0
+  - name: Player
+    uniqueID: 2566185347
     locked: 0
   m_RenderingLayers:
   - Default
