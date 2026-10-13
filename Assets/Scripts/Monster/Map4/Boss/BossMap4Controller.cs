@@ -6,11 +6,12 @@ public class BossMap4Controller : MonoBehaviour
     public float maxHealth = 100f;
     private float currentHealth;
     public float moveSpeed = 3f;
-    public float attackRange = 2f;
+    public float attackRange = 5f;
+    public float detectionRange = 10f; // Khoảng cách tối đa để Boss phát hiện Player
 
     [Header("References")]
     public Animator animator;
-    public Transform player; // Kéo thả Player vào đây trong Inspector
+    public Transform player; // Có thể kéo thả vào đây hoặc để code tự tìm
     private Rigidbody2D rb;
     private bool isDead = false;
 
@@ -18,15 +19,29 @@ public class BossMap4Controller : MonoBehaviour
     {
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
+
         if (animator == null)
             animator = GetComponent<Animator>();
+
+        // Tự động tìm Player theo Tag nếu bạn quên kéo thả trong Inspector
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.transform;
+            }
+            else
+            {
+                Debug.LogWarning("Không tìm thấy đối tượng nào có Tag là 'Player' trong Scene!");
+            }
+        }
     }
 
     void Update()
     {
         if (isDead) return;
 
-        // Ví dụ logic đơn giản: Kiểm tra khoảng cách tới Player để tấn công hoặc di chuyển
         if (player != null)
         {
             float distanceToPlayer = Vector2.Distance(transform.position, player.position);
@@ -36,14 +51,14 @@ public class BossMap4Controller : MonoBehaviour
                 // Gọi hàm tấn công
                 Attack();
             }
-            else if (distanceToPlayer < 10f)
+            else if (distanceToPlayer <= detectionRange)
             {
                 // Gọi hàm di chuyển theo Player
                 MoveTowardsPlayer();
             }
             else
             {
-                // Đứng yên (Idle)
+                // Đứng yên (Idle) khi Player ở xa
                 SetIdle();
             }
         }
@@ -59,11 +74,15 @@ public class BossMap4Controller : MonoBehaviour
         animator.SetBool("IsWalking", true);
         animator.SetBool("IsATK", false);
 
-        // Lật mặt Boss hướng về phía Player
+        // Lật mặt Boss hướng về phía Player (Đã đảo lại dấu để khớp với sprite gốc)
         if (direction.x > 0)
-            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
-        else if (direction.x < 0)
+        {
             transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+        }
+        else if (direction.x < 0)
+        {
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+        }
     }
 
     void Attack()
@@ -101,7 +120,7 @@ public class BossMap4Controller : MonoBehaviour
         isDead = true;
         rb.linearVelocity = Vector2.zero;
 
-        // Kích hoạt animation chết (Trigger "Die" mà chúng ta vừa tạo)
+        // Kích hoạt animation chết
         animator.SetTrigger("Die");
 
         // Vô hiệu hóa Collider để không tương tác nữa
@@ -111,7 +130,7 @@ public class BossMap4Controller : MonoBehaviour
             col.enabled = false;
         }
 
-        // Hủy đối tượng Boss sau vài giây khi chạy xong animation chết
+        // Hủy đối tượng Boss sau 3 giây
         Destroy(gameObject, 3f);
     }
 }
