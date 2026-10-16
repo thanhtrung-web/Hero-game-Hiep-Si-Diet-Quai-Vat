@@ -6,12 +6,13 @@ public class BossMap4Controller : MonoBehaviour
     public float maxHealth = 100f;
     private float currentHealth;
     public float moveSpeed = 3f;
-    public float attackRange = 5f;
-    public float detectionRange = 10f; // Khoảng cách tối đa để Boss phát hiện Player
+    public float attackRange = 2f;
+    public float detectionRange = 10f;
+    public float attackDamage = 20f;
 
     [Header("References")]
     public Animator animator;
-    public Transform player; // Có thể kéo thả vào đây hoặc để code tự tìm
+    public Transform player;
     private Rigidbody2D rb;
     private bool isDead = false;
 
@@ -19,22 +20,14 @@ public class BossMap4Controller : MonoBehaviour
     {
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
-
+        
         if (animator == null)
             animator = GetComponent<Animator>();
 
-        // Tự động tìm Player theo Tag nếu bạn quên kéo thả trong Inspector
         if (player == null)
         {
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-            if (playerObj != null)
-            {
-                player = playerObj.transform;
-            }
-            else
-            {
-                Debug.LogWarning("Không tìm thấy đối tượng nào có Tag là 'Player' trong Scene!");
-            }
+            if (playerObj != null) player = playerObj.transform;
         }
     }
 
@@ -46,50 +39,67 @@ public class BossMap4Controller : MonoBehaviour
         {
             float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
+            // LUÔN LUÔN xoay mặt về phía Player bất kể đang đứng, đi hay đánh
+            FacePlayer();
+
             if (distanceToPlayer <= attackRange)
             {
-                // Gọi hàm tấn công
                 Attack();
             }
             else if (distanceToPlayer <= detectionRange)
             {
-                // Gọi hàm di chuyển theo Player
                 MoveTowardsPlayer();
             }
             else
             {
-                // Đứng yên (Idle) khi Player ở xa
                 SetIdle();
             }
         }
     }
 
-    void MoveTowardsPlayer()
+    // Hàm chuyên trách việc xoay mặt theo Player
+    void FacePlayer()
     {
-        // Di chuyển hướng về phía Player
-        Vector2 direction = (player.position - transform.position).normalized;
-        rb.linearVelocity = new Vector2(direction.x * moveSpeed, rb.linearVelocity.y);
+        float directionX = player.position.x - transform.position.x;
 
-        // Kích hoạt animation đi bộ
-        animator.SetBool("IsWalking", true);
-        animator.SetBool("IsATK", false);
-
-        // Lật mặt Boss hướng về phía Player (Đã đảo lại dấu để khớp với sprite gốc)
-        if (direction.x > 0)
+        if (directionX > 0)
         {
+            // Quay mặt sang phải
             transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
         }
-        else if (direction.x < 0)
+        else if (directionX < 0)
         {
+            // Quay mặt sang trái
             transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
         }
     }
 
+    void MoveTowardsPlayer()
+    {
+        Vector2 direction = (player.position - transform.position).normalized;
+        rb.linearVelocity = new Vector2(direction.x * moveSpeed, rb.linearVelocity.y);
+
+        animator.SetBool("IsWalking", true);
+        animator.SetBool("IsATK", false);
+    }
+
     void Attack()
     {
-        rb.linearVelocity = Vector2.zero; // Dừng di chuyển khi tấn công
+        rb.linearVelocity = Vector2.zero; // Dừng di chuyển khi đánh
         animator.SetBool("IsWalking", false);
         animator.SetBool("IsATK", true);
+    }
+
+    public void DealDamageToPlayer()
+    {
+        if (player != null)
+        {
+            float distance = Vector2.Distance(transform.position, player.position);
+            if (distance <= attackRange + 0.5f) 
+            {
+                Debug.Log("Boss đã đánh trúng Player gây " + attackDamage + " sát thương!");
+            }
+        }
     }
 
     void SetIdle()
@@ -99,38 +109,21 @@ public class BossMap4Controller : MonoBehaviour
         animator.SetBool("IsATK", false);
     }
 
-    // Hàm nhận sát thương (gọi từ vũ khí của Player khi đánh trúng Boss)
     public void TakeDamage(float damage)
     {
         if (isDead) return;
-
         currentHealth -= damage;
-
-        // Kích hoạt animation nhận sát thương
         animator.SetTrigger("IsTakeDmg");
-
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
+        if (currentHealth <= 0) Die();
     }
 
     void Die()
     {
         isDead = true;
         rb.linearVelocity = Vector2.zero;
-
-        // Kích hoạt animation chết
         animator.SetTrigger("Die");
-
-        // Vô hiệu hóa Collider để không tương tác nữa
         Collider2D col = GetComponent<Collider2D>();
-        if (col != null)
-        {
-            col.enabled = false;
-        }
-
-        // Hủy đối tượng Boss sau 3 giây
+        if (col != null) col.enabled = false;
         Destroy(gameObject, 3f);
     }
 }
