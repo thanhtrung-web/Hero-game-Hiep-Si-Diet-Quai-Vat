@@ -1,0 +1,680 @@
+fileFormatVersion: 2
+guid: e95ca43a2c0611244babb662489aa969
+AssetOrigin:
+  serializedVersion: 1
+  productId: 106818
+  packageName: 2D Ice World
+  packageVersion: 1.5
+  assetPath: Assets/2D Ice World/Assets/Sprites/ATLAS_ICE_0001.png
+  uploadId: 410600
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: Ice_Bot_S_L
+  - first:
+      213: 21300002
+    second: Ice_Bot_26_big_L
+  - first:
+      213: 21300004
+    second: Ice_Top_26_big_R
+  - first:
+      213: 21300006
+    second: Ice_G_M
+  - first:
+      213: 21300008
+    second: Ice_Top_26_big_L
+  - first:
+      213: 21300010
+    second: Ice_Bot_26_big_R
+  - first:
+      213: 21300012
+    second: Ice_Bot_S_R
+  - first:
+      213: 21300014
+    second: Snowtree_Top
+  - first:
+      213: 21300016
+    second: Snowhill_1
+  - first:
+      213: 21300018
+    second: Snow_decoration_1
+  - first:
+      213: 21300020
+    second: Ice_Bot_L
+  - first:
+      213: 21300022
+    second: Ice_Bot_M
+  - first:
+      213: 21300024
+    second: Ice_Bot_R
+  - first:
+      213: 21300026
+    second: Snow_decoration_2
+  - first:
+      213: 21300028
+    second: Snowhill_3
+  - first:
+      213: 21300030
+    second: Snowtree_ground
+  - first:
+      213: 21300032
+    second: Snow_G_S_L
+  - first:
+      213: 21300034
+    second: Snow_G_26_big_L
+  - first:
+      213: 21300036
+    second: Snow_G_26_small_L
+  - first:
+      213: 21300038
+    second: Snowhill_2
+  - first:
+      213: 21300040
+    second: Snow_G_26_small_R
+  - first:
+      213: 21300042
+    second: Snow_G_26_big_R
+  - first:
+      213: 21300044
+    second: Snow_G_S_R
+  - first:
+      213: 21300046
+    second: Snow_platform
+  - first:
+      213: 21300048
+    second: Igloo_Top_R
+  - first:
+      213: 21300050
+    second: Snow_E_L
+  - first:
+      213: 21300052
+    second: Snow_G_M
+  - first:
+      213: 21300054
+    second: Snow_E_R
+  - first:
+      213: 21300056
+    second: Ice_platform
+  - first:
+      213: 21300058
+    second: Igloo_Top_L
+  - first:
+      213: 21300060
+    second: Igloo_M_R
+  - first:
+      213: 21300062
+    second: Igloo_S_R
+  - first:
+      213: 21300064
+    second: Snowball_small
+  - first:
+      213: 21300066
+    second: Igloo_M_Door_L
+  - first:
+      213: 21300068
+    second: Igloo_M_Dorr_R
+  - first:
+      213: 21300070
+    second: Snowball_big
+  - first:
+      213: 21300072
+    second: Igloo_S_L
+  - first:
+      213: 21300074
+    second: Igloo_M_L
+  - first:
+      213: 21300076
+    second: Igloo_Door_R
+  - first:
+      213: 21300078
+    second: Ice_Top_26_small_L
+  - first:
+      213: 21300080
+    second: Ice_Top_spikes
+  - first:
+      213: 21300082
+    second: Ice_Top_26_small_R
+  - first:
+      213: 21300084
+    second: Igloo_Door_L
+  - first:
+      213: 21300086
+    second: Ice_Top_2
+  - first:
+      213: 21300088
+    second: Ice_Bot_Spikes_L
+  - first:
+      213: 21300090
+    second: Ice_Bot_spikes
+  - first:
+      213: 21300092
+    second: Ice_Bot_Spikes_R
+  - first:
+      213: 21300094
+    second: Ice_Top_3
+  - first:
+      213: 21300096
+    second: Ice_cube_small
+  - first:
+      213: 21300098
+    second: Ice_G_S_L
+  - first:
+      213: 21300100
+    second: Ice_G_26_big_L
+  - first:
+      213: 21300102
+    second: Ice_G_26_small_L
+  - first:
+      213: 21300104
+    second: Ice_Top_1
+  - first:
+      213: 21300106
+    second: Ice_G_26_small_R
+  - first:
+      213: 21300108
+    second: Ice_G_26_big_R
+  - first:
+      213: 21300110
+    second: Ice_G_S_R
+  - first:
+      213: 21300112
+    second: Ice_cube_big
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_0
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 589
+        width: 894
+        height: 220
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fbdd6b3f02dca24cb55577d233398ff
+      internalID: -2036298983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_1
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 795
+        width: 891
+        height: 229
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2032cdf58c471b44aa8a4e7f0281bf2
+      internalID: 1204813304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_2
+      rect:
+        serializedVersion: 2
+        x: 652
+        y: 791
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4c2f585937dd984b80588b6ab678c08
+      internalID: 1387854930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_3
+      rect:
+        serializedVersion: 2
+        x: 899
+        y: 711
+        width: 121
+        height: 296
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8035fce6174dc0343880832794d67fac
+      internalID: 442604743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 387
+        width: 180
+        height: 181
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 466f5634e72c7b14e90d5897f3549dff
+      internalID: -181192461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_5
+      rect:
+        serializedVersion: 2
+        x: 645
+        y: 533
+        width: 119
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 437b7c86854f4854095bbaec733bbbc9
+      internalID: 2083113371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_6
+      rect:
+        serializedVersion: 2
+        x: 844
+        y: 387
+        width: 180
+        height: 181
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cdedb618789fb7547a248a3ac2efbe05
+      internalID: -663330364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_7
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 423
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e47c767c6ebe9a43b82100baaecd76b
+      internalID: -1248174775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_8
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 385
+        width: 138
+        height: 118
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 194fd1c4b8bf5cb4a9bb7d715b263471
+      internalID: -1400064959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_9
+      rect:
+        serializedVersion: 2
+        x: 654
+        y: 398
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1b53b23179d4314a88d4dcedacec8df
+      internalID: -2124969056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_10
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 257
+        width: 120
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac1c55560e0576e4a89c01989658eb9e
+      internalID: -1703844455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_11
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 129
+        width: 386
+        height: 191
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ebdaa054b1c5f024da9c9e3d32b10719
+      internalID: -1097723129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_12
+      rect:
+        serializedVersion: 2
+        x: 901
+        y: 257
+        width: 120
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47baecb1015212e4880303a193365a5e
+      internalID: -2009879099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_13
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 0
+        width: 891
+        height: 232
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8e3f738ef1122240b171ff104a95671
+      internalID: -843411976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_14
+      rect:
+        serializedVersion: 2
+        x: 929
+        y: 159
+        width: 64
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f69610ea48f7c714896ff6fcc15122ab
+      internalID: -553252197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ATLAS_ICE_0001_15
+      rect:
+        serializedVersion: 2
+        x: 897
+        y: 1
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b0c3de557a54a04786e9720bd274a12
+      internalID: 1405482742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: bf305808f44b2e349a29657cdb94879e
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      ATLAS_ICE_0001_0: -2036298983
+      ATLAS_ICE_0001_1: 1204813304
+      ATLAS_ICE_0001_10: -1703844455
+      ATLAS_ICE_0001_11: -1097723129
+      ATLAS_ICE_0001_12: -2009879099
+      ATLAS_ICE_0001_13: -843411976
+      ATLAS_ICE_0001_14: -553252197
+      ATLAS_ICE_0001_15: 1405482742
+      ATLAS_ICE_0001_2: 1387854930
+      ATLAS_ICE_0001_3: 442604743
+      ATLAS_ICE_0001_4: -181192461
+      ATLAS_ICE_0001_5: 2083113371
+      ATLAS_ICE_0001_6: -663330364
+      ATLAS_ICE_0001_7: -1248174775
+      ATLAS_ICE_0001_8: -1400064959
+      ATLAS_ICE_0001_9: -2124969056
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: ea97858b0ea987940ad44f93067a2aef
+timeCreated: 1512811387
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 106818
+  packageName: 2D Ice World
+  packageVersion: 1.5
+  assetPath: Assets/2D Ice World/Assets/Sprites/Tile_Prefabs/Snow_E_R.asset
+  uploadId: 410600

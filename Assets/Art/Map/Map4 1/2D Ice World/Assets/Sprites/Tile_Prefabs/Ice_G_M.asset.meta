@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: b158dfa3b0d02da4fb15fbd5d8bc3e7c
+timeCreated: 1512811381
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 106818
+  packageName: 2D Ice World
+  packageVersion: 1.5
+  assetPath: Assets/2D Ice World/Assets/Sprites/Tile_Prefabs/Ice_G_M.asset
+  uploadId: 410600

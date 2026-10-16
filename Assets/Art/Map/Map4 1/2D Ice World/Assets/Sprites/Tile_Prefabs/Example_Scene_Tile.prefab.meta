@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 89f1dbe19a24d3848ba0b40096f120e6
+timeCreated: 1512809354
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 106818
+  packageName: 2D Ice World
+  packageVersion: 1.5
+  assetPath: Assets/2D Ice World/Assets/Sprites/Tile_Prefabs/Example_Scene_Tile.prefab
+  uploadId: 410600
