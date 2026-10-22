@@ -44,7 +44,7 @@ public class KnightController : MonoBehaviour
     {
         if (isDefending)
         {
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             return;
         }
 
@@ -55,7 +55,7 @@ public class KnightController : MonoBehaviour
             currentSpeed = sprintSpeed;
         }
 
-        rb.velocity = new Vector2(moveInput * currentSpeed, rb.velocity.y);
+        rb.linearVelocity = new Vector2(moveInput * currentSpeed, rb.linearVelocity.y);
 
         if (moveInput > 0)
             transform.localScale = new Vector3(1, 1, 1);
@@ -71,7 +71,7 @@ public class KnightController : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
     }
 
@@ -79,10 +79,10 @@ public class KnightController : MonoBehaviour
     {
         if (isDefending) return;
 
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.J) || Input.GetMouseButton(0))
         {
             // Nếu đang chạy nhanh (Sprint) -> kích hoạt Run Attack
-            if (Input.GetKey(KeyCode.LeftShift) && Mathf.Abs(rb.velocity.x) > 4.5f && isGrounded)
+            if (Input.GetKey(KeyCode.LeftShift) && Mathf.Abs(rb.linearVelocity.x) > 4.5f && isGrounded)
             {
                 anim.SetTrigger("runAttack");
                 return;
@@ -107,7 +107,7 @@ public class KnightController : MonoBehaviour
 
     private void UpdateAnimation()
     {
-        anim.SetFloat("speed", Mathf.Abs(rb.velocity.x));
+        anim.SetFloat("speed", Mathf.Abs(rb.linearVelocity.x));
         anim.SetBool("isGrounded", isGrounded);
         anim.SetBool("isDefending", isDefending);
     }
@@ -127,7 +127,7 @@ public class KnightController : MonoBehaviour
     public void Die()
     {
         anim.SetTrigger("dead");
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         enabled = false;
     }
 }

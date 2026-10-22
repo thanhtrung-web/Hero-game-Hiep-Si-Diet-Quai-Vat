@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Enemy
+  - Ground
   layers:
   - Default
   - TransparentFX
@@ -39,6 +40,7 @@ TagManager:
   - 
   - 
   - 
+  
   m_SortingLayers:
   - name: Default
     uniqueID: 0
