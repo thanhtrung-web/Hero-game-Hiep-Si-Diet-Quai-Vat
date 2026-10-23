@@ -34,7 +34,7 @@ public class GroupNormalEnemy : MonoBehaviour
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // Tự động tìm điểm LeftPoint và RightPoint từ Object cha (Group_Golem) nếu bạn quên kéo thả
+        // Tự động tìm điểm LeftPoint và RightPoint từ Object cha nếu quên kéo thả
         Transform groupParent = transform.parent;
         if (groupParent != null)
         {
@@ -57,11 +57,11 @@ public class GroupNormalEnemy : MonoBehaviour
         {
             FacePlayer();
             animator.SetBool("IsWalking", false);
-            animator.SetBool("IsATK", true);
 
+            // Kiểm tra thời gian hồi chiêu để kích hoạt đòn đánh
             if (Time.time >= lastAttackTime + attackCooldown)
             {
-                TriggerAttackEvent();
+                animator.SetTrigger("IsATK"); // Dùng Trigger để đánh từng nhịp chuẩn xác
                 lastAttackTime = Time.time;
             }
         }
@@ -71,7 +71,6 @@ public class GroupNormalEnemy : MonoBehaviour
             FacePlayer();
             isWaiting = false;
             animator.SetBool("IsWalking", true);
-            animator.SetBool("IsATK", false);
 
             float direction = player.position.x > transform.position.x ? 1f : -1f;
             transform.Translate(Vector3.right * direction * moveSpeed * Time.deltaTime);
@@ -97,7 +96,6 @@ public class GroupNormalEnemy : MonoBehaviour
         if (isWaiting)
         {
             animator.SetBool("IsWalking", false);
-            animator.SetBool("IsATK", false);
 
             idleTimer += Time.deltaTime;
             if (idleTimer >= idleTimeAtPoint)
@@ -108,11 +106,9 @@ public class GroupNormalEnemy : MonoBehaviour
         }
 
         animator.SetBool("IsWalking", true);
-        animator.SetBool("IsATK", false);
 
         if (movingRight)
         {
-            // Di chuyển sang phải bằng Kinematic (Translate)
             transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
             if (spriteRenderer != null) spriteRenderer.flipX = false;
 
@@ -124,7 +120,6 @@ public class GroupNormalEnemy : MonoBehaviour
         }
         else
         {
-            // Di chuyển sang trái
             transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
             if (spriteRenderer != null) spriteRenderer.flipX = true;
 
@@ -154,20 +149,28 @@ public class GroupNormalEnemy : MonoBehaviour
         }
     }
 
-    void TriggerAttackEvent()
+    // ==========================================
+    // HÀM GỌI BẰNG ANIMATION EVENT (Gắn vào khung hình chém)
+    // ==========================================
+    public void AnimationAttackHit()
     {
-        if (player != null)
+        if (player != null && Vector2.Distance(transform.position, player.position) <= attackRange + 0.5f)
         {
             player.SendMessage("TakeDamage", attackDamage, SendMessageOptions.DontRequireReceiver);
-            Debug.Log("<color=yellow>Golem tấn công trúng Player gây " + attackDamage + " sát thương!</color>");
+            Debug.Log("<color=yellow>Golem chém trúng Player gây " + attackDamage + " sát thương!</color>");
         }
     }
 
+    // ==========================================
+    // HÀM NHẬN SÁT THƯƠNG TỪ PLAYER
+    // ==========================================
     public void TakeDamage(float amount)
     {
         if (isDead) return;
         currentHealth -= amount;
         animator.SetTrigger("IsHurt");
+
+        Debug.Log("<color=cyan>Quái nhận " + amount + " DMG! Máu còn: " + currentHealth + "</color>");
 
         if (currentHealth <= 0) Die();
     }
