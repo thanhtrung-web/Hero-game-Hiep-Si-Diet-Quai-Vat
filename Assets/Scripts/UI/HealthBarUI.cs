@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class HealthBarUI : MonoBehaviour
 {
     [SerializeField] private PlayerHealth playerHealth;
+    [SerializeField] private KnightController knight;
 
     private Slider slider;
 
@@ -21,7 +22,7 @@ public class HealthBarUI : MonoBehaviour
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-        playerHealth = FindAnyObjectByType<PlayerHealth>();
+        FindPlayer();
         RefreshBar();
     }
 
@@ -33,18 +34,26 @@ public class HealthBarUI : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // The persistent Canvas can outlive the Player. Drop its old reference
-        // and look for the PlayerHealth belonging to the newly loaded scene.
+        // and look for the player belonging to the newly loaded scene.
         playerHealth = null;
+        knight = null;
         RefreshBar();
     }
 
     private void LateUpdate()
     {
         // Keep trying while a Player is being created by a spawn/persistence script.
-        if (playerHealth == null)
-            playerHealth = FindAnyObjectByType<PlayerHealth>();
+        if (playerHealth == null && knight == null)
+            FindPlayer();
 
         RefreshBar();
+    }
+
+    private void FindPlayer()
+    {
+        knight = FindAnyObjectByType<KnightController>();
+        if (knight == null)
+            playerHealth = FindAnyObjectByType<PlayerHealth>();
     }
 
     private void RefreshBar()
@@ -52,16 +61,24 @@ public class HealthBarUI : MonoBehaviour
         if (slider == null)
             return;
 
-        if (playerHealth == null)
+        if (knight != null)
         {
-            slider.SetValueWithoutNotify(0f);
+            float ratio = knight.MaxHealth > 0
+                ? (float)knight.CurrentHealth / knight.MaxHealth
+                : 0f;
+            slider.SetValueWithoutNotify(Mathf.Clamp01(ratio));
             return;
         }
 
-        float ratio = playerHealth.MaxHealth > 0
-            ? (float)playerHealth.CurrentHealth / playerHealth.MaxHealth
-            : 0f;
+        if (playerHealth != null)
+        {
+            float ratio = playerHealth.MaxHealth > 0
+                ? (float)playerHealth.CurrentHealth / playerHealth.MaxHealth
+                : 0f;
+            slider.SetValueWithoutNotify(Mathf.Clamp01(ratio));
+            return;
+        }
 
-        slider.SetValueWithoutNotify(Mathf.Clamp01(ratio));
+        slider.SetValueWithoutNotify(0f);
     }
 }
