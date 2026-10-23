@@ -20,6 +20,8 @@ public class PlayerMovement : MonoBehaviour
     private float moveInput;
     private bool jumpRequested;
     private bool isRunning;
+    private bool isGrounded;
+    private bool isJumping;
 
     private void Awake()
     {
@@ -56,7 +58,14 @@ public class PlayerMovement : MonoBehaviour
             moveInput += 1f;
 
         if (keyboard.spaceKey.wasPressedThisFrame)
+        {
             jumpRequested = true;
+
+            // Chặn Run animation ngay khi bắt đầu một cú nhảy hợp lệ.
+            // isRunning vẫn giữ nguyên để không làm tụt tốc độ ngang trên không.
+            if (isGrounded)
+                isJumping = true;
+        }
 
         bool shiftHeld = keyboard.leftShiftKey.isPressed ||
                          keyboard.rightShiftKey.isPressed;
@@ -66,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
             spriteRenderer.flipX = moveInput < 0f;
 
         animator.SetFloat("Speed", Mathf.Abs(moveInput));
-        animator.SetBool("IsRunning", isRunning);
+        animator.SetBool("IsRunning", isRunning && isGrounded && !isJumping);
     }
 
     private void FixedUpdate()
@@ -80,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
             jumpRequested = false;
             return;
         }
-        bool isGrounded = groundCheck != null &&
+        isGrounded = groundCheck != null &&
             Physics2D.OverlapCircle(
                 groundCheck.position,
                 groundCheckRadius,
@@ -97,12 +106,19 @@ public class PlayerMovement : MonoBehaviour
 
             // Switch to Jump immediately when taking off.
             isGrounded = false;
+            isJumping = true;
         }
 
         // The ground-check circle may still touch the floor during takeoff.
         if (velocity.y > 0.01f)
         {
             isGrounded = false;
+        }
+
+        // Khi đã chạm đất thì cho phép Walk/Run animation hoạt động trở lại.
+        if (isGrounded && velocity.y <= 0.01f)
+        {
+            isJumping = false;
         }
 
         rb.linearVelocity = velocity;
