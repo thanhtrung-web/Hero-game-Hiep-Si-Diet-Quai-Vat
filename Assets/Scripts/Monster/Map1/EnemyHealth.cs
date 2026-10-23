@@ -7,9 +7,9 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private Behaviour patrolScript;
     public bool IsDead => isDead;
     private int currentHealth;
-    private bool isDead;
+    protected bool isDead;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         currentHealth = maxHealth;
 
@@ -17,7 +17,7 @@ public class EnemyHealth : MonoBehaviour
             animator = GetComponentInChildren<Animator>();
     }
 
-    public void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage)
     {
         if (isDead || damage <= 0)
             return;

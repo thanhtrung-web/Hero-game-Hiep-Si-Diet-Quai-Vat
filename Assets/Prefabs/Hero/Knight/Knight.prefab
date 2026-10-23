@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3683285142735355136}
   - component: {fileID: 8923356367489313838}
   - component: {fileID: 5074105742433772409}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Knight
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
@@ -158,17 +158,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -1.9544773, y: -2.0021148}
+  m_Offset: {x: 0.025073528, y: -0.99365354}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 8, y: 8}
+    pivot: {x: 0.258, y: 0.5}
+    oldSize: {x: 4, y: 4}
     newSize: {x: 4, y: 4}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.8964481, y: 4.085655}
+  m_Size: {x: 1.4112568, y: 2.0687327}
   m_EdgeRadius: 0
 --- !u!114 &8923356367489313838
 MonoBehaviour:
@@ -189,6 +189,18 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  maxHealth: 200
+  maxStamina: 100
+  attackRange: 1.2
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  attack1Damage: 20
+  attack2Damage: 25
+  attack3Damage: 35
+  runAttackDamage: 30
+  staminaRegenRate: 4
+  sprintStaminaCost: 10
 --- !u!95 &5074105742433772409
 Animator:
   serializedVersion: 7
@@ -220,9 +232,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7343479271090283410}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: GoundCheck
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -236,8 +248,8 @@ Transform:
   m_GameObject: {fileID: 3467404405153820958}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.25, y: -4.012, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.22, y: -2, z: 0}
+  m_LocalScale: {x: 0.8409, y: 0.8409, z: 0.8409}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7128673555305041972}
