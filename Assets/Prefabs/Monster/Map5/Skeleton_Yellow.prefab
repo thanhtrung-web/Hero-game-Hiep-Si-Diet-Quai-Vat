@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5a8f2225ee27ef4eac62e875225ac53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkeletonController
-  maxHealth: 150
+  maxHealth: 155
   animator: {fileID: 0}
   patrolScript: {fileID: 0}
   moveSpeed: 2.2
@@ -228,7 +228,7 @@ MonoBehaviour:
   ledgeCheckDistance: 0.8
   groundCheckDepth: 1
   wallCheckDistance: 0.6
-  patrolRadius: 4
+  patrolRadius: 3
   aggroRange: 5
   deAggroRange: 6.5
   attackRange: 1.8

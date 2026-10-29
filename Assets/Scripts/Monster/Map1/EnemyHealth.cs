@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    [SerializeField] private int maxHealth = 3;
-    [SerializeField] private Animator animator;
-    [SerializeField] private Behaviour patrolScript;
+    [SerializeField] protected int maxHealth = 3;
+    [SerializeField] protected Animator animator;
+    [SerializeField] protected Behaviour patrolScript;
     public bool IsDead => isDead;
-    private int currentHealth;
+    protected int currentHealth;
     protected bool isDead;
 
     protected virtual void Awake()
@@ -26,16 +26,7 @@ public class EnemyHealth : MonoBehaviour
 
         if (currentHealth == 0)
         {
-            isDead = true;
-
-            if (patrolScript != null)
-                patrolScript.enabled = false;
-
-            if (animator != null)
-                animator.SetTrigger("Dead");
-            else
-                Destroy(gameObject);
-
+            Die();
             return;
         }
 
@@ -43,7 +34,19 @@ public class EnemyHealth : MonoBehaviour
             animator.SetTrigger("Hurt");
     }
 
-    
+    protected virtual void Die()
+    {
+        isDead = true;
+
+        if (patrolScript != null)
+            patrolScript.enabled = false;
+
+        if (animator != null)
+            animator.SetTrigger("Dead");
+        else
+            Destroy(gameObject);
+    }
+
     public void DestroyAfterDeath()
     {
         if (isDead)

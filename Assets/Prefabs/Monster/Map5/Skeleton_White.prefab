@@ -214,7 +214,7 @@ MonoBehaviour:
   ledgeCheckDistance: 0.8
   groundCheckDepth: 1
   wallCheckDistance: 0.6
-  patrolRadius: 4
+  patrolRadius: 3
   aggroRange: 4.5
   deAggroRange: 5.5
   attackRange: 1.8
