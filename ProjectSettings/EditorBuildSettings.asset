@@ -26,6 +26,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Map1/Map01_Sceen5.unity
     guid: 063197ba30bb58348b30453e3a49064a
+  - enabled: 1
+    path: Assets/Scenes/Map5/Map5.unity
+    guid: a17181658db0f8f4caa6b72e27174d61
+  - enabled: 1
+    path: Assets/Scenes/Map5/Map5_Phase2.unity
+    guid: b5e28a914c468b9874bd9ed4bf6150e9
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
