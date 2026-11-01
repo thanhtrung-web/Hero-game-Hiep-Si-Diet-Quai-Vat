@@ -15,9 +15,9 @@ GameObject:
   - component: {fileID: 7264913642512359632}
   - component: {fileID: 2179487684703965658}
   - component: {fileID: 4944733536456556032}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: Boss_Frost
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -217,7 +217,7 @@ AudioSource:
   m_GameObject: {fileID: 1164779958406165404}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 5648443171253266897, guid: 6630ca1a54619ee4899c7c585c6accf3, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -229,8 +229,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
+  MinDistance: 4
+  MaxDistance: 20
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -265,7 +265,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

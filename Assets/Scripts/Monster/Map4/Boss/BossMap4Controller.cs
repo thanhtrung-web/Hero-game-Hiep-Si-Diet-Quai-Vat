@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class BossMap4Controller : MonoBehaviour
 {
@@ -54,36 +54,31 @@ public class BossMap4Controller : MonoBehaviour
         {
             float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-            if (Time.time >= lastAttackTime + attackCooldown)
-            {
-                FacePlayer();
-            }
-
-            // 1. Đang đứng khựng chờ sau khi chém -> Idle
+            // 1. Kiểm tra nếu đang trong thời gian hồi chiêu (Cooldown) thì khựng lại chờ
             if (Time.time < lastAttackTime + attackCooldown)
             {
                 StopMoving();
-                PlayIdleSoundOnce();
                 return;
             }
 
             // 2. Logic di chuyển & tấn công
             if (distanceToPlayer <= attackRange)
             {
+                FacePlayer();
                 Attack();
             }
             else if (distanceToPlayer <= detectionRange)
             {
+                FacePlayer();
+                PlayIdleSoundOnce();
                 MoveTowardsPlayer();
             }
             else
             {
                 SetIdle();
-                PlayIdleSoundOnce();
             }
         }
     }
-
     void FacePlayer()
     {
         if (player == null) return;
@@ -110,28 +105,32 @@ public class BossMap4Controller : MonoBehaviour
     void Attack()
     {
         StopMoving();
-        animator.SetTrigger("IsATK");
+
+        // Đặt lại thời gian tấn công trước khi gọi Trigger để khóa hành động di chuyển
         lastAttackTime = Time.time;
+
+        // Kích hoạt animation tấn công
+        animator.SetTrigger("IsATK");
 
         if (attackSound != null && audioSource != null)
         {
             audioSource.PlayOneShot(attackSound);
         }
     }
-
     void StopMoving()
     {
-        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+        if (rb != null)
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
         animator.SetBool("IsWalking", false);
     }
 
-    // 🔊 PHÁT ĐÚNG 1 LẦN DUY NHẤT VÀ KHÓA TẮT HẲN
+    // 🔊 PHÁT ĐÚNG 1 LẦN KHI NGƯỜI CHƠI TIẾN VÀO GẦN BOSS
     void PlayIdleSoundOnce()
     {
-        if (audioSource == null || idleSound == null) return;
+        if (audioSource == null || idleSound == null || player == null) return;
 
-        // Nếu CHƯA TỪNG phát lần nào -> Phát đúng 1 tiếng rồi khóa vĩnh viễn
-        if (!hasPlayedIdleSound)
+        // Chỉ phát khi người chơi đã tiến vào phạm vi gần Boss (detectionRange)
+        if (!hasPlayedIdleSound && Vector2.Distance(transform.position, player.position) <= detectionRange)
         {
             audioSource.PlayOneShot(idleSound);
             hasPlayedIdleSound = true; // Khóa cờ ngay lập tức, không bao giờ mở lại
@@ -140,6 +139,8 @@ public class BossMap4Controller : MonoBehaviour
 
     public void DealDamageToPlayer()
     {
+        if (isDead) return;
+
         if (player != null)
         {
             float distance = Vector2.Distance(transform.position, player.position);
@@ -155,11 +156,19 @@ public class BossMap4Controller : MonoBehaviour
         StopMoving();
     }
 
+    // Hàm nhận sát thương chính của Boss
     public void TakeDamage(float damage)
     {
         if (isDead) return;
 
         currentHealth -= damage;
+
+        if (currentHealth <= 0)
+        {
+            Die();
+            return;
+        }
+
         animator.SetTrigger("IsTakeDmg");
         StopMoving();
 
@@ -167,23 +176,43 @@ public class BossMap4Controller : MonoBehaviour
         {
             audioSource.PlayOneShot(takeDamageSound);
         }
+    }
 
-        if (currentHealth <= 0) Die();
+    public void TakeDamage(int damage)
+    {
+        TakeDamage((float)damage);
     }
 
     void Die()
     {
+        if (isDead) return;
         isDead = true;
         StopMoving();
-        animator.SetTrigger("IsDie");
+
+        // 1. Reset sạch toàn bộ Trigger tấn công/nhận đòn và ép chuyển sang BossDie
+        if (animator != null)
+        {
+            animator.ResetTrigger("IsATK");
+            animator.ResetTrigger("IsTakeDmg");
+            animator.SetBool("IsWalking", false);
+            animator.SetTrigger("IsDie");
+        }
 
         if (dieSound != null && audioSource != null)
         {
             audioSource.PlayOneShot(dieSound);
         }
 
+        // Vô hiệu hóa va chạm để Player có thể đi xuyên qua xác
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
+
+        // Triệt tiêu vận tốc rơi và khóa trọng lực, chống rơi xuyên bản đồ
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.bodyType = RigidbodyType2D.Kinematic;
+        }
 
         Destroy(gameObject, 3f);
     }

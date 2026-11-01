@@ -207,6 +207,25 @@ public class KnightController : MonoBehaviour
                     enemy.TakeDamage(damage);
                     Debug.Log($"<color=yellow>TRÚNG ĐÍCH!</color> Hiệp sĩ chém trúng {hit.name}, gây {damage} sát thương!");
                 }
+                else
+                {
+                    // Hỗ trợ các quái không kế thừa EnemyHealth (Map 4 Golem, Boss)
+                    var normalEnemy = hit.GetComponentInParent<GroupNormalEnemy>();
+                    if (normalEnemy != null)
+                    {
+                        normalEnemy.TakeDamage(damage);
+                        Debug.Log($"<color=yellow>TRÚNG ĐÍCH!</color> Hiệp sĩ chém trúng {hit.name}, gây {damage} sát thương!");
+                    }
+                    else
+                    {
+                        var boss = hit.GetComponentInParent<BossMap4Controller>();
+                        if (boss != null)
+                        {
+                            boss.TakeDamage(damage);
+                            Debug.Log($"<color=yellow>TRÚNG ĐÍCH!</color> Hiệp sĩ chém trúng {hit.name}, gây {damage} sát thương!");
+                        }
+                    }
+                }
             }
         }
     }

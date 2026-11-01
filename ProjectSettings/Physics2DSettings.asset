@@ -54,8 +54,12 @@ Physics2DSettings:
   m_AutoSyncTransforms: 0
   m_GizmoOptions: 10
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_LayerCollisionMatrix: ffffffffffffffffffffffffffffffffffffffffffffffff7fffffff3fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffu
 =======
   m_LayerCollisionMatrix: fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffdfffffffcffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffu
 >>>>>>> 7d658e8 (add golem monster)
+=======
+  m_LayerCollisionMatrix: ffffffffffffffffffffffffffffffffffffffffffffffff7fffffff3fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffu
+>>>>>>> e5c6145 (Fix bug)
   m_PhysicsLowLevelSettings: {fileID: 0}

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class GroupNormalEnemy : MonoBehaviour
 {
@@ -26,6 +26,7 @@ public class GroupNormalEnemy : MonoBehaviour
     private Transform player;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+    private Rigidbody2D rb;
     private bool isDead = false;
 
     void Start()
@@ -33,6 +34,7 @@ public class GroupNormalEnemy : MonoBehaviour
         currentHealth = maxHealth;
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
 
         // Tự động tìm điểm LeftPoint và RightPoint từ Object cha nếu quên kéo thả
         Transform groupParent = transform.parent;
@@ -154,6 +156,8 @@ public class GroupNormalEnemy : MonoBehaviour
     // ==========================================
     public void AnimationAttackHit()
     {
+        if (isDead) return;
+
         if (player != null && Vector2.Distance(transform.position, player.position) <= attackRange + 0.5f)
         {
             player.SendMessage("TakeDamage", attackDamage, SendMessageOptions.DontRequireReceiver);
@@ -168,20 +172,46 @@ public class GroupNormalEnemy : MonoBehaviour
     {
         if (isDead) return;
         currentHealth -= amount;
+
+        if (currentHealth <= 0)
+        {
+            Die();
+            return;
+        }
+
         animator.SetTrigger("IsHurt");
 
         Debug.Log("<color=cyan>Quái nhận " + amount + " DMG! Máu còn: " + currentHealth + "</color>");
+    }
 
-        if (currentHealth <= 0) Die();
+    public void TakeDamage(int amount)
+    {
+        TakeDamage((float)amount);
     }
 
     void Die()
     {
+        if (isDead) return;
         isDead = true;
-        animator.SetTrigger("IsDie");
 
+        if (animator != null)
+        {
+            animator.ResetTrigger("IsATK");
+            animator.ResetTrigger("IsHurt");
+            animator.SetBool("IsWalking", false);
+            animator.SetTrigger("IsDie");
+        }
+
+        // Vô hiệu hóa va chạm để Player có thể đi xuyên qua xác
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
+
+        // Triệt tiêu vận tốc rơi và khóa trọng lực, chống rơi xuyên bản đồ
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.bodyType = RigidbodyType2D.Kinematic;
+        }
 
         Destroy(gameObject, 2f);
     }
