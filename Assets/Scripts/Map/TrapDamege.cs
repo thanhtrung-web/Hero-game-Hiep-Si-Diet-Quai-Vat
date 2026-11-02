@@ -7,19 +7,12 @@ public class TrapDamage : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Mage
+        // Mage và Knight đều dùng PlayerHealth
         PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-        if (playerHealth != null)
-        {
-            playerHealth.TakeDamage(damage);
-            return;
-        }
 
-        // Knight: trap xuyên qua khiên (canBeBlocked = false)
-        KnightController knight = other.GetComponent<KnightController>();
-        if (knight != null)
-        {
-            knight.TakeDamage(damage, false);
-        }
+        if (playerHealth == null)
+            return;
+
+        playerHealth.TakeDamage(damage);
     }
 }

@@ -7,24 +7,13 @@ public class HealthPickup : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        bool healed = false;
-
-        // Mage
+        // Mage và Knight đều dùng PlayerHealth
         PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-        if (playerHealth != null)
-        {
-            healed = playerHealth.Heal(healAmount);
-        }
-        else
-        {
-            // Knight
-            KnightController knight = other.GetComponent<KnightController>();
-            if (knight != null)
-                healed = knight.Heal(healAmount);
-        }
 
-        // Chỉ hủy vật phẩm khi thật sự hồi được máu (đầy máu thì giữ lại)
-        if (healed)
+        if (playerHealth == null)
+            return;
+
+        if (playerHealth.Heal(healAmount))
         {
             Destroy(gameObject);
         }
