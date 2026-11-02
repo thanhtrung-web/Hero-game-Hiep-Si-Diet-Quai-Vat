@@ -233,7 +233,7 @@ MonoBehaviour:
   map2SceneName: 
   map3SceneName: 
   map4SceneName: 
-  map5SceneName: 
+  map5SceneName: Map5
   mainMenuSceneName: GameMenuSceen
   mainMenuPanel: {fileID: 0}
   optionsPanel: {fileID: 0}
@@ -577,7 +577,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -340089112393056493, guid: 0d6c984959273b843823ea872e29bf0f, type: 3}
+  m_Sprite: {fileID: -1955448553306655712, guid: a98f81c41947f7e46ae1cbf544483856, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1569,7 +1569,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -2115,7 +2115,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -340089112393056493, guid: 0d6c984959273b843823ea872e29bf0f, type: 3}
+  m_Sprite: {fileID: -1955448553306655712, guid: a98f81c41947f7e46ae1cbf544483856, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2725,7 +2725,7 @@ GameObject:
   - component: {fileID: 1806893279}
   - component: {fileID: 1806893282}
   m_Layer: 5
-  m_Name: Button_Back
+  m_Name: BackButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

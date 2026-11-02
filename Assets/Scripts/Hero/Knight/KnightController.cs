@@ -30,6 +30,7 @@ public class KnightController : MonoBehaviour
     public int MaxHealth => maxHealth;
     public float CurrentStamina => currentStamina;
     public float MaxStamina => maxStamina;
+    public bool IsDead => currentHealth <= 0;
 
     private bool isGrounded;
     private bool isDefending;
@@ -51,6 +52,14 @@ public class KnightController : MonoBehaviour
 
     void Update()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        // DEBUG: bấm H để tự trừ 20 máu (bỏ qua khiên) - chỉ có trong Editor / Development Build
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            TakeDamage(20, false);
+        }
+#endif
+
         // 1. Nếu đang bị Vỡ Khiên Choáng -> Khựng lại 1 giây không thể cử động
         if (isStunned)
         {
@@ -225,12 +234,13 @@ public class KnightController : MonoBehaviour
         anim.SetBool("isDefending", isDefending);
     }
 
-    public void TakeDamage(int damage = 10)
+    // canBeBlocked = false: sát thương môi trường (trap, debug) xuyên qua khiên
+    public void TakeDamage(int damage = 10, bool canBeBlocked = true)
     {
         if (currentHealth <= 0) return;
 
         // --- TRƯỜNG HỢP 1: ĐANG GIƠ KHIÊN ĐỠ ---
-        if (isDefending)
+        if (isDefending && canBeBlocked)
         {
             float staminaCost = damage * 1.2f;
 
@@ -270,6 +280,18 @@ public class KnightController : MonoBehaviour
         {
             Die();
         }
+    }
+
+    // Hồi máu (không vượt maxHealth). Trả về false nếu đã đầy máu hoặc đã chết
+    // -> HealthPickup dựa vào giá trị này để quyết định có hủy vật phẩm hay không.
+    public bool Heal(int amount)
+    {
+        if (currentHealth <= 0 || currentHealth >= maxHealth)
+            return false;
+
+        currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
+        Debug.Log($"Hiệp sĩ hồi {amount} máu, còn: {currentHealth}/{maxHealth}");
+        return true;
     }
 
     public void Die()

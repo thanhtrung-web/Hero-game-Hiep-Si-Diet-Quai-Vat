@@ -44,4 +44,16 @@ public class PlayerHealth : MonoBehaviour
         else
             animator.SetTrigger("Hurt");
     }
+    public bool Heal(int amount)
+    {
+        if (IsDead || amount <= 0 || currentHealth >= maxHealth)
+            return false;
+
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+
+        // Nếu bạn có hàm cập nhật thanh máu thì gọi ở đây
+        // UpdateHealthUI();
+
+        return true;
+    }
 }

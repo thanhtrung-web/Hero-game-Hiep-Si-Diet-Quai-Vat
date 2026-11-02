@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private PlayerHealth playerHealth;
+    private PlayerStamina stamina; // [MỚI] thể lực dùng chung
     private float moveInput;
     private bool jumpRequested;
     private bool isRunning;
@@ -29,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         playerHealth = GetComponent<PlayerHealth>();
+        stamina = GetComponent<PlayerStamina>(); // [MỚI]
     }
 
     private void Update()
@@ -69,7 +71,17 @@ public class PlayerMovement : MonoBehaviour
 
         bool shiftHeld = keyboard.leftShiftKey.isPressed ||
                          keyboard.rightShiftKey.isPressed;
-        isRunning = Mathf.Abs(moveInput) > 0.01f && shiftHeld;
+
+        // [MỚI] Nhả Shift thì mở khóa kiệt sức (muốn chạy lại phải bấm Shift một lần nữa)
+        if (stamina != null &&
+            (keyboard.leftShiftKey.wasReleasedThisFrame || keyboard.rightShiftKey.wasReleasedThisFrame))
+        {
+            stamina.ClearExhausted();
+        }
+
+        // [MỚI] Chạy nước rút tiêu tốn thể lực; hết thể lực -> DrainSprint trả về false -> quay về đi bộ
+        bool wantsToRun = Mathf.Abs(moveInput) > 0.01f && shiftHeld;
+        isRunning = wantsToRun && (stamina == null || stamina.DrainSprint(Time.deltaTime));
 
         if (moveInput != 0f)
             spriteRenderer.flipX = moveInput < 0f;

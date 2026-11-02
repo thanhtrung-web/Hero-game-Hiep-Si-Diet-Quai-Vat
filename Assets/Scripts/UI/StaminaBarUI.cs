@@ -1,81 +1,80 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Slider))]
+/// <summary>
+/// Thanh stamina trên HUD. Tự tìm Player được spawn lúc runtime (Mage hoặc Knight)
+/// rồi đọc stamina của nhân vật đó mỗi frame.
+/// Dùng được với Slider, Image (Fill Amount), hoặc cả hai - gán cái nào dùng cái đó.
+/// </summary>
 public class StaminaBarUI : MonoBehaviour
 {
-    [SerializeField] private KnightController knight;
+    [Header("UI (gán Slider hoặc Image đều được)")]
+    [SerializeField] private Slider slider;
     [SerializeField] private Image fillImage;
-    [SerializeField] private Color normalColor = new Color(0.2f, 0.8f, 0.3f, 1f); // Xanh lục tươi
-    [SerializeField] private Color lowStaminaColor = new Color(0.95f, 0.25f, 0.2f, 1f); // Đỏ cảnh báo nguy cơ vỡ khiên
 
-    private Slider slider;
+    [Header("Tìm Player")]
+    [SerializeField] private float searchInterval = 0.25f;
+
+    private PlayerStamina mageStamina;   // Mage dùng PlayerStamina
+    private KnightController knight;     // Knight hiện vẫn tự giữ stamina trong KnightController
+    private float nextSearchTime;
 
     private void Awake()
     {
-        slider = GetComponent<Slider>();
-        slider.minValue = 0f;
-        slider.maxValue = 1f;
-        slider.wholeNumbers = false;
-        slider.interactable = false;
-
-        if (fillImage == null && slider.fillRect != null)
-            fillImage = slider.fillRect.GetComponent<Image>();
-    }
-
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        FindKnight();
-        RefreshBar();
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        knight = null;
-        RefreshBar();
-    }
-
-    private void LateUpdate()
-    {
-        if (knight == null)
-            FindKnight();
-
-        RefreshBar();
-    }
-
-    private void FindKnight()
-    {
-        knight = FindAnyObjectByType<KnightController>();
-    }
-
-    private void RefreshBar()
-    {
-        if (slider == null)
-            return;
-
-        if (knight == null)
+        if (slider != null)
         {
-            slider.SetValueWithoutNotify(0f);
+            slider.minValue = 0f;
+            slider.maxValue = 1f;
+        }
+        Apply(0f);
+    }
+
+    private void Update()
+    {
+        // Player chưa spawn (hoặc đã bị hủy khi đổi scene) -> thử tìm lại theo chu kỳ
+        if (mageStamina == null && knight == null)
+        {
+            if (Time.unscaledTime >= nextSearchTime)
+            {
+                nextSearchTime = Time.unscaledTime + searchInterval;
+                FindTarget();
+            }
             return;
         }
 
-        float ratio = knight.MaxStamina > 0
-            ? knight.CurrentStamina / knight.MaxStamina
-            : 0f;
+        float current;
+        float max;
 
-        slider.SetValueWithoutNotify(Mathf.Clamp01(ratio));
+        if (mageStamina != null)
+        {
+            current = mageStamina.CurrentStamina;
+            max = mageStamina.MaxStamina;
+        }
+        else
+        {
+            current = knight.CurrentStamina;
+            max = knight.MaxStamina;
+        }
+
+        Apply(max > 0f ? current / max : 0f);
+    }
+
+    private void FindTarget()
+    {
+        mageStamina = FindFirstObjectByType<PlayerStamina>();
+
+        if (mageStamina == null)
+            knight = FindFirstObjectByType<KnightController>();
+    }
+
+    private void Apply(float ratio)
+    {
+        ratio = Mathf.Clamp01(ratio);
+
+        if (slider != null)
+            slider.value = ratio;
 
         if (fillImage != null)
-        {
-            // Khi thể lực dưới 20% (nguy cơ bị guard-break vỡ khiên) -> đổi sang màu đỏ
-            fillImage.color = ratio < 0.2f ? lowStaminaColor : normalColor;
-        }
+            fillImage.fillAmount = ratio;
     }
 }
