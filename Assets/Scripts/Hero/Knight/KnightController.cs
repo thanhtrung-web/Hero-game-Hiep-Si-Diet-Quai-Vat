@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerHealth))]
 public class KnightController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 4f;
@@ -8,7 +9,6 @@ public class KnightController : MonoBehaviour
 
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private int maxHealth = 200;
     [SerializeField] private float maxStamina = 100f;
     [SerializeField] private float attackRange = 1.2f;
     [SerializeField] private LayerMask enemyLayer;
@@ -19,15 +19,12 @@ public class KnightController : MonoBehaviour
     [SerializeField] private float staminaRegenRate = 4f;
     [SerializeField] private float sprintStaminaCost = 10f;
 
-    private int currentHealth;
     private float currentStamina;
     private bool isStunned;
     private float stunTimer;
     private bool isExhausted; // Khóa chạy khi cạn sạch thể lực, chống giật lùi/flicker
 
-    // Cho phép các script khác (hoặc UI) đọc máu và thể lực
-    public int CurrentHealth => currentHealth;
-    public int MaxHealth => maxHealth;
+    // Cho phép các script khác (hoặc UI) đọc thể lực. Máu do PlayerHealth quản lý.
     public float CurrentStamina => currentStamina;
     public float MaxStamina => maxStamina;
 
@@ -35,22 +32,39 @@ public class KnightController : MonoBehaviour
     private bool isDefending;
     private Rigidbody2D rb;
     private Animator anim;
+    private PlayerHealth playerHealth;
+    private bool deathHandled;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        playerHealth = GetComponent<PlayerHealth>();
     }
 
     void Start()
     {
-        currentHealth = maxHealth;
         currentStamina = maxStamina;
         isExhausted = false;
     }
 
     void Update()
     {
+        // Hết máu (PlayerHealth quyết định) -> xử lý chết 1 lần rồi dừng điều khiển
+        if (playerHealth.IsDead)
+        {
+            Die();
+            return;
+        }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        // DEBUG: bấm H để tự trừ 20 máu (bỏ qua khiên) - chỉ có trong Editor / Development Build
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            playerHealth.TakeDamage(20);
+        }
+#endif
+
         // 1. Nếu đang bị Vỡ Khiên Choáng -> Khựng lại 1 giây không thể cử động
         if (isStunned)
         {
@@ -225,9 +239,10 @@ public class KnightController : MonoBehaviour
         anim.SetBool("isDefending", isDefending);
     }
 
+    // Sát thương từ quái: xử lý khiên trước, phần còn lại chuyển cho PlayerHealth
     public void TakeDamage(int damage = 10)
     {
-        if (currentHealth <= 0) return;
+        if (playerHealth.IsDead) return;
 
         // --- TRƯỜNG HỢP 1: ĐANG GIƠ KHIÊN ĐỠ ---
         if (isDefending)
@@ -246,7 +261,7 @@ public class KnightController : MonoBehaviour
 
                 // Dính 50% sát thương xuyên thủng khiên
                 int bleedDamage = Mathf.Max(1, damage / 2);
-                currentHealth = Mathf.Max(0, currentHealth - bleedDamage);
+                playerHealth.TakeDamage(bleedDamage);
                 anim.SetTrigger("hurt");
 
                 Debug.Log($"<color=red>VỠ KHIÊN!</color> Hiệp sĩ bị choáng 1s và dính {bleedDamage} sát thương!");
@@ -261,19 +276,16 @@ public class KnightController : MonoBehaviour
         }
 
         // --- TRƯỜNG HỢP 2: KHÔNG ĐỠ KHIÊN (BỊ ĐÁNH TRỰC DIỆN) ---
-        currentHealth = Mathf.Max(0, currentHealth - damage);
+        playerHealth.TakeDamage(damage);
         anim.SetTrigger("hurt");
-        Debug.Log($"Hiệp sĩ trúng đòn! Mất {damage} máu, còn: {currentHealth}/{maxHealth}");
-
-        // Nếu hết máu -> Chết
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
     }
 
+    // Được gọi khi PlayerHealth báo đã chết (xem Update)
     public void Die()
     {
+        if (deathHandled) return;
+        deathHandled = true;
+
         anim.SetTrigger("dead");
         rb.linearVelocity = Vector2.zero;
         enabled = false;

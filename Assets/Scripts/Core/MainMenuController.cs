@@ -120,6 +120,22 @@ public class MainMenuController : MonoBehaviour
         LoadSceneByName(map5SceneName);
     }
 
+    // Dùng cho luồng "chọn map trước, chọn nhân vật sau" (mapNumber: 1-5)
+    public void LoadMapByNumber(int mapNumber)
+    {
+        switch (mapNumber)
+        {
+            case 1: LoadMap1(); break;
+            case 2: LoadMap2(); break;
+            case 3: LoadMap3(); break;
+            case 4: LoadMap4(); break;
+            case 5: LoadMap5(); break;
+            default:
+                Debug.LogError($"MainMenuController: Số map không hợp lệ: {mapNumber} (chỉ nhận 1-5).", this);
+                break;
+        }
+    }
+
     public void BackToMainMenu()
     {
         LoadSceneByName(mainMenuSceneName);

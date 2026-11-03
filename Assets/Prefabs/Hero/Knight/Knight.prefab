@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3683285142735355136}
   - component: {fileID: 8923356367489313838}
   - component: {fileID: 5074105742433772409}
+  - component: {fileID: 5748394451432000924}
   m_Layer: 6
   m_Name: Knight
   m_TagString: Player
@@ -82,8 +83,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 1220678549
-  m_SortingLayer: 2
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4723107735738678597, guid: 44c9ef70502bb4d46be28bb7c0432e69, type: 3}
@@ -223,6 +224,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5748394451432000924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750252173591891550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ad9452b47ddace48bd608652972c33b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  maxHealth: 100
+  currentHealth: 0
+  enableDamageTest: 1
 --- !u!1 &3467404405153820958
 GameObject:
   m_ObjectHideFlags: 0
