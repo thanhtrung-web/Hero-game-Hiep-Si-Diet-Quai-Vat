@@ -1,0 +1,919 @@
+fileFormatVersion: 2
+guid: d5c813108b1fa794f80015c591221107
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5271018696135512534
+    second: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_0"
+  - first:
+      213: -2278923588056766941
+    second: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_1"
+  - first:
+      213: -8571475373802386200
+    second: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_2"
+  - first:
+      213: 5109403658357340703
+    second: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_3"
+  - first:
+      213: -7535291940718066576
+    second: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_4"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_0"
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 798
+        width: 345
+        height: 137
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2e66644c6499d6b0800000000000000
+      internalID: -5271018696135512534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_1"
+      rect:
+        serializedVersion: 2
+        x: 416
+        y: 796
+        width: 345
+        height: 137
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3262e972213af50e0800000000000000
+      internalID: -2278923588056766941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_2"
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 797
+        width: 345
+        height: 137
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ec0087af800c0980800000000000000
+      internalID: -8571475373802386200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_4"
+      rect:
+        serializedVersion: 2
+        x: 1127
+        y: 799
+        width: 345
+        height: 137
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 074c2a257e34d6790800000000000000
+      internalID: -7535291940718066576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_5"
+      rect:
+        serializedVersion: 2
+        x: 1127
+        y: 668
+        width: 346
+        height: 129
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5199064fadd9a8142acf93880ad0c6fc
+      internalID: 1262129705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_6"
+      rect:
+        serializedVersion: 2
+        x: 1131
+        y: 42
+        width: 344
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4894162535ea4f4eb0a3f85edf28925
+      internalID: -2133611326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_7"
+      rect:
+        serializedVersion: 2
+        x: 1132
+        y: 170
+        width: 344
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a82e91d6164b41641915f78c107c3686
+      internalID: -76895969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_8"
+      rect:
+        serializedVersion: 2
+        x: 1132
+        y: 296
+        width: 341
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00ef17579e116254cace1ace8ea6e7e8
+      internalID: -540782387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_9"
+      rect:
+        serializedVersion: 2
+        x: 1132
+        y: 419
+        width: 341
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0738384fb729f54da7bff43df049bf5
+      internalID: 550670425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_10"
+      rect:
+        serializedVersion: 2
+        x: 1134
+        y: 544
+        width: 341
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11c0585b808283f40903c64d1c3968da
+      internalID: 58841612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_11"
+      rect:
+        serializedVersion: 2
+        x: 1134
+        y: 544
+        width: 341
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ca26a1a981caf94a9ecd03215c9325f
+      internalID: 1379408847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_12"
+      rect:
+        serializedVersion: 2
+        x: 770
+        y: 668
+        width: 347
+        height: 131
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee2a5ab73acdc6c4ebcd3be72c77b8f1
+      internalID: 1284341121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_13"
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 539
+        width: 347
+        height: 131
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 365a0984215f99844812b3ca1779c702
+      internalID: 1763500384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_15"
+      rect:
+        serializedVersion: 2
+        x: 771
+        y: 43
+        width: 347
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2be981cd800febd41812ac9eedf9b93f
+      internalID: -210011263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_17"
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 41
+        width: 347
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3db6e51072b39047af721846f71e4dd
+      internalID: -1434017860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_18"
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 43
+        width: 347
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a2d259cd8948de469f5042e0ba60b33
+      internalID: -877468680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_19"
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 43
+        width: 347
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef3c865b56ca87f479520c6e385e74c4
+      internalID: -248651917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_14"
+      rect:
+        serializedVersion: 2
+        x: 413
+        y: 662
+        width: 347
+        height: 131
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2071c01dd653bac4e8261dda5ba396f0
+      internalID: 1222656628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_16"
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 665
+        width: 347
+        height: 131
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8ce987c8bdf78e4caa522421f750c9b
+      internalID: 1762491241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_20"
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 665
+        width: 347
+        height: 131
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eefc1418ce5983443a38b01b2d2f38ed
+      internalID: 305202063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_21"
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 536
+        width: 347
+        height: 131
+      alignment: 9
+      pivot: {x: -0.1592766, y: 0.43014595}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 444c0393eee4c3b418891ba46ae77434
+      internalID: -1581209839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_22"
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 537
+        width: 347
+        height: 131
+      alignment: 9
+      pivot: {x: -0.1592766, y: 0.43014595}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0f11854b66a304419f4ad3d28b195f4
+      internalID: 81487303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_23"
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 537
+        width: 347
+        height: 131
+      alignment: 9
+      pivot: {x: -0.1592766, y: 0.43014595}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f68369e383362824e82ac844b95ebd74
+      internalID: -1479053818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_24"
+      rect:
+        serializedVersion: 2
+        x: 773
+        y: 415
+        width: 342
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de1c37c57017c9147813f843c144bbf9
+      internalID: 528101985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_25"
+      rect:
+        serializedVersion: 2
+        x: 421
+        y: 416
+        width: 342
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f8111dfd97f4cf4d84aba1422766911
+      internalID: -1569953631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_26"
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 419
+        width: 342
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27f3309ed7997d742bb1b8370c34e0e6
+      internalID: -48768411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_27"
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 419
+        width: 342
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a05413746c81314f8173933cc26e4c2
+      internalID: -1338600293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_28"
+      rect:
+        serializedVersion: 2
+        x: 773
+        y: 293
+        width: 341
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 211c83b5102b9a247b660e6025ce8ede
+      internalID: 1046440618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_29"
+      rect:
+        serializedVersion: 2
+        x: 423
+        y: 292
+        width: 341
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5928fb423831e094a9847986f93f3b4d
+      internalID: 1264802735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_30"
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 293
+        width: 341
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 25dd90150d5145748a9c2413b447e5f0
+      internalID: 1329143065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_31"
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 175
+        width: 341
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa2af838c2ca24b468e6d7dd92963bc1
+      internalID: 1300592345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_32"
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 174
+        width: 341
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55b257458481abe4ba94b812e658ed07
+      internalID: -1894090120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_33"
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 167
+        width: 341
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e138533370968614891a21a6e3a723b8
+      internalID: 1606361647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_34"
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 167
+        width: 341
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 183488af02615534daa6a1af0023a58e
+      internalID: 1750067476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: f6431f79b47d3d941afe9bd7930144f6
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_0": -5271018696135512534
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_1": -2278923588056766941
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_10": 58841612
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_11": 1379408847
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_12": 1284341121
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_13": 1763500384
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_14": 1222656628
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_15": -210011263
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_16": 1762491241
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_17": -1434017860
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_18": -877468680
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_19": -248651917
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_2": -8571475373802386200
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_20": 305202063
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_21": -1581209839
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_22": 81487303
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_23": -1479053818
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_24": 528101985
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_25": -1569953631
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_26": -48768411
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_27": -1338600293
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_28": 1046440618
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_29": 1264802735
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_3": 5109403658357340703
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_30": 1329143065
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_31": 1300592345
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_32": -1894090120
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_33": 1606361647
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_34": 1750067476
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_4": -7535291940718066576
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_5": 1262129705
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_6": -2133611326
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_7": -76895969
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_8": -540782387
+      "B\u1ED9 n\xFAt pixel fantasy b\u1EA3n \u0111\u1ED3_9": 550670425
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

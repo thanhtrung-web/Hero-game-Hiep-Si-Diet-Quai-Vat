@@ -162,101 +162,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Flame_jet_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 4c7a799dcdac1eda0800000000000000
-      internalID: -5917225385495910460
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Flame_jet_1
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 0
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 80187180937e6d550800000000000000
-      internalID: 6185385370374865160
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Flame_jet_2
-      rect:
-        serializedVersion: 2
-        x: 256
-        y: 0
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 4c441ace688d7f7d0800000000000000
-      internalID: -2884598962300304188
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Flame_jet_3
-      rect:
-        serializedVersion: 2
-        x: 384
-        y: 0
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 3b38061c03356a870800000000000000
-      internalID: 8693727599553184691
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: Flame_jet_4
       rect:
         serializedVersion: 2
-        x: 512
+        x: 1292
         y: 0
-        width: 128
-        height: 128
+        width: 115
+        height: 77
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -275,10 +187,10 @@ TextureImporter:
       name: Flame_jet_5
       rect:
         serializedVersion: 2
-        x: 640
+        x: 24
         y: 0
-        width: 128
-        height: 128
+        width: 38
+        height: 66
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -297,10 +209,10 @@ TextureImporter:
       name: Flame_jet_6
       rect:
         serializedVersion: 2
-        x: 768
+        x: 156
         y: 0
-        width: 128
-        height: 128
+        width: 25
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -319,10 +231,10 @@ TextureImporter:
       name: Flame_jet_7
       rect:
         serializedVersion: 2
-        x: 896
+        x: 275
         y: 0
-        width: 128
-        height: 128
+        width: 46
+        height: 63
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -341,10 +253,10 @@ TextureImporter:
       name: Flame_jet_8
       rect:
         serializedVersion: 2
-        x: 1024
+        x: 396
         y: 0
-        width: 128
-        height: 128
+        width: 74
+        height: 58
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -363,10 +275,10 @@ TextureImporter:
       name: Flame_jet_9
       rect:
         serializedVersion: 2
-        x: 1152
+        x: 524
         y: 0
-        width: 128
-        height: 128
+        width: 96
+        height: 67
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -385,10 +297,10 @@ TextureImporter:
       name: Flame_jet_10
       rect:
         serializedVersion: 2
-        x: 1280
+        x: 652
         y: 0
-        width: 128
-        height: 128
+        width: 114
+        height: 73
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -407,10 +319,10 @@ TextureImporter:
       name: Flame_jet_11
       rect:
         serializedVersion: 2
-        x: 1408
+        x: 780
         y: 0
-        width: 128
-        height: 128
+        width: 115
+        height: 77
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -429,10 +341,10 @@ TextureImporter:
       name: Flame_jet_12
       rect:
         serializedVersion: 2
-        x: 1536
+        x: 908
         y: 0
-        width: 128
-        height: 128
+        width: 115
+        height: 83
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -451,10 +363,10 @@ TextureImporter:
       name: Flame_jet_13
       rect:
         serializedVersion: 2
-        x: 1664
+        x: 1036
         y: 0
-        width: 128
-        height: 128
+        width: 115
+        height: 67
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -465,6 +377,94 @@ TextureImporter:
       bones: []
       spriteID: 9e7dc78ada335cbf0800000000000000
       internalID: -304780578828527639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Flame_jet_14
+      rect:
+        serializedVersion: 2
+        x: 1164
+        y: 0
+        width: 115
+        height: 78
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a7b9aa645851644f9dc14951d38337e
+      internalID: -1710856924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Flame_jet_15
+      rect:
+        serializedVersion: 2
+        x: 1420
+        y: 0
+        width: 115
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0cce76bcbe1cf2b49af48e00130361b6
+      internalID: 1228504703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Flame_jet_17
+      rect:
+        serializedVersion: 2
+        x: 1548
+        y: 0
+        width: 113
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c7f1cbfff078204b83e78454c27bf0a
+      internalID: 42362396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Flame_jet_20
+      rect:
+        serializedVersion: 2
+        x: 1676
+        y: 0
+        width: 105
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6293bc79006b23a4987042b917d0aaec
+      internalID: -701853982
       vertices: []
       indices: 
       edges: []
@@ -483,7 +483,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":128.0,"y":128.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Flame_jet_0: -5917225385495910460
       Flame_jet_1: 6185385370374865160
@@ -491,7 +491,14 @@ TextureImporter:
       Flame_jet_11: 204132811695256350
       Flame_jet_12: 4970080592206777693
       Flame_jet_13: -304780578828527639
+      Flame_jet_14: -1710856924
+      Flame_jet_15: 1228504703
+      Flame_jet_16: -1483720649
+      Flame_jet_17: 42362396
+      Flame_jet_18: -2085812105
+      Flame_jet_19: 1986669970
       Flame_jet_2: -2884598962300304188
+      Flame_jet_20: -701853982
       Flame_jet_3: 8693727599553184691
       Flame_jet_4: -7365605940438354302
       Flame_jet_5: 201168274936304639
