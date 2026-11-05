@@ -36,6 +36,7 @@ public class LichBossController : EnemyHealth
     [SerializeField] private int deathNovaDamage = 45;
     [SerializeField] private int teleportSlashDamage = 30;
     [SerializeField] private GameObject minionPrefab;
+    [SerializeField] private GameObject minionPrefab2;
     [SerializeField] private int maxActiveMinions = 4;
 
     [Header("5. Overhead UI")]
@@ -355,15 +356,20 @@ public class LichBossController : EnemyHealth
         if (anim != null) anim.SetTrigger("Summon");
 
         yield return new WaitForSeconds(0.5f);
-        if (minionPrefab != null)
+        if (minionPrefab != null || minionPrefab2 != null)
         {
             int spawnNum = Mathf.Min(2, maxActiveMinions - activeMinions.Count);
             for (int i = 0; i < spawnNum; i++)
             {
-                float side = (i == 0) ? 2.0f : -2.0f;
+                float side = (i == 0) ? 2.5f : -2.5f;
                 Vector3 spawnPos = transform.position + new Vector3(side, 0f, 0f);
-                GameObject m = Instantiate(minionPrefab, spawnPos, Quaternion.identity);
-                activeMinions.Add(m);
+                GameObject prefabToSpawn = (i == 0 || minionPrefab2 == null) ? minionPrefab : minionPrefab2;
+                if (prefabToSpawn == null) prefabToSpawn = minionPrefab2 != null ? minionPrefab2 : minionPrefab;
+                if (prefabToSpawn != null)
+                {
+                    GameObject m = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
+                    activeMinions.Add(m);
+                }
             }
         }
 

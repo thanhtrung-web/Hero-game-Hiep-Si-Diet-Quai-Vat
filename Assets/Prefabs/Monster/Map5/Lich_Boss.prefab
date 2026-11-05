@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1 &2000000000000001
 GameObject:
@@ -203,7 +203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89f4dafb765ddd54b8d60a1eab2bbbf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LichBossController
-  maxHealth: 3
+  maxHealth: 600
   animator: {fileID: 0}
   patrolScript: {fileID: 0}
   currentPhase: 0
@@ -217,13 +217,15 @@ MonoBehaviour:
   meleeRange: 2.8
   skillCooldown: 2.5
   soulSlashDamage: 20
-  shadowDashDamage: 25
+  shadowDashDamage: 5
   darkWaveDamage: 30
   dashSpeed: 16
   dashDuration: 0.35
   soulSpikeDamage: 35
   deathNovaDamage: 45
   teleportSlashDamage: 30
-  minionPrefab: {fileID: 3607489874284767990, guid: cf3bb7a7f2810d94fba369db59a5d092, type: 3}
+  minionPrefab: {fileID: 3100000000000001, guid: dd010001d4e54617890123456789a001, type: 3}
+  minionPrefab2: {fileID: 3200000000000001, guid: ed010001d4e54617890123456789a001, type: 3}
   maxActiveMinions: 4
   barOffset: {x: -1.1, y: 3.5, z: 0}
+
