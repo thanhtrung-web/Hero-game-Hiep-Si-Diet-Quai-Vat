@@ -12749,6 +12749,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Knight
       objectReference: {fileID: 0}
+    - target: {fileID: 750252173591891550, guid: 99b23fba08a78b14eaab1a24b7198416, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3683285142735355136, guid: 99b23fba08a78b14eaab1a24b7198416, type: 3}
       propertyPath: m_Enabled
       value: 1

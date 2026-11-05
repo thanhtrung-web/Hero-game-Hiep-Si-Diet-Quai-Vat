@@ -17,9 +17,12 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private PlayerHealth playerHealth;
+    private PlayerStamina stamina; // [MỚI] thể lực dùng chung
     private float moveInput;
     private bool jumpRequested;
     private bool isRunning;
+    private bool isGrounded;
+    private bool isJumping;
 
     private void Awake()
     {
@@ -27,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         playerHealth = GetComponent<PlayerHealth>();
+        stamina = GetComponent<PlayerStamina>(); // [MỚI]
     }
 
     private void Update()
@@ -56,17 +60,34 @@ public class PlayerMovement : MonoBehaviour
             moveInput += 1f;
 
         if (keyboard.spaceKey.wasPressedThisFrame)
+        {
             jumpRequested = true;
+
+            // Chặn Run animation ngay khi bắt đầu một cú nhảy hợp lệ.
+            // isRunning vẫn giữ nguyên để không làm tụt tốc độ ngang trên không.
+            if (isGrounded)
+                isJumping = true;
+        }
 
         bool shiftHeld = keyboard.leftShiftKey.isPressed ||
                          keyboard.rightShiftKey.isPressed;
-        isRunning = Mathf.Abs(moveInput) > 0.01f && shiftHeld;
+
+        // [MỚI] Nhả Shift thì mở khóa kiệt sức (muốn chạy lại phải bấm Shift một lần nữa)
+        if (stamina != null &&
+            (keyboard.leftShiftKey.wasReleasedThisFrame || keyboard.rightShiftKey.wasReleasedThisFrame))
+        {
+            stamina.ClearExhausted();
+        }
+
+        // [MỚI] Chạy nước rút tiêu tốn thể lực; hết thể lực -> DrainSprint trả về false -> quay về đi bộ
+        bool wantsToRun = Mathf.Abs(moveInput) > 0.01f && shiftHeld;
+        isRunning = wantsToRun && (stamina == null || stamina.DrainSprint(Time.deltaTime));
 
         if (moveInput != 0f)
             spriteRenderer.flipX = moveInput < 0f;
 
         animator.SetFloat("Speed", Mathf.Abs(moveInput));
-        animator.SetBool("IsRunning", isRunning);
+        animator.SetBool("IsRunning", isRunning && isGrounded && !isJumping);
     }
 
     private void FixedUpdate()
@@ -80,7 +101,7 @@ public class PlayerMovement : MonoBehaviour
             jumpRequested = false;
             return;
         }
-        bool isGrounded = groundCheck != null &&
+        isGrounded = groundCheck != null &&
             Physics2D.OverlapCircle(
                 groundCheck.position,
                 groundCheckRadius,
@@ -97,12 +118,19 @@ public class PlayerMovement : MonoBehaviour
 
             // Switch to Jump immediately when taking off.
             isGrounded = false;
+            isJumping = true;
         }
 
         // The ground-check circle may still touch the floor during takeoff.
         if (velocity.y > 0.01f)
         {
             isGrounded = false;
+        }
+
+        // Khi đã chạm đất thì cho phép Walk/Run animation hoạt động trở lại.
+        if (isGrounded && velocity.y <= 0.01f)
+        {
+            isJumping = false;
         }
 
         rb.linearVelocity = velocity;
