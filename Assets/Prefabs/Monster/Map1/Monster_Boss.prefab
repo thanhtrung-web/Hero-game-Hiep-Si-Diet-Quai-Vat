@@ -12,12 +12,7 @@ GameObject:
   - component: {fileID: 4078727207815077865}
   - component: {fileID: 8146217977276952459}
   - component: {fileID: 1328078419719859066}
-  - component: {fileID: 5883462371466899026}
-  - component: {fileID: 4388011882266045715}
-  - component: {fileID: 856257108099607965}
   - component: {fileID: 725429939199888203}
-  - component: {fileID: 3513536725788755529}
-  - component: {fileID: 6812309192238435476}
   m_Layer: 0
   m_Name: Monster_Boss
   m_TagString: Enemy
@@ -173,51 +168,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.8986135, y: 0.70025885}
   m_EdgeRadius: 0
---- !u!114 &5883462371466899026
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2603825225785975385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c69f78d37566737468556b12693527ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 3
-  animator: {fileID: 725429939199888203}
-  patrolScript: {fileID: 4388011882266045715}
---- !u!114 &4388011882266045715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2603825225785975385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78bf12d140b06f147afe1b68dc74b358, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SlimePatrol
-  leftLimit: -27
-  rightLimit: -13
-  moveSpeed: 3
-  spriteFacesLeftByDefault: 0
---- !u!114 &856257108099607965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2603825225785975385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e094d82f04f4fd24389ce20173ed3f8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SlimeContactDamage
-  damage: 1
-  damageInterval: 1
 --- !u!95 &725429939199888203
 Animator:
   serializedVersion: 7
@@ -240,38 +190,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3513536725788755529
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2603825225785975385}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66b362cf2caac69469f9b4930a7fcd23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAnimationByVelocity
-  rb: {fileID: 8146217977276952459}
-  animator: {fileID: 725429939199888203}
-  moveThreshold: 0.05
---- !u!114 &6812309192238435476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2603825225785975385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74e615a1ba0e11f438a104b9e783db8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossAI
-  player: {fileID: 0}
-  animator: {fileID: 0}
-  spriteRenderer: {fileID: 0}
-  moveSpeed: 3
-  stopDistance: 2
-  detectionRange: 8
-  leftLimit: {fileID: 0}
-  rightLimit: {fileID: 0}

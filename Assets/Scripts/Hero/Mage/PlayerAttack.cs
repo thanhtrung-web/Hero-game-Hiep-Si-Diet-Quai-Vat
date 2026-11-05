@@ -5,6 +5,10 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(Animator), typeof(PlayerStamina))]
 public class PlayerAttack : MonoBehaviour
 {
+    [Header("Fireball Damage")]
+    [SerializeField] private int fireballDamage = 30;
+
+    
     [Header("Cooldowns")]
     [SerializeField] private float attackCooldown = 0.6f;
     [SerializeField] private float fireballCooldown = 1.2f;
@@ -16,6 +20,17 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private float fireballStaminaCost = 20f;
     [FormerlySerializedAs("flameManaCost")]
     [SerializeField] private float flameStaminaCost = 30f;
+
+    [Header("Attack Damage")]
+    [SerializeField] private int attack1Damage = 20;
+    [SerializeField] private int attack2Damage = 25;
+    
+    [SerializeField] private int flameDamage = 40;
+
+    public int Attack1Damage => attack1Damage;
+    public int Attack2Damage => attack2Damage;
+    public int FireballDamage => fireballDamage;
+    public int FlameDamage => flameDamage;
 
     private Animator animator;
     private PlayerStamina stamina;

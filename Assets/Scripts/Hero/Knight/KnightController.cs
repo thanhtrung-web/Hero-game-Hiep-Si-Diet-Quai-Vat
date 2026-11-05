@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerHealth))]
@@ -11,7 +12,6 @@ public class KnightController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float maxStamina = 100f;
     [SerializeField] private float attackRange = 1.2f;
-    [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private int attack1Damage = 20;
     [SerializeField] private int attack2Damage = 25;
     [SerializeField] private int attack3Damage = 35;
@@ -210,17 +210,16 @@ public class KnightController : MonoBehaviour
 
         // Quét tất cả vật thể nằm trong tầm kiếm chém
         Collider2D[] hits = Physics2D.OverlapCircleAll(attackPos, attackRange);
+        HashSet<EnemyHealth> damaged = new HashSet<EnemyHealth>(); // mỗi mục tiêu chỉ trúng 1 lần/nhát
+
         foreach (Collider2D hit in hits)
         {
-            // Kiểm tra nếu trúng Quái (qua Tag Enemy hoặc Layer Enemy)
-            if (hit.CompareTag("Enemy") || ((1 << hit.gameObject.layer) & enemyLayer) != 0)
+            // Trúng bất kỳ vật thể nào có EnemyHealth (quái, boss, vật thể phá được...), không cần Tag/Layer
+            EnemyHealth target = hit.GetComponentInParent<EnemyHealth>();
+            if (target != null && damaged.Add(target))
             {
-                var enemy = hit.GetComponentInParent<EnemyHealth>();
-                if (enemy != null)
-                {
-                    enemy.TakeDamage(damage);
-                    Debug.Log($"<color=yellow>TRÚNG ĐÍCH!</color> Hiệp sĩ chém trúng {hit.name}, gây {damage} sát thương!");
-                }
+                target.TakeDamage(damage);
+                Debug.Log($"<color=yellow>TRÚNG ĐÍCH!</color> Hiệp sĩ chém trúng {hit.name}, gây {damage} sát thương!");
             }
         }
     }
