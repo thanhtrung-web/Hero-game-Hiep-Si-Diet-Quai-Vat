@@ -12,10 +12,12 @@ public class PlayerMeleeHit : MonoBehaviour
     [SerializeField] private string attack1Trigger = "Attack_1";
     [SerializeField] private string attack2Trigger = "Attack_2";
 
+    private PlayerAttack playerAttack;
     private bool attackLocked;
 
     private void Awake()
     {
+        playerAttack = GetComponentInParent<PlayerAttack>();
         if (animator == null)
             animator = GetComponent<Animator>();
     }
@@ -72,5 +74,14 @@ public class PlayerMeleeHit : MonoBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(attackPoint.position, hitboxSize);
+    }
+    public void DealAttack1Damage()
+    {
+        DealDamage(playerAttack.Attack1Damage);
+    }
+
+    public void DealAttack2Damage()
+    {
+        DealDamage(playerAttack.Attack2Damage);
     }
 }
