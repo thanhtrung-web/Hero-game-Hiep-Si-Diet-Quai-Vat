@@ -56,4 +56,19 @@ public class PlayerHealth : MonoBehaviour
 
         return true;
     }
+    public void OnDeathAnimationFinished()
+    {
+        if (!IsDead) return;
+
+        GameEndUI gameEndUI = FindFirstObjectByType<GameEndUI>();
+
+        if (gameEndUI != null)
+        {
+            gameEndUI.ShowLose();
+        }
+        else
+        {
+            Debug.LogError("[PlayerHealth] Không tìm thấy GameEndUI!");
+        }
+    }
 }
