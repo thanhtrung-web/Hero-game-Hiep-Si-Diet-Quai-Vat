@@ -138,12 +138,12 @@ TextureImporter:
       name: attack_bite_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 70
-        height: 70
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 15
+        y: 25
+        width: 36
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -160,12 +160,12 @@ TextureImporter:
       name: attack_bite_1
       rect:
         serializedVersion: 2
-        x: 70
-        y: 0
-        width: 70
-        height: 70
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 85
+        y: 25
+        width: 34
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -182,12 +182,12 @@ TextureImporter:
       name: attack_bite_2
       rect:
         serializedVersion: 2
-        x: 140
-        y: 0
-        width: 70
-        height: 70
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 155
+        y: 25
+        width: 33
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -204,12 +204,12 @@ TextureImporter:
       name: attack_bite_3
       rect:
         serializedVersion: 2
-        x: 210
-        y: 0
-        width: 70
-        height: 70
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 225
+        y: 25
+        width: 33
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -226,12 +226,12 @@ TextureImporter:
       name: attack_bite_4
       rect:
         serializedVersion: 2
-        x: 280
-        y: 0
-        width: 70
-        height: 70
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 295
+        y: 25
+        width: 33
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -248,12 +248,12 @@ TextureImporter:
       name: attack_bite_5
       rect:
         serializedVersion: 2
-        x: 350
-        y: 0
-        width: 70
-        height: 70
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 365
+        y: 25
+        width: 33
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -270,12 +270,12 @@ TextureImporter:
       name: attack_bite_6
       rect:
         serializedVersion: 2
-        x: 420
-        y: 0
-        width: 70
-        height: 70
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 435
+        y: 25
+        width: 33
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -292,12 +292,12 @@ TextureImporter:
       name: attack_bite_7
       rect:
         serializedVersion: 2
-        x: 490
-        y: 0
-        width: 70
-        height: 70
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 505
+        y: 25
+        width: 46
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -314,12 +314,12 @@ TextureImporter:
       name: attack_bite_8
       rect:
         serializedVersion: 2
-        x: 560
-        y: 0
-        width: 70
-        height: 70
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 575
+        y: 25
+        width: 45
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -336,12 +336,12 @@ TextureImporter:
       name: attack_bite_9
       rect:
         serializedVersion: 2
-        x: 630
-        y: 0
-        width: 70
-        height: 70
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 645
+        y: 25
+        width: 45
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -358,12 +358,12 @@ TextureImporter:
       name: attack_bite_10
       rect:
         serializedVersion: 2
-        x: 700
-        y: 0
-        width: 70
-        height: 70
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 715
+        y: 25
+        width: 44
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -380,12 +380,12 @@ TextureImporter:
       name: attack_bite_11
       rect:
         serializedVersion: 2
-        x: 770
-        y: 0
-        width: 70
-        height: 70
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 785
+        y: 25
+        width: 41
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -412,7 +412,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":70.0,"y":70.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":7,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":80.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       attack_bite_0: -3660337718397525389
       attack_bite_1: 2591778900972152968

@@ -148,6 +148,21 @@ public class PauseMenuController : MonoBehaviour
         SetFullscreen(fullscreen);
     }
 
+    public void ResetSettings()
+    {
+        if (musicVolumeSlider != null)
+            musicVolumeSlider.SetValueWithoutNotify(DefaultMusicVolume);
+
+        if (sfxVolumeSlider != null)
+            sfxVolumeSlider.SetValueWithoutNotify(DefaultSfxVolume);
+
+        if (fullscreenToggle != null)
+            fullscreenToggle.SetIsOnWithoutNotify(false);
+
+        SetMusicVolume(DefaultMusicVolume);
+        SetSfxVolume(DefaultSfxVolume);
+        SetFullscreen(false);
+    }
     public void PauseGame()
     {
         isPaused = true;
