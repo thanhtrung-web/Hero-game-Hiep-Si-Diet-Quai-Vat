@@ -19,6 +19,12 @@ public class KnightController : MonoBehaviour
     [SerializeField] private float staminaRegenRate = 4f;
     [SerializeField] private float sprintStaminaCost = 10f;
 
+    [Header("Slope & Step Handling")]
+    [SerializeField] private float maxSlopeAngle = 60f;
+    [SerializeField] private float maxStepHeight = 0.6f;
+    [SerializeField] private float stepCheckDistance = 0.45f;
+    [SerializeField] private float stepClimbLift = 0.12f;
+
     private float currentStamina;
     private bool isStunned;
     private float stunTimer;
@@ -30,9 +36,11 @@ public class KnightController : MonoBehaviour
 
     private bool isGrounded;
     private bool isDefending;
+    private bool isJumping;
     private Rigidbody2D rb;
     private Animator anim;
     private PlayerHealth playerHealth;
+    private CapsuleCollider2D col;
     private bool deathHandled;
 
     private void Awake()
@@ -40,6 +48,7 @@ public class KnightController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         playerHealth = GetComponent<PlayerHealth>();
+        col = GetComponent<CapsuleCollider2D>();
     }
 
     void Start()
@@ -90,6 +99,29 @@ public class KnightController : MonoBehaviour
         isDefending = currentStamina > 0 && (Input.GetKey(KeyCode.K) || Input.GetMouseButton(1));
     }
 
+    private void UpdateGroundCheck()
+    {
+        if (groundCheck != null)
+        {
+            isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.25f, groundLayer);
+        }
+        else if (col != null)
+        {
+            Vector2 checkPos = new Vector2(col.bounds.center.x, col.bounds.min.y);
+            isGrounded = Physics2D.OverlapCircle(checkPos, 0.25f, groundLayer);
+        }
+        else
+        {
+            isGrounded = Physics2D.Raycast(transform.position, Vector2.down, 2.1f, groundLayer);
+        }
+
+        // Khi đang rơi xuống hoặc vận tốc y nhỏ thì reset trạng thái nhảy
+        if (isJumping && rb.linearVelocity.y <= 0.1f && isGrounded)
+        {
+            isJumping = false;
+        }
+    }
+
     private void HandleMovement()
     {
         if (isDefending)
@@ -132,7 +164,73 @@ public class KnightController : MonoBehaviour
             }
         }
 
-        rb.linearVelocity = new Vector2(moveInput * currentSpeed, rb.linearVelocity.y);
+        UpdateGroundCheck();
+
+        if (isMoving)
+        {
+            float moveDir = Mathf.Sign(moveInput);
+            Bounds b = col != null ? col.bounds : new Bounds(transform.position + Vector3.down, new Vector3(1.25f, 2.05f, 0));
+            float footY = b.min.y;
+            float centerX = b.center.x;
+            float halfWidth = b.extents.x;
+
+            Vector2 frontOrigin = new Vector2(centerX + moveDir * (halfWidth - 0.05f), footY);
+
+            // 1. Quét kiểm tra bậc thang ngay trước mũi chân
+            RaycastHit2D hitStepLow = Physics2D.Raycast(new Vector2(frontOrigin.x, footY + 0.1f), Vector2.right * moveDir, stepCheckDistance, groundLayer);
+            RaycastHit2D hitStepHigh = Physics2D.Raycast(new Vector2(frontOrigin.x, footY + maxStepHeight), Vector2.right * moveDir, stepCheckDistance + 0.1f, groundLayer);
+
+            // 2. Quét kiểm tra độ dốc mặt sàn dưới chân
+            RaycastHit2D hitGroundSlope = Physics2D.Raycast(new Vector2(centerX, footY + 0.25f), Vector2.down, 0.6f, groundLayer);
+
+            // TRƯỜNG HỢP A: Bậc thang (chân vướng bậc cản thấp nhưng khoảng không tầm gối/ngực thoáng) -> Tự động bước lên
+            if (hitStepLow && !hitStepHigh && isGrounded && !isJumping)
+            {
+                rb.position += new Vector2(0f, stepClimbLift);
+                rb.linearVelocity = new Vector2(moveInput * currentSpeed, Mathf.Max(rb.linearVelocity.y, currentSpeed * 1.0f));
+            }
+            // TRƯỜNG HỢP B: Đang đi trên dốc nghiêng phẳng
+            else if (hitGroundSlope && isGrounded && !isJumping && Vector2.Angle(hitGroundSlope.normal, Vector2.up) > 4f && Vector2.Angle(hitGroundSlope.normal, Vector2.up) <= maxSlopeAngle)
+            {
+                Vector2 slopeNormal = hitGroundSlope.normal;
+                Vector2 slopeDir = new Vector2(slopeNormal.y, -slopeNormal.x).normalized;
+                float dot = Vector2.Dot(Vector2.right * moveDir, slopeDir);
+                Vector2 slopeVelocity = (dot >= 0 ? slopeDir : -slopeDir) * currentSpeed;
+
+                rb.linearVelocity = slopeVelocity;
+            }
+            // TRƯỜNG HỢP C: Mặt phẳng ngang hoặc trên không
+            else
+            {
+                rb.linearVelocity = new Vector2(moveInput * currentSpeed, rb.linearVelocity.y);
+
+                // Hỗ trợ bước xuống bậc thang nhẹ nhàng khi đi từ bậc trên xuống bậc dưới
+                if (isGrounded && !isJumping && rb.linearVelocity.y <= 0.1f)
+                {
+                    Vector2 stepDownOrigin = new Vector2(centerX + moveDir * halfWidth, footY + 0.1f);
+                    RaycastHit2D hitDown = Physics2D.Raycast(stepDownOrigin, Vector2.down, maxStepHeight + 0.3f, groundLayer);
+                    if (hitDown && hitDown.distance > 0.15f)
+                    {
+                        rb.position += new Vector2(0f, -(hitDown.distance - 0.1f) * 0.4f);
+                    }
+                }
+            }
+        }
+        else
+        {
+            // Đứng yên: nếu đang trên dốc thì giữ chặt vị trí không để bị trượt tụt dốc
+            Bounds b = col != null ? col.bounds : new Bounds(transform.position + Vector3.down, new Vector3(1.25f, 2.05f, 0));
+            RaycastHit2D hitGroundSlope = Physics2D.Raycast(new Vector2(b.center.x, b.min.y + 0.25f), Vector2.down, 0.6f, groundLayer);
+
+            if (hitGroundSlope && isGrounded && Vector2.Angle(hitGroundSlope.normal, Vector2.up) > 4f)
+            {
+                rb.linearVelocity = Vector2.zero;
+            }
+            else
+            {
+                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+            }
+        }
 
         // Tự động xoay mặt theo hướng di chuyển nhưng giữ nguyên 100% kích thước Scale đã chỉnh trong Unity
         if (moveInput > 0)
@@ -155,13 +253,15 @@ public class KnightController : MonoBehaviour
 
     private void HandleJump()
     {
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+        UpdateGroundCheck();
 
         if (isDefending) return;
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            isJumping = true;
+            isGrounded = false;
         }
     }
 

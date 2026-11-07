@@ -15,6 +15,8 @@ public static class CastleMapHelper
     private const string BlueprintObjectName = "[Mau_LauDai_Reference]";
     private const string PalettePrefabPath = "Assets/Art/Map/Map5/TilePalette/Map5.prefab";
     private const string TileAssetsDir = "Assets/Art/Map/Map5/TilePalette/Tiles";
+    private const string DecorTexturePath = "Assets/Art/Map/Map5/PlatformerSet1/other_and_decorative.png";
+    private const string DecorPalettePrefabPath = "Assets/Art/Map/Map5/TilePalette/Map5_Decor.prefab";
 
     [MenuItem("Tools/Map 5 Phase 2/1. Hien Ban Ve Dai Phao Dai 4 Tang (Grand Palace Blueprint)")]
     public static void ShowGrandPalaceBlueprint()
@@ -216,12 +218,14 @@ public static class CastleMapHelper
     {
         AssetDatabase.ImportAsset(MainLevBuildPath, ImportAssetOptions.ForceUpdate);
         AssetDatabase.ImportAsset(PalettePrefabPath, ImportAssetOptions.ForceUpdate);
+        AssetDatabase.ImportAsset(DecorTexturePath, ImportAssetOptions.ForceUpdate);
+        AssetDatabase.ImportAsset(DecorPalettePrefabPath, ImportAssetOptions.ForceUpdate);
         AssetDatabase.Refresh();
 
         EditorUtility.DisplayDialog("Đã Làm Mới Thành Công!",
-            "Đã đồng bộ toàn bộ 1,789 tile 16x16 pixel vào Tile Palette Map5!\n\n" +
-            "1. Lỗi 'GridPalette' đã được loại bỏ hoàn toàn.\n" +
-            "2. Palette 'Map5' đã sẵn sàng trong cửa sổ Tile Palette.\n" +
+            "Đã đồng bộ toàn bộ 1,789 tile kiến trúc và 510 tile trang trí vào Tile Palette!\n\n" +
+            "1. Palette 'Map5': Gạch xây dựng, cầu thang, cột, mái vòm.\n" +
+            "2. Palette 'Map5_Decor': Kệ sách, lọ thuốc, rương, cờ rủ, chông nhọn.\n" +
             "3. Bậc thang, cột dọc và phiến sàn khớp chuẩn 100% không còn lệch!",
             "Tuyệt vời");
     }
