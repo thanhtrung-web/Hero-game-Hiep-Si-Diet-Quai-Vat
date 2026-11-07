@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerHealth))]
 public class KnightController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 4f;
@@ -10,8 +8,10 @@ public class KnightController : MonoBehaviour
 
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private int maxHealth = 200;
     [SerializeField] private float maxStamina = 100f;
     [SerializeField] private float attackRange = 1.2f;
+    [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private int attack1Damage = 20;
     [SerializeField] private int attack2Damage = 25;
     [SerializeField] private int attack3Damage = 35;
@@ -19,12 +19,15 @@ public class KnightController : MonoBehaviour
     [SerializeField] private float staminaRegenRate = 4f;
     [SerializeField] private float sprintStaminaCost = 10f;
 
+    private int currentHealth;
     private float currentStamina;
     private bool isStunned;
     private float stunTimer;
     private bool isExhausted; // Khóa chạy khi cạn sạch thể lực, chống giật lùi/flicker
 
-    // Cho phép các script khác (hoặc UI) đọc thể lực. Máu do PlayerHealth quản lý.
+    // Cho phép các script khác (hoặc UI) đọc máu và thể lực
+    public int CurrentHealth => currentHealth;
+    public int MaxHealth => maxHealth;
     public float CurrentStamina => currentStamina;
     public float MaxStamina => maxStamina;
 
@@ -32,39 +35,22 @@ public class KnightController : MonoBehaviour
     private bool isDefending;
     private Rigidbody2D rb;
     private Animator anim;
-    private PlayerHealth playerHealth;
-    private bool deathHandled;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        playerHealth = GetComponent<PlayerHealth>();
     }
 
     void Start()
     {
+        currentHealth = maxHealth;
         currentStamina = maxStamina;
         isExhausted = false;
     }
 
     void Update()
     {
-        // Hết máu (PlayerHealth quyết định) -> xử lý chết 1 lần rồi dừng điều khiển
-        if (playerHealth.IsDead)
-        {
-            Die();
-            return;
-        }
-
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        // DEBUG: bấm H để tự trừ 20 máu (bỏ qua khiên) - chỉ có trong Editor / Development Build
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            playerHealth.TakeDamage(20);
-        }
-#endif
-
         // 1. Nếu đang bị Vỡ Khiên Choáng -> Khựng lại 1 giây không thể cử động
         if (isStunned)
         {
@@ -210,16 +196,36 @@ public class KnightController : MonoBehaviour
 
         // Quét tất cả vật thể nằm trong tầm kiếm chém
         Collider2D[] hits = Physics2D.OverlapCircleAll(attackPos, attackRange);
-        HashSet<EnemyHealth> damaged = new HashSet<EnemyHealth>(); // mỗi mục tiêu chỉ trúng 1 lần/nhát
-
         foreach (Collider2D hit in hits)
         {
-            // Trúng bất kỳ vật thể nào có EnemyHealth (quái, boss, vật thể phá được...), không cần Tag/Layer
-            EnemyHealth target = hit.GetComponentInParent<EnemyHealth>();
-            if (target != null && damaged.Add(target))
+            // Kiểm tra nếu trúng Quái (qua Tag Enemy hoặc Layer Enemy)
+            if (hit.CompareTag("Enemy") || ((1 << hit.gameObject.layer) & enemyLayer) != 0)
             {
-                target.TakeDamage(damage);
-                Debug.Log($"<color=yellow>TRÚNG ĐÍCH!</color> Hiệp sĩ chém trúng {hit.name}, gây {damage} sát thương!");
+                var enemy = hit.GetComponentInParent<EnemyHealth>();
+                if (enemy != null)
+                {
+                    enemy.TakeDamage(damage);
+                    Debug.Log($"<color=yellow>TRÚNG ĐÍCH!</color> Hiệp sĩ chém trúng {hit.name}, gây {damage} sát thương!");
+                }
+                else
+                {
+                    // Hỗ trợ các quái không kế thừa EnemyHealth (Map 4 Golem, Boss)
+                    var normalEnemy = hit.GetComponentInParent<GroupNormalEnemy>();
+                    if (normalEnemy != null)
+                    {
+                        normalEnemy.TakeDamage(damage);
+                        Debug.Log($"<color=yellow>TRÚNG ĐÍCH!</color> Hiệp sĩ chém trúng {hit.name}, gây {damage} sát thương!");
+                    }
+                    else
+                    {
+                        var boss = hit.GetComponentInParent<BossMap4Controller>();
+                        if (boss != null)
+                        {
+                            boss.TakeDamage(damage);
+                            Debug.Log($"<color=yellow>TRÚNG ĐÍCH!</color> Hiệp sĩ chém trúng {hit.name}, gây {damage} sát thương!");
+                        }
+                    }
+                }
             }
         }
     }
@@ -238,10 +244,9 @@ public class KnightController : MonoBehaviour
         anim.SetBool("isDefending", isDefending);
     }
 
-    // Sát thương từ quái: xử lý khiên trước, phần còn lại chuyển cho PlayerHealth
     public void TakeDamage(int damage = 10)
     {
-        if (playerHealth.IsDead) return;
+        if (currentHealth <= 0) return;
 
         // --- TRƯỜNG HỢP 1: ĐANG GIƠ KHIÊN ĐỠ ---
         if (isDefending)
@@ -260,7 +265,7 @@ public class KnightController : MonoBehaviour
 
                 // Dính 50% sát thương xuyên thủng khiên
                 int bleedDamage = Mathf.Max(1, damage / 2);
-                playerHealth.TakeDamage(bleedDamage);
+                currentHealth = Mathf.Max(0, currentHealth - bleedDamage);
                 anim.SetTrigger("hurt");
 
                 Debug.Log($"<color=red>VỠ KHIÊN!</color> Hiệp sĩ bị choáng 1s và dính {bleedDamage} sát thương!");
@@ -275,16 +280,19 @@ public class KnightController : MonoBehaviour
         }
 
         // --- TRƯỜNG HỢP 2: KHÔNG ĐỠ KHIÊN (BỊ ĐÁNH TRỰC DIỆN) ---
-        playerHealth.TakeDamage(damage);
+        currentHealth = Mathf.Max(0, currentHealth - damage);
         anim.SetTrigger("hurt");
+        Debug.Log($"Hiệp sĩ trúng đòn! Mất {damage} máu, còn: {currentHealth}/{maxHealth}");
+
+        // Nếu hết máu -> Chết
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
     }
 
-    // Được gọi khi PlayerHealth báo đã chết (xem Update)
     public void Die()
     {
-        if (deathHandled) return;
-        deathHandled = true;
-
         anim.SetTrigger("dead");
         rb.linearVelocity = Vector2.zero;
         enabled = false;
