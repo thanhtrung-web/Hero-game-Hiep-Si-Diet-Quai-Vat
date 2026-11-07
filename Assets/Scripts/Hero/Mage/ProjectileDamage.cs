@@ -23,4 +23,8 @@ public class ProjectileDamage : MonoBehaviour
         enemy.TakeDamage(damage);
         Destroy(gameObject);
     }
+    public void SetDamage(int value)
+    {
+        damage = value;
+    }
 }

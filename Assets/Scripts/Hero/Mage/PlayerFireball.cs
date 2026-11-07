@@ -39,7 +39,16 @@ public class PlayerFireball : MonoBehaviour
             spawnPosition,
             Quaternion.identity
         );
+        ProjectileDamage projectileDamage =
+     projectile.GetComponent<ProjectileDamage>();
 
+        PlayerAttack playerAttack =
+            GetComponentInParent<PlayerAttack>();
+
+        if (projectileDamage != null && playerAttack != null)
+        {
+            projectileDamage.SetDamage(playerAttack.FireballDamage);
+        }
         projectile.Launch(direction);
     }
 }
