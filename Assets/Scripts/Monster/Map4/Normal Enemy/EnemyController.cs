@@ -29,12 +29,21 @@ public class GroupNormalEnemy : MonoBehaviour
     private Rigidbody2D rb;
     private bool isDead = false;
 
+    [Header("Audio (Dùng 1 Audio Source)")]
+    public AudioSource audioSource;
+    public AudioClip attackSound;
+    public AudioClip takeDamageSound;
+    public AudioClip dieSound;
+
     void Start()
     {
         currentHealth = maxHealth;
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
+
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
 
         // Tự động tìm điểm LeftPoint và RightPoint từ Object cha nếu quên kéo thả
         Transform groupParent = transform.parent;
@@ -65,6 +74,11 @@ public class GroupNormalEnemy : MonoBehaviour
             {
                 animator.SetTrigger("IsATK"); // Dùng Trigger để đánh từng nhịp chuẩn xác
                 lastAttackTime = Time.time;
+
+                if (attackSound != null && audioSource != null)
+                {
+                    audioSource.PlayOneShot(attackSound);
+                }
             }
         }
         // --- 2. TRẠNG THÁI RƯỢT ĐUỔI PLAYER ---
@@ -181,6 +195,11 @@ public class GroupNormalEnemy : MonoBehaviour
 
         animator.SetTrigger("IsHurt");
 
+        if (takeDamageSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(takeDamageSound);
+        }
+
         Debug.Log("<color=cyan>Quái nhận " + amount + " DMG! Máu còn: " + currentHealth + "</color>");
     }
 
@@ -200,6 +219,11 @@ public class GroupNormalEnemy : MonoBehaviour
             animator.ResetTrigger("IsHurt");
             animator.SetBool("IsWalking", false);
             animator.SetTrigger("IsDie");
+        }
+
+        if (dieSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(dieSound);
         }
 
         // Vô hiệu hóa va chạm để Player có thể đi xuyên qua xác
