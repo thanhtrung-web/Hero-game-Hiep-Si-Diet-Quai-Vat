@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7817238209333681742}
   - component: {fileID: 552970584469316760}
   - component: {fileID: 1566741132286394773}
-  - component: {fileID: 3776923138294965524}
+  - component: {fileID: -3845240880368348443}
   m_Layer: 7
   m_Name: MiniBoss
   m_TagString: Enemy
@@ -191,7 +191,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.0109162, y: 0.7114429}
   m_EdgeRadius: 0
---- !u!114 &3776923138294965524
+--- !u!114 &-3845240880368348443
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,32 +200,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 7965130596206574050}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70d4e793ea892c244b84ac960f98f436, type: 3}
+  m_Script: {fileID: 11500000, guid: c11712629d7c83a46ba6b8ee4f10e9ed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossController
-  maxHealth: 50
-  animator: {fileID: 7817238209333681742}
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  maxHealth: 3
+  animator: {fileID: 0}
   patrolScript: {fileID: 0}
-  moveSpeed: 2.2
-  chaseSpeed: 3.6
+  moveSpeed: 2
+  chaseSpeed: 3
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
-  ledgeCheckDistance: 1
-  groundCheckDepth: 1.2
-  wallCheckDistance: 0.8
-  patrolRadius: 6
-  aggroRange: 8.5
-  deAggroRange: 12
-  attackRange: 2.5
-  attackCooldown: 2.2
-  normalAttackDamage: 25
-  heavyAttackDamage: 40
-  minionPrefab: {fileID: 0}
-  summonCooldown: 16
-  maxMinions: 2
-  summonHpThreshold: 0.75
-  hurtCooldown: 1.5
-  exitPortal: {fileID: 0}
-  portalAppearDelay: 1.5
-  portalOffsetFromBoss: {x: 1, y: 0.2, z: 0}
+    m_Bits: 0
+  ledgeCheckDistance: 0.8
+  groundCheckDepth: 1
+  wallCheckDistance: 0.6
+  patrolRadius: 4
+  aggroRange: 4.5
+  deAggroRange: 5.5
+  attackRange: 1.8
+  attackCooldown: 2
+  attackDamage: 10
+  knockbackForce: 3
+  hurtDuration: 0.25

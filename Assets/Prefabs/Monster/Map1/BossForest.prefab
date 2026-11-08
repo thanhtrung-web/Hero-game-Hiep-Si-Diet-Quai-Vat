@@ -221,7 +221,7 @@ MonoBehaviour:
   attackCooldown: 2.2
   normalAttackDamage: 25
   heavyAttackDamage: 40
-  minionPrefab: {fileID: 0}
+  minionPrefab: {fileID: 7965130596206574050, guid: 62b3cf6d9d6200146a8a03afdb43c1e6, type: 3}
   summonCooldown: 16
   maxMinions: 2
   summonHpThreshold: 0.75
