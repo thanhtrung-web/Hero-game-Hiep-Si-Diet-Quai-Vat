@@ -4,16 +4,21 @@ public class Enemy : MonoBehaviour
 {
     public float speed = 2f;
     public float distance = 5f;
+    private Animator animator;
     private Vector3 startPos;
     private bool moveRight = true;
 
     private void Start()
     {
         startPos = transform.position;
+        animator = GetComponent<Animator>();
+        SetMoving(true);
     }
 
     private void Update()
     {
+        SetMoving(true);
+
         if (moveRight)
         {
             transform.Translate(Vector3.right * speed * Time.deltaTime);
@@ -39,5 +44,11 @@ public class Enemy : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
+    }
+
+    private void SetMoving(bool moving)
+    {
+        if (animator != null)
+            animator.SetBool("IsMoving", moving);
     }
 }
