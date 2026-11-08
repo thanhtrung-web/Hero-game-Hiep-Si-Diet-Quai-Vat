@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 7128673555305041972}
   - component: {fileID: 465819988416026721}
   - component: {fileID: 2971027123633667150}
-  - component: {fileID: 3683285142735355136}
   - component: {fileID: 8923356367489313838}
   - component: {fileID: 5074105742433772409}
-  m_Layer: 0
+  - component: {fileID: 2995099898765908123}
+  m_Layer: 6
   m_Name: Knight
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -82,8 +82,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 1220678549
-  m_SortingLayer: 2
+  m_SortingLayerID: -1728781949
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4723107735738678597, guid: 44c9ef70502bb4d46be28bb7c0432e69, type: 3}
@@ -120,12 +120,65 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!61 &3683285142735355136
-BoxCollider2D:
+--- !u!114 &8923356367489313838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750252173591891550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97d29bc79f2046d4d89355220072b4a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KnightController
+  moveSpeed: 4
+  sprintSpeed: 7
+  jumpForce: 6
+  groundCheck: {fileID: 7343479271090283410}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  maxHealth: 200
+  maxStamina: 100
+  attackRange: 1.2
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  attack1Damage: 20
+  attack2Damage: 25
+  attack3Damage: 35
+  runAttackDamage: 30
+  staminaRegenRate: 4
+  sprintStaminaCost: 10
+--- !u!95 &5074105742433772409
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750252173591891550}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4cf1a9cc69061ab46b1c830598942111, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!70 &2995099898765908123
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -134,7 +187,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 0bc09c01ac7c5194eb696abf219fa466, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -158,59 +211,9 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -1.9544773, y: -2.0021148}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 8, y: 8}
-    newSize: {x: 4, y: 4}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 2.8964481, y: 4.085655}
-  m_EdgeRadius: 0
---- !u!114 &8923356367489313838
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 750252173591891550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97d29bc79f2046d4d89355220072b4a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KnightController
-  moveSpeed: 4
-  sprintSpeed: 7
-  jumpForce: 6
-  groundCheck: {fileID: 7343479271090283410}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
---- !u!95 &5074105742433772409
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 750252173591891550}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 4cf1a9cc69061ab46b1c830598942111, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_Offset: {x: 0.968, y: 0}
+  m_Size: {x: 4, y: 4}
+  m_Direction: 0
 --- !u!1 &3467404405153820958
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,9 +223,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7343479271090283410}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: GoundCheck
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -236,8 +239,8 @@ Transform:
   m_GameObject: {fileID: 3467404405153820958}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.25, y: -4.012, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.22, y: -2, z: 0}
+  m_LocalScale: {x: 0.8409, y: 0.8409, z: 0.8409}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7128673555305041972}

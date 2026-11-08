@@ -4,8 +4,10 @@
 TagManager:
   serializedVersion: 3
   tags:
+  - Player
   - Enemy
   - Ground
+  - Rock
   layers:
   - Default
   - TransparentFX
@@ -13,7 +15,8 @@ TagManager:
   - Ground
   - Water
   - UI
-  - Ground
+  - Player
+  - Enemy
   - 
   - 
   - 
@@ -37,11 +40,13 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  
   m_SortingLayers:
+  - name: Nothing
+    uniqueID: 2672678269
+    locked: 0
+  - name: Everything
+    uniqueID: 3994309081
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
@@ -51,14 +56,32 @@ TagManager:
   - name: ForeGround
     uniqueID: 7962305
     locked: 0
-  - name: Ground
+  - name: Ground_Map2
     uniqueID: 94214937
     locked: 0
-  - name: Player
+  - name: Player_Map2
     uniqueID: 3901973881
     locked: 0
-  - name: Enemy
+  - name: Enemy_Map2
     uniqueID: 363960017
+    locked: 0
+  - name: TransparentFX
+    uniqueID: 3401165425
+    locked: 0
+  - name: Ignore Raycast
+    uniqueID: 2743735099
+    locked: 0
+  - name: Ground
+    uniqueID: 1314092469
+    locked: 0
+  - name: Water
+    uniqueID: 3926727799
+    locked: 0
+  - name: Player
+    uniqueID: 1727057819
+    locked: 0
+  - name: Enemy
+    uniqueID: 2500562071
     locked: 0
   m_RenderingLayers:
   - Default
