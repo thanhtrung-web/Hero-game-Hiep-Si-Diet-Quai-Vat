@@ -114,7 +114,10 @@ namespace HeroGame.Map3
         // Called from Map3 health component; no edits to EnemyHealth or Knight.
         public void NotifyDamaged()
         {
-            OnHurt(0f);
+            if (State == CaveEnemyState.Dead) return;
+            alerted = true;
+            if (State != CaveEnemyState.Hurt)
+                Enter(CaveEnemyState.Hurt, hurtSeconds + 0.15f);
         }
 
         public void NotifyDeath()
@@ -228,63 +231,71 @@ namespace HeroGame.Map3
                 Vector2.Distance(body.position, Home) > leashRange)
                 alerted = false;
 
-            if (alerted)
+            if (alerted) ChaseOrAttack(distance);
+            else Patrol();
+        }
+
+        private void ChaseOrAttack(float distance)
+        {
+            Vector2 delta = PlayerPosition - body.position;
+            Face(delta.x);
+
+            // Khoang cach tu mep collider den mep collider thay vi tam 2 object.
+            float attackDistance = distance;
+            if (shape.enabled && playerCollider && playerCollider.enabled)
+                attackDistance = Mathf.Max(0f, shape.Distance(playerCollider).distance);
+
+            bool verticalOK = true;
+            if (kind != CaveEnemyKind.Bat && playerCollider && playerCollider.enabled)
             {
-                Vector2 delta = PlayerPosition - body.position;
-                Face(delta.x);
+                Bounds a = shape.bounds;
+                Bounds b = playerCollider.bounds;
+                float verticalGap = Mathf.Max(0f,
+                    Mathf.Max(a.min.y, b.min.y) - Mathf.Min(a.max.y, b.max.y));
+                verticalOK = verticalGap <= 0.35f;
+            }
 
-                // Khoang cach tu mep collider den mep collider thay vi tam 2 object.
-                float attackDistance = distance;
-                if (shape.enabled && playerCollider && playerCollider.enabled)
-                    attackDistance = Mathf.Max(0f, shape.Distance(playerCollider).distance);
+            bool sightOK = CanSee(PlayerPosition);
 
-                bool verticalOK = true;
-                if (kind != CaveEnemyKind.Bat && playerCollider && playerCollider.enabled)
-                {
-                    Bounds a = shape.bounds;
-                    Bounds b = playerCollider.bounds;
-                    float verticalGap = Mathf.Max(0f,
-                        Mathf.Max(a.min.y, b.min.y) - Mathf.Min(a.max.y, b.max.y));
-                    verticalOK = verticalGap <= 0.35f;
-                }
+            if (debugAttack && Time.time >= nextDebugAt)
+            {
+                nextDebugAt = Time.time + 1f;
+                Debug.Log($"[{name}] State={State}, center={distance:F2}, edge={attackDistance:F2}, " +
+                          $"range={attackRange:F2}, vertical={verticalOK}, LOS={sightOK}, " +
+                          $"cooldown={Mathf.Max(0f, attackReady - Time.time):F2}", this);
+            }
 
-                bool sightOK = CanSee(PlayerPosition);
-
-                if (debugAttack && Time.time >= nextDebugAt)
-                {
-                    nextDebugAt = Time.time + 1f;
-                    Debug.Log($"[{name}] State={State}, center={distance:F2}, edge={attackDistance:F2}, " +
-                              $"range={attackRange:F2}, vertical={verticalOK}, LOS={sightOK}, " +
-                              $"cooldown={Mathf.Max(0f, attackReady - Time.time):F2}", this);
-                }
-
-                if (attackDistance <= attackRange && verticalOK && sightOK)
-                {
-                    velocity = Vector2.zero;
-                    if (Time.time >= attackReady)
-                    {
-                        hitDone = false;
-                        swoopSoundPlayed = false;
-                        attackStart = Time.time;
-                        attackReady = Time.time + attackSeconds + attackCooldown;
-                        swoopTarget = PlayerPosition;
-                        Enter(CaveEnemyState.Attack, attackSeconds + 0.15f);
-                    }
-                    else
-                    {
-                        Enter(CaveEnemyState.Idle);
-                    }
-                }
-                else
-                {
-                    Vector2 destination = PlayerPosition;
-                    if (kind == CaveEnemyKind.Bat)
-                        destination += Vector2.up * 0.8f;
-                    Move(destination, chaseSpeed, false);
-                }
+            if (attackDistance <= attackRange && verticalOK && sightOK)
+            {
+                TryStartAttack();
                 return;
             }
 
+            Vector2 destination = PlayerPosition;
+            if (kind == CaveEnemyKind.Bat)
+                destination += Vector2.up * 0.8f;
+            Move(destination, chaseSpeed, false);
+        }
+
+        private void TryStartAttack()
+        {
+            velocity = Vector2.zero;
+            if (Time.time < attackReady)
+            {
+                Enter(CaveEnemyState.Idle);
+                return;
+            }
+
+            hitDone = false;
+            swoopSoundPlayed = false;
+            attackStart = Time.time;
+            attackReady = Time.time + attackSeconds + attackCooldown;
+            swoopTarget = PlayerPosition;
+            Enter(CaveEnemyState.Attack, attackSeconds + 0.15f);
+        }
+
+        private void Patrol()
+        {
             if (State == CaveEnemyState.Idle && Time.time < stateEnd) return;
 
             if ((body.position.x - Home.x) * facing >= patrolDistance)
@@ -447,14 +458,6 @@ namespace HeroGame.Map3
                 return;
 
             Enter(CaveEnemyState.Idle, 0.05f);
-        }
-
-        private void OnHurt(float amount)
-        {
-            if (State == CaveEnemyState.Dead) return;
-            alerted = true;
-            if (State != CaveEnemyState.Hurt)
-                Enter(CaveEnemyState.Hurt, hurtSeconds + 0.15f);
         }
 
         private void Die()
