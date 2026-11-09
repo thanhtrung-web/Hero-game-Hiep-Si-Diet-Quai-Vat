@@ -18,6 +18,7 @@ public class BossMap4Health : EnemyHealth
             currentHealth = maxHealth;
         }
     }
+ 
 
     public override void TakeDamage(int damage)
     {

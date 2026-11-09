@@ -14,6 +14,21 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Map1/Map01.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/Cavemap/Cavemap.unity
+    guid: 8cff11f89ad44154ab413895c2bddc2a
+  - enabled: 1
+    path: Assets/Scenes/Map3/Map3.unity
+    guid: afa13a4b813a37e4f9059a7908b150de
+  - enabled: 1
+    path: Assets/Scenes/Map4/Map4.unity
+    guid: 2dd68ceb742a5a54a963a451f069a087
+  - enabled: 1
+    path: Assets/Scenes/Map5/Map5.unity
+    guid: a17181658db0f8f4caa6b72e27174d61
+  - enabled: 1
+    path: Assets/Scenes/Map5/Map5_Phase2.unity
+    guid: b5e28a914c468b9874bd9ed4bf6150e9
   - enabled: 0
     path: Assets/Scenes/Map1/Map01_Sceen2.unity
     guid: ab566a84489c1f145a07f271b5a2275c
@@ -26,21 +41,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Map1/Map01_Sceen5.unity
     guid: 063197ba30bb58348b30453e3a49064a
-  - enabled: 1
-    path: Assets/Scenes/Map5/Map5.unity
-    guid: a17181658db0f8f4caa6b72e27174d61
-  - enabled: 1
-    path: Assets/Scenes/Map5/Map5_Phase2.unity
-    guid: b5e28a914c468b9874bd9ed4bf6150e9
-  - enabled: 1
-    path: Assets/Scenes/Map4/Map4.unity
-    guid: 2dd68ceb742a5a54a963a451f069a087
-  - enabled: 1
-    path: Assets/Scenes/Map2/The Grave.unity
-    guid: 3aec2ab67fedfb847ac8353d9e69b49b
-  - enabled: 1
-    path: Assets/Scenes/Map2/BossRoom.unity
-    guid: 3043a44da11d77846a36fc0240621435
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

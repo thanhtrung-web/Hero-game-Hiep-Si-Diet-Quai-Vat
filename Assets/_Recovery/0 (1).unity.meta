@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Prefabs/Map/Map1/PortalEndgame.prefab.meta
+guid: 29f064f1e9ea5bd4a8fd83d0fbd2e75e
+PrefabImporter:
+========
 guid: 5a347b30a5a65014cb820ae51e9f9827
 DefaultImporter:
+>>>>>>>> origin/Develop:Assets/_Recovery/0 (1).unity.meta
   externalObjects: {}
   userData: 
   assetBundleName: 
