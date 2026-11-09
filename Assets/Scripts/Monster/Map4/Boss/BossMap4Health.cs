@@ -14,13 +14,9 @@ public class BossMap4Health : EnemyHealth
         bossController = GetComponent<BossMap4Controller>();
         if (bossController != null)
         {
-            maxHealth = Mathf.RoundToInt(bossController.maxHealth);
+            maxHealth = bossController.MaxHealth;
             currentHealth = maxHealth;
         }
-    protected override void Awake()
-    {
-        base.Awake();
-        bossController = GetComponent<BossMap4Controller>();
     }
 
     public override void TakeDamage(int damage)
@@ -29,8 +25,8 @@ public class BossMap4Health : EnemyHealth
 
         if (bossController != null)
         {
-            bossController.TakeDamage((float)damage);
-            currentHealth = Mathf.Max(0, Mathf.RoundToInt(bossController.CurrentHealth));
+            bossController.TakeDamage(damage);
+            currentHealth = Mathf.Max(0, bossController.CurrentHealth);
             isDead = bossController.IsDead;
 
             NotifyDamageTaken(damage);
