@@ -1,22 +1,19 @@
 using UnityEngine;
 
-public class BossMap4Controller : MonoBehaviour
+public class BossMap4Controller : EnemyHealth
 {
     [Header("Stats")]
-    public float maxHealth = 100f;
-    private float currentHealth;
     public float moveSpeed = 3f;
     public float detectionRange = 10f;
-    public float attackRange = 2f;
+    public float attackRange = 3.5f;
     public float attackDamage = 20f;
-    public float attackCooldown = 1.5f;
-    private float lastAttackTime;
+    public float attackCooldown = 2.2f;
+    private float lastAttackTime = -999f;
 
     [Header("References")]
-    public Animator animator;
     public Transform player;
     private Rigidbody2D rb;
-    private bool isDead = false;
+    private CapsuleCollider2D bossCollider;
 
     [Header("Audio (Dùng 1 Audio Source)")]
     public AudioSource audioSource;
@@ -28,11 +25,44 @@ public class BossMap4Controller : MonoBehaviour
     // 🔒 CỜ KHÓA TUYỆT ĐỐI: Đảm bảo Idle Sound chỉ kêu đúng 1 LẦN DUY NHẤT
     private bool hasPlayedIdleSound = false;
 
+    protected override void Awake()
+    {
+        if (maxHealth <= 3)
+        {
+            maxHealth = 100;
+        }
+
+        base.Awake();
+
+        rb = GetComponent<Rigidbody2D>();
+        bossCollider = GetComponent<CapsuleCollider2D>();
+
+        // Đảm bảo Rigidbody2D bật Simulated để nhận va chạm đòn đánh từ Player
+        if (rb != null)
+        {
+            rb.simulated = true;
+        }
+
+        // Thu gọn chiều ngang Collider nếu đang quá bè (4.93m) để Player tiếp cận sát thân Boss
+        if (bossCollider != null && bossCollider.size.x > 3.0f)
+        {
+            bossCollider.size = new Vector2(2.5f, bossCollider.size.y);
+        }
+
+        // Đảm bảo tầm đánh đủ lớn so với kích thước Collider cao lớn của Boss Frost
+        if (attackRange < 3.2f)
+        {
+            attackRange = 3.5f;
+        }
+
+        if (attackCooldown < 2.1f)
+        {
+            attackCooldown = 2.2f;
+        }
+    }
+
     void Start()
     {
-        currentHealth = maxHealth;
-        rb = GetComponent<Rigidbody2D>();
-
         if (animator == null)
             animator = GetComponent<Animator>();
 
@@ -50,35 +80,59 @@ public class BossMap4Controller : MonoBehaviour
     {
         if (isDead) return;
 
-        if (player != null)
+        if (player == null)
         {
-            float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null) player = playerObj.transform;
+            if (player == null) return;
+        }
 
-            // 1. Kiểm tra nếu đang trong thời gian hồi chiêu (Cooldown) thì khựng lại chờ
-            if (Time.time < lastAttackTime + attackCooldown)
-            {
-                StopMoving();
-                return;
-            }
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-            // 2. Logic di chuyển & tấn công
-            if (distanceToPlayer <= attackRange)
-            {
-                FacePlayer();
-                Attack();
-            }
-            else if (distanceToPlayer <= detectionRange)
-            {
-                FacePlayer();
-                PlayIdleSoundOnce();
-                MoveTowardsPlayer();
-            }
-            else
-            {
-                SetIdle();
-            }
+        // 1. Kiểm tra nếu đang trong thời gian hồi chiêu (Cooldown) thì khựng lại chờ
+        if (Time.time < lastAttackTime + attackCooldown)
+        {
+            StopMoving();
+            return;
+        }
+
+        // 2. Logic di chuyển & tấn công
+        if (IsPlayerInAttackRange(attackRange))
+        {
+            FacePlayer();
+            Attack();
+        }
+        else if (distanceToPlayer <= detectionRange)
+        {
+            FacePlayer();
+            PlayIdleSoundOnce();
+            MoveTowardsPlayer();
+        }
+        else
+        {
+            SetIdle();
         }
     }
+
+    private bool IsPlayerInAttackRange(float range)
+    {
+        if (player == null) return false;
+
+        float dist2D = Vector2.Distance(transform.position, player.position);
+        float distX = Mathf.Abs(transform.position.x - player.position.x);
+        float distY = Mathf.Abs(transform.position.y - player.position.y);
+
+        // Do Boss Frost rất cao (size Y ~ 5.8), tâm của Boss nằm cao hơn tâm Player ~1.8m
+        // Nên kiểm tra khoảng cách ngang + biên Collider giúp Boss đánh chuẩn xác khi áp sát
+        if (bossCollider != null)
+        {
+            float edgeDist = Mathf.Sqrt(bossCollider.bounds.SqrDistance(player.position));
+            if (edgeDist <= 1.2f) return true;
+        }
+
+        return dist2D <= range || (distX <= range && distY <= 3.5f);
+    }
+
     void FacePlayer()
     {
         if (player == null) return;
@@ -110,6 +164,7 @@ public class BossMap4Controller : MonoBehaviour
         lastAttackTime = Time.time;
 
         // Kích hoạt animation tấn công
+        animator.ResetTrigger("IsTakeDmg");
         animator.SetTrigger("IsATK");
 
         if (attackSound != null && audioSource != null)
@@ -117,11 +172,13 @@ public class BossMap4Controller : MonoBehaviour
             audioSource.PlayOneShot(attackSound);
         }
     }
+
     void StopMoving()
     {
         if (rb != null)
             rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
-        animator.SetBool("IsWalking", false);
+        if (animator != null)
+            animator.SetBool("IsWalking", false);
     }
 
     // 🔊 PHÁT ĐÚNG 1 LẦN KHI NGƯỜI CHƠI TIẾN VÀO GẦN BOSS
@@ -143,8 +200,7 @@ public class BossMap4Controller : MonoBehaviour
 
         if (player != null)
         {
-            float distance = Vector2.Distance(transform.position, player.position);
-            if (distance <= attackRange + 0.5f)
+            if (IsPlayerInAttackRange(attackRange + 0.8f))
             {
                 player.SendMessage("TakeDamage", attackDamage, SendMessageOptions.DontRequireReceiver);
             }
@@ -156,12 +212,15 @@ public class BossMap4Controller : MonoBehaviour
         StopMoving();
     }
 
-    // Hàm nhận sát thương chính của Boss
-    public void TakeDamage(float damage)
+    // ==========================================
+    // NHẬN SÁT THƯƠNG TỪ PLAYER (Ghi đè EnemyHealth)
+    // ==========================================
+    public override void TakeDamage(int damage)
     {
-        if (isDead) return;
+        if (isDead || damage <= 0) return;
 
-        currentHealth -= damage;
+        currentHealth = Mathf.Max(0, currentHealth - damage);
+        Debug.Log("<color=cyan>Boss Frost nhận " + damage + " DMG! Máu còn: " + currentHealth + "</color>");
 
         if (currentHealth <= 0)
         {
@@ -169,7 +228,8 @@ public class BossMap4Controller : MonoBehaviour
             return;
         }
 
-        animator.SetTrigger("IsTakeDmg");
+        if (animator != null)
+            animator.SetTrigger("IsTakeDmg");
         StopMoving();
 
         if (takeDamageSound != null && audioSource != null)
@@ -178,12 +238,12 @@ public class BossMap4Controller : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
-        TakeDamage((float)damage);
+        TakeDamage(Mathf.RoundToInt(damage));
     }
 
-    void Die()
+    protected override void Die()
     {
         if (isDead) return;
         isDead = true;

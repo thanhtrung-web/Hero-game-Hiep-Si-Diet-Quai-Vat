@@ -12,11 +12,24 @@ public class PortalUnlockAfterEnemies : MonoBehaviour
         if (portalTrigger == null)
             portalTrigger = GetComponent<Collider2D>();
 
+        if (portalVisual == null)
+            portalVisual = GetComponent<SpriteRenderer>();
+
         if (portalTrigger != null)
             portalTrigger.enabled = false;
 
         if (portalVisual != null)
             portalVisual.enabled = false;
+    }
+
+    private void Start()
+    {
+        // Nếu trong Scene đã có QuestUIController thì nhường toàn bộ việc đếm quái + mở cổng cho QuestUIController,
+        // tắt Update của script này để không bị chạy trùng lặp code.
+        if (FindAnyObjectByType<QuestUIController>() != null)
+        {
+            enabled = false;
+        }
     }
 
     private void Update()
