@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
+    public int CurrentHealth => currentHealth;
+    public int MaxHealth => maxHealth;
     [SerializeField] protected int maxHealth = 3;
     [SerializeField] protected Animator animator;
     [SerializeField] protected Behaviour patrolScript;
