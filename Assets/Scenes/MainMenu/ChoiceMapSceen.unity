@@ -230,7 +230,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuController
   mapChoiceSceneName: ChoiceMapSceen
   firstSceneName: Map01
-  map2SceneName: Cavemap
+  map2SceneName: The Grave
   map3SceneName: Map3
   map4SceneName: Map4
   map5SceneName: Map5

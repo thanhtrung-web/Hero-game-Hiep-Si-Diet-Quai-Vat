@@ -31,16 +31,8 @@ public class BossMap4Controller : EnemyHealth
 
     private bool hasPlayedIdleSound = false;
 
- 
-
-    
     protected override void Awake()
     {
-        currentHealth = maxHealth;
-        if (GetComponent<BossMap4Health>() == null)
-        {
-            gameObject.AddComponent<BossMap4Health>();
-        }
         if (maxHealth <= 3)
         {
             maxHealth = 100;
