@@ -8,7 +8,14 @@ public class ScenePortal : MonoBehaviour
     [SerializeField] private string targetSceneName = "Map5_Phase2";
     [SerializeField] private float transitionDelay = 0.3f;
 
+    [Header("Safety & Behavior")]
+    [Tooltip("Thời gian chờ tối thiểu sau khi scene load trước khi cổng kích hoạt, tránh bị loop nếu vừa spawn ngay trên cổng")]
+    [SerializeField] private float activateDelay = 2.0f;
+    [Tooltip("Nếu true, cổng này chỉ là cổng xuất hiện (một chiều), không dịch chuyển người chơi đi đâu cả")]
+    [SerializeField] private bool isOneWay = false;
+
     private bool isLoading;
+    private float sceneLoadedTime;
 
     public string TargetSceneName
     {
@@ -16,8 +23,38 @@ public class ScenePortal : MonoBehaviour
         set => targetSceneName = value;
     }
 
+    public bool IsOneWay
+    {
+        get => isOneWay;
+        set => isOneWay = value;
+    }
+
+    private void Awake()
+    {
+        sceneLoadedTime = Time.time;
+    }
+
+    private void OnEnable()
+    {
+        sceneLoadedTime = Time.time;
+        isLoading = false;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
+        TryTriggerPortal(other);
+    }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        TryTriggerPortal(other);
+    }
+
+    private void TryTriggerPortal(Collider2D other)
+    {
+        if (isOneWay) return;
+        // Chỉ hoãn kích hoạt nếu Scene vừa mới nạp (ngăn người chơi vừa load scene đã bị dịch chuyển ngược lại)
+        if (Time.timeSinceLevelLoad < activateDelay) return;
         if (isLoading) return;
 
         bool isPlayer = other.CompareTag("Player")

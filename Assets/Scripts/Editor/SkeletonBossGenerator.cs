@@ -121,10 +121,20 @@ public class SkeletonBossGenerator
         atk2ToIdle.exitTime = 0.9f;
         atk2ToIdle.duration = 0.05f;
 
+        var atk2ToAtk3 = attack2State.AddTransition(attack3State);
+        atk2ToAtk3.AddCondition(AnimatorConditionMode.If, 0, "Attack3");
+        atk2ToAtk3.hasExitTime = false;
+        atk2ToAtk3.duration = 0.05f;
+
         // Attack 3 (Heavy Smash)
         var toAtk3 = idleState.AddTransition(attack3State);
         toAtk3.AddCondition(AnimatorConditionMode.If, 0, "Attack3");
         toAtk3.hasExitTime = false;
+
+        var toAtk3FromWalk = walkState.AddTransition(attack3State);
+        toAtk3FromWalk.AddCondition(AnimatorConditionMode.If, 0, "Attack3");
+        toAtk3FromWalk.hasExitTime = false;
+        toAtk3FromWalk.duration = 0.05f;
 
         var atk3ToIdle = attack3State.AddTransition(idleState);
         atk3ToIdle.hasExitTime = true;
@@ -135,6 +145,11 @@ public class SkeletonBossGenerator
         var toSummon = idleState.AddTransition(summonState);
         toSummon.AddCondition(AnimatorConditionMode.If, 0, "Summon");
         toSummon.hasExitTime = false;
+
+        var toSummonFromWalk = walkState.AddTransition(summonState);
+        toSummonFromWalk.AddCondition(AnimatorConditionMode.If, 0, "Summon");
+        toSummonFromWalk.hasExitTime = false;
+        toSummonFromWalk.duration = 0.05f;
 
         var summonToIdle = summonState.AddTransition(idleState);
         summonToIdle.hasExitTime = true;

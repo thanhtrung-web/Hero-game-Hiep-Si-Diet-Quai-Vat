@@ -1,7 +1,18 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GroupNormalEnemy : MonoBehaviour
 {
+    public float CurrentHealth => currentHealth;
+    public bool IsDead => isDead;
+
+    private void Awake()
+    {
+        currentHealth = maxHealth;
+        if (GetComponent<GolemHealth>() == null)
+        {
+            gameObject.AddComponent<GolemHealth>();
+        }
+    }
     [Header("Stats")]
     public float moveSpeed = 2f;
     public float attackRange = 1.8f;

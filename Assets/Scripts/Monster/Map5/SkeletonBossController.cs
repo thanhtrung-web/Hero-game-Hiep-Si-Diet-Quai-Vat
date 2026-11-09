@@ -5,6 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class SkeletonBossController : EnemyHealth
 {
+    public override bool IsBoss => true;
+    public override string BossTitle => "Đại Tướng Quân Bộ Xương - Skeleton Warlord";
+
     public enum BossState
     {
         Patrol,
@@ -47,6 +50,14 @@ public class SkeletonBossController : EnemyHealth
     [Tooltip("Vị trí lệch của cổng so với Boss (mặc định xuất hiện ngay kế cạnh Boss)")]
     [SerializeField] private Vector3 portalOffsetFromBoss = new Vector3(1.0f, 0.2f, 0f);
 
+    [Header("6. Audio (SFX)")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip attackSound;
+    [SerializeField] private AudioClip attack1Sound;
+    [SerializeField] private AudioClip attack2Sound;
+    [SerializeField] private AudioClip attack3Sound;
+    [SerializeField] private UnityEngine.Audio.AudioMixerGroup sfxMixerGroup;
+
     // Components nội bộ
     private Rigidbody2D rb;
     private SpriteRenderer sr;
@@ -75,6 +86,17 @@ public class SkeletonBossController : EnemyHealth
         if (animator == null)
             animator = GetComponent<Animator>();
         myCollider = GetComponent<Collider2D>();
+
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
+
+        audioSource.playOnAwake = false;
+        audioSource.loop = false;
+        audioSource.spatialBlend = 0f;
+        if (sfxMixerGroup != null)
+            audioSource.outputAudioMixerGroup = sfxMixerGroup;
     }
 
 #if UNITY_EDITOR
@@ -115,6 +137,14 @@ public class SkeletonBossController : EnemyHealth
         {
             groundLayer = LayerMask.GetMask("Ground");
             if (groundLayer == 0) groundLayer = 1 << 3;
+        }
+
+        // Tự động kết nối đệ tử Skeleton_White nếu bị thiếu hoặc mất liên kết
+        if (minionPrefab == null)
+        {
+#if UNITY_EDITOR
+            minionPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Monster/Map5/Skeleton_White.prefab");
+#endif
         }
 
         nextSummonTime = Time.time + 6f; // Chờ 6s sau khi bắt đầu trận mới summon đợt 1
@@ -179,14 +209,19 @@ public class SkeletonBossController : EnemyHealth
                     return;
                 }
 
-                // Ưu tiên 2: Tấn công nếu trong tầm đánh
-                if (horizontalDist <= attackRange && Time.time >= nextAttackTime)
+                // Ưu tiên 2: Tấn công nếu trong tầm đánh -> Dừng chân và vung kiếm (hoặc đứng thủ chờ hồi đòn)
+                if (horizontalDist <= attackRange)
                 {
-                    StartCoroutine(AttackRoutine());
+                    StopMoving();
+
+                    if (Time.time >= nextAttackTime)
+                    {
+                        StartCoroutine(AttackRoutine());
+                    }
                     return;
                 }
 
-                // Di chuyển áp sát người chơi
+                // Di chuyển áp sát người chơi nếu ngoài tầm đánh
                 Vector2 ledgeOrigin = (Vector2)transform.position + new Vector2(direction * ledgeCheckDistance, 0.2f);
                 RaycastHit2D groundHit = Physics2D.Raycast(ledgeOrigin, Vector2.down, groundCheckDepth, groundLayer);
 
@@ -267,7 +302,7 @@ public class SkeletonBossController : EnemyHealth
     private void FaceTarget(float targetX)
     {
         float diff = targetX - transform.position.x;
-        if (Mathf.Abs(diff) > 0.2f)
+        if (Mathf.Abs(diff) > 0.35f)
         {
             if (diff > 0 && direction < 0)
             {
@@ -293,30 +328,91 @@ public class SkeletonBossController : EnemyHealth
     {
         currentState = BossState.Attacking;
         StopMoving();
+        if (player != null) FaceTarget(player.position.x);
 
-        // 35% tỉ lệ tung chiêu Heavy Attack (Attack 3), 65% tung combo Attack 1 + 2
-        bool isHeavy = Random.value < 0.35f;
+        // Đa dạng hoá nhịp đánh mượt mà:
+        // 1. Combo 3 đòn liên hoàn (Attack 1 -> 2 -> 3): 35%
+        // 2. Combo 2 đòn liên tiếp (Attack 1 -> 2): 40%
+        // 3. Trọng kích giáng búa (Attack 3): 25%
+        float roll = Random.value;
 
-        if (isHeavy)
+        if (roll < 0.25f)
         {
+            // === KIỂU 1: TRỌNG KÍCH ĐƠN (ATTACK 3) ===
             if (anim != null) anim.SetTrigger("Attack3");
-            yield return new WaitForSeconds(0.45f); // Chờ vung búa xuống
 
+            // 0s - 0.45s: Giơ kiếm tụ lực lên cao
+            yield return new WaitForSeconds(0.45f);
+            PlayAttack3Sound();
+
+            // 0.45s - 0.60s: Vung kiếm giáng xuống đất
+            yield return new WaitForSeconds(0.15f);
             CheckAndDamagePlayer(heavyAttackDamage, attackRange + 1.2f);
-            yield return new WaitForSeconds(0.65f); // Hoàn tất hoạt ảnh
-            nextAttackTime = Time.time + attackCooldown + 0.5f;
+
+            // 0.60s - 1.10s: Thu kiếm về tư thế thủ (0.50s)
+            yield return new WaitForSeconds(0.50f);
+
+            nextAttackTime = Time.time + attackCooldown;
+        }
+        else if (roll < 0.65f)
+        {
+            // === KIỂU 2: COMBO 2 ĐÒN (ATTACK 1 -> ATTACK 2) ===
+            if (anim != null) anim.SetTrigger("Attack");
+
+            // Đòn 1: Chém ngang (vung kiếm tới tại 0.40s)
+            yield return new WaitForSeconds(0.25f);
+            PlayAttack1Sound();
+            yield return new WaitForSeconds(0.15f);
+            CheckAndDamagePlayer(normalAttackDamage, attackRange + 0.6f);
+
+            // Chờ đòn 1 chuyển tiếp sang đòn 2 (tại 0.71s, còn 0.31s)
+            yield return new WaitForSeconds(0.31f);
+
+            // Đòn 2: Chém vát ngược lên (sát thương nổ tại 0.35s sau khi vào đòn 2)
+            yield return new WaitForSeconds(0.20f);
+            PlayAttack2Sound();
+            yield return new WaitForSeconds(0.15f);
+            CheckAndDamagePlayer(normalAttackDamage, attackRange + 0.6f);
+
+            // Chờ thu kiếm hoàn tất đòn 2 về Idle (0.33s)
+            yield return new WaitForSeconds(0.33f);
+
+            nextAttackTime = Time.time + attackCooldown;
         }
         else
         {
+            // === KIỂU 3: COMBO 3 ĐÒN LIÊN HOÀN (ATTACK 1 -> 2 -> 3) ===
             if (anim != null) anim.SetTrigger("Attack");
-            yield return new WaitForSeconds(0.35f); // Nhát chém 1
+
+            // Đòn 1: Chém ngang (0.40s)
+            yield return new WaitForSeconds(0.25f);
+            PlayAttack1Sound();
+            yield return new WaitForSeconds(0.15f);
             CheckAndDamagePlayer(normalAttackDamage, attackRange + 0.6f);
 
-            yield return new WaitForSeconds(0.35f); // Nhát chém 2
+            // Chờ đòn 1 sang đòn 2 (0.31s)
+            yield return new WaitForSeconds(0.31f);
+
+            // Đòn 2: Chém vát lên (0.35s)
+            yield return new WaitForSeconds(0.20f);
+            PlayAttack2Sound();
+            yield return new WaitForSeconds(0.15f);
             CheckAndDamagePlayer(normalAttackDamage, attackRange + 0.6f);
 
-            yield return new WaitForSeconds(0.4f);
-            nextAttackTime = Time.time + attackCooldown;
+            // Đang vung lên cao, trigger ngay đòn 3 để tiếp nối nhịp combo mượt mà
+            yield return new WaitForSeconds(0.20f);
+            if (anim != null) anim.SetTrigger("Attack3");
+
+            // Đòn 3: Giơ cao rồi giáng mạnh xuống đất (0.60s)
+            yield return new WaitForSeconds(0.45f);
+            PlayAttack3Sound();
+            yield return new WaitForSeconds(0.15f);
+            CheckAndDamagePlayer(heavyAttackDamage, attackRange + 1.2f);
+
+            // Thu kiếm hoàn tất đòn 3 (0.50s)
+            yield return new WaitForSeconds(0.50f);
+
+            nextAttackTime = Time.time + attackCooldown + 0.4f;
         }
 
         currentState = BossState.Chase;
@@ -328,13 +424,15 @@ public class SkeletonBossController : EnemyHealth
         StopMoving();
 
         if (anim != null) anim.SetTrigger("Summon");
-        yield return new WaitForSeconds(0.5f); // Đoạn giơ kiếm gọi đệ
+
+        // Đợi Boss giơ cao kiếm tụ năng lượng (thời điểm 0.8s)
+        yield return new WaitForSeconds(0.8f);
 
         // Triệu hồi 1 hoặc 2 Skeleton_White
         int spawnCount = Mathf.Min(2, maxMinions - activeMinions.Count);
         for (int i = 0; i < spawnCount; i++)
         {
-            float offsetX = (i == 0) ? -2.0f * direction : 2.0f * direction;
+            float offsetX = (i == 0) ? -2.2f * direction : 2.2f * direction;
             Vector3 spawnPos = transform.position + new Vector3(offsetX, 0f, 0f);
 
             if (minionPrefab != null)
@@ -344,12 +442,40 @@ public class SkeletonBossController : EnemyHealth
             }
         }
 
-        yield return new WaitForSeconds(0.6f);
+        // Chờ hạ kiếm hoàn tất toàn bộ hoạt ảnh Summon dài 1.6s
+        yield return new WaitForSeconds(0.8f);
+
         nextSummonTime = Time.time + summonCooldown;
         currentState = BossState.Chase;
     }
 
-    // Hỗ trợ gọi sát thương qua Animation Event nếu gắn vào Clip
+    // Hỗ trợ gọi âm thanh và sát thương qua Animation Event nếu gắn vào Clip
+    public void PlayAttack1Sound()
+    {
+        AudioClip clip = (attack1Sound != null) ? attack1Sound : attackSound;
+        if (clip != null && audioSource != null)
+            audioSource.PlayOneShot(clip);
+    }
+
+    public void PlayAttack2Sound()
+    {
+        AudioClip clip = (attack2Sound != null) ? attack2Sound : attackSound;
+        if (clip != null && audioSource != null)
+            audioSource.PlayOneShot(clip);
+    }
+
+    public void PlayAttack3Sound()
+    {
+        AudioClip clip = (attack3Sound != null) ? attack3Sound : attackSound;
+        if (clip != null && audioSource != null)
+            audioSource.PlayOneShot(clip);
+    }
+
+    public void PlayAttackSound()
+    {
+        PlayAttack1Sound();
+    }
+
     public void DealNormalDamage()
     {
         CheckAndDamagePlayer(normalAttackDamage, attackRange + 0.6f);
@@ -422,6 +548,9 @@ public class SkeletonBossController : EnemyHealth
         if (isDead || damage <= 0) return;
 
         currentHealth = Mathf.Max(0, currentHealth - damage);
+        NotifyDamageTaken(damage);
+        NotifyHealthChanged(currentHealth, maxHealth);
+        SpawnDamagePopup(damage);
 
         if (currentHealth == 0)
         {
@@ -429,13 +558,18 @@ public class SkeletonBossController : EnemyHealth
             return;
         }
 
-        // Kháng choáng: Chỉ giật Hurt nếu qua thời gian hồi để tránh bị stun-lock
-        if (Time.time >= lastHurtTime + hurtCooldown)
+        // Kháng choáng (Super-Armor): Không bị giật Hurt ngắt đòn khi đang vung kiếm hoặc triệu hồi
+        if (currentState != BossState.Attacking && currentState != BossState.Summoning)
         {
-            lastHurtTime = Time.time;
-            if (anim != null) anim.SetTrigger("Hurt");
-            StartCoroutine(FlashRedEffect());
+            if (Time.time >= lastHurtTime + hurtCooldown)
+            {
+                lastHurtTime = Time.time;
+                if (anim != null) anim.SetTrigger("Hurt");
+            }
         }
+
+        // Luôn nhấp nháy đỏ báo hiệu nhận sát thương
+        StartCoroutine(FlashRedEffect());
 
         // Chuyển sang rượt đuổi ngay nếu bị đánh từ xa
         if (currentState == BossState.Patrol || currentState == BossState.Returning)
@@ -471,13 +605,26 @@ public class SkeletonBossController : EnemyHealth
 
         Debug.Log("👑💀 [Skeleton_Boss] ĐÃ BỊ TIÊU DIỆT! CỔNG DỊCH CHUYỂN ĐANG MỞ...");
         StartCoroutine(OpenExitPortalRoutine());
-        Destroy(gameObject, 3.5f);
+        Destroy(gameObject, 4.0f);
+    }
+
+    private void OnDestroy()
+    {
+        // Failsafe: Đảm bảo cổng dịch chuyển luôn luôn được bật kể cả khi Boss bị Destroy
+        if (isDead)
+        {
+            ActivateExitPortalDirectly();
+        }
     }
 
     private IEnumerator OpenExitPortalRoutine()
     {
         yield return new WaitForSeconds(portalAppearDelay);
+        ActivateExitPortalDirectly();
+    }
 
+    private void ActivateExitPortalDirectly()
+    {
         GameObject portalObj = exitPortal;
 
         // Nếu chưa gán trong Inspector, tự tìm kiếm trong Scene (kể cả object đang bị ẩn / inactive)
@@ -497,18 +644,29 @@ public class SkeletonBossController : EnemyHealth
 
         if (portalObj != null)
         {
-            // Luôn đặt cổng xuất hiện ngay cạnh Boss (nơi Boss vừa bị hạ gục)
-            portalObj.transform.position = transform.position + portalOffsetFromBoss;
+            // GIỮ NGUYÊN VỊ TRÍ CỬA RA CỦA MAP (như x=84.6 ở cuối hành lang), KHÔNG DỜI ĐI NƠI KHÁC!
+            // Chỉ đặt cạnh boss nếu portal chưa được thiết lập vị trí trong Scene (đang ở gốc 0,0,0)
+            if (portalObj.transform.position == Vector3.zero)
+            {
+                portalObj.transform.position = transform.position + portalOffsetFromBoss;
+            }
 
             portalObj.SetActive(true);
 
             var srPortal = portalObj.GetComponent<SpriteRenderer>();
-            if (srPortal != null) srPortal.enabled = true;
+            if (srPortal != null)
+            {
+                srPortal.enabled = true;
+                if (srPortal.sortingOrder < 5) srPortal.sortingOrder = 5;
+            }
 
             var colPortal = portalObj.GetComponent<Collider2D>();
             if (colPortal != null) colPortal.enabled = true;
 
-            Debug.Log($"🌀 [Skeleton_Boss] CỔNG QUA MAP 5 PHẦN 2 ĐÃ XUẤT HIỆN TẠI VỊ TRÍ KẾ BÊN BOSS: {portalObj.transform.position}!");
+            var scenePortal = portalObj.GetComponent<ScenePortal>();
+            if (scenePortal != null) scenePortal.enabled = true;
+
+            Debug.Log($"🌀 [Skeleton_Boss] CỔNG QUA MAP 5 PHẦN 2 ĐÃ SẴN SÀNG TẠI VỊ TRÍ: {portalObj.transform.position}!");
         }
         else
         {
