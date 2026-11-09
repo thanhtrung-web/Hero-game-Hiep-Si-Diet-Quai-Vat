@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class LichBossController : EnemyHealth
 {
+    public override bool IsBoss => true;
+    public override string BossTitle => "Đại Phù Thủy Hắc Ám - Lich Lord";
     public enum BossPhase
     {
         Phase1_LichKnight,
@@ -15,7 +17,8 @@ public class LichBossController : EnemyHealth
     [Header("1. Boss Phase & Core Stats")]
     [SerializeField] private BossPhase currentPhase = BossPhase.Phase1_LichKnight;
     [SerializeField] private int maxBossHealth = 600;
-    [SerializeField] private float moveSpeedP1 = 2.4f;
+    [SerializeField] private float moveSpeedP1 = 3.6f; // Tăng tốc độ di chuyển Phase 1 dũng mãnh hơn
+    [SerializeField] private float phase1SkillCooldown = 1.1f; // Nhịp ra chiêu dồn dập, không bị đơ khựng
     [SerializeField] private float flySpeedP2 = 3.6f;
     [SerializeField] private LayerMask groundLayer;
 
@@ -26,7 +29,7 @@ public class LichBossController : EnemyHealth
 
     [Header("3. Phase 1 Skills (Lich Knight)")]
     [SerializeField] private int soulSlashDamage = 20;
-    [SerializeField] private int shadowDashDamage = 25;
+    [SerializeField] private int shadowDashDamage = 5; // Multi-hit tick damage
     [SerializeField] private int darkWaveDamage = 30;
     [SerializeField] private float dashSpeed = 16f;
     [SerializeField] private float dashDuration = 0.35f;
@@ -34,13 +37,22 @@ public class LichBossController : EnemyHealth
     [Header("4. Phase 2 Skills (Death Lord)")]
     [SerializeField] private int soulSpikeDamage = 35;
     [SerializeField] private int deathNovaDamage = 45;
+    [SerializeField] private float deathNovaRadius = 5.2f; // Mở rộng thêm gần 2 size (từ 3.4m -> 5.2m)
     [SerializeField] private int teleportSlashDamage = 30;
+    [SerializeField] private GameObject soulSpikePrefab;
     [SerializeField] private GameObject minionPrefab;
     [SerializeField] private GameObject minionPrefab2;
     [SerializeField] private int maxActiveMinions = 4;
 
     [Header("5. Overhead UI")]
     [SerializeField] private Vector3 barOffset = new Vector3(-1.1f, 3.5f, 0f);
+
+    [Header("6. Audio (SFX)")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip skillSound;
+    [SerializeField] private AudioClip dashSound;
+    [SerializeField] private AudioClip teleportSound;
+    [SerializeField] private UnityEngine.Audio.AudioMixerGroup sfxMixerGroup;
 
     private Rigidbody2D rb;
     private SpriteRenderer sr;
@@ -68,6 +80,19 @@ public class LichBossController : EnemyHealth
         sr = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
 
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
+
+        audioSource.playOnAwake = false;
+        audioSource.loop = false;
+        audioSource.spatialBlend = 0f;
+        if (sfxMixerGroup != null)
+            audioSource.outputAudioMixerGroup = sfxMixerGroup;
+
+        maxHealth = maxBossHealth;
+        currentHealth = maxBossHealth;
         currentHP = maxBossHealth;
         phase1ThresholdHP = maxBossHealth / 2;
     }
@@ -124,19 +149,19 @@ public class LichBossController : EnemyHealth
     {
         if (nextSkillTimer <= 0f)
         {
-            // Chọn skill phù hợp theo khoảng cách
+            // Chọn skill dứt khoát theo khoảng cách
             if (dist <= meleeRange)
             {
-                // Gần: 60% Soul Slash, 40% Dark Wave
-                if (Random.value < 0.6f)
+                // Cận chiến: 70% chém kiếm Soul Slash, 30% chưởng sóng bóng tối Dark Wave
+                if (Random.value < 0.7f)
                     StartCoroutine(ExecuteSoulSlash());
                 else
                     StartCoroutine(ExecuteDarkWave());
             }
             else
             {
-                // Xa: 50% Shadow Dash áp sát, 50% Dark Wave
-                if (Random.value < 0.5f)
+                // Cự ly xa: 75% Lướt thần tốc Shadow Dash áp sát cực nhanh, 25% Dark Wave
+                if (Random.value < 0.75f)
                     StartCoroutine(ExecuteShadowDash());
                 else
                     StartCoroutine(ExecuteDarkWave());
@@ -144,14 +169,15 @@ public class LichBossController : EnemyHealth
             return;
         }
 
-        // Trong thời gian hồi skill: đi bộ áp sát
-        if (dist > meleeRange * 0.8f)
+        // Trong lúc hồi chiêu ngắn (1.1s): Không bao giờ đứng đơ!
+        if (dist > meleeRange * 0.7f)
         {
             MoveForward(moveSpeedP1);
         }
         else
         {
-            StopMoving();
+            // Áp sát linh hoạt giữ nhịp tấn công
+            MoveForward(moveSpeedP1 * 0.5f);
         }
     }
 
@@ -160,13 +186,14 @@ public class LichBossController : EnemyHealth
         isActing = true;
         StopMoving();
         if (anim != null) anim.SetTrigger("SoulSlash");
+        PlaySkillSound();
 
-        yield return new WaitForSeconds(0.4f);
-        ApplyAoEDamage(transform.position + new Vector3(direction * 1.8f, 0.8f, 0f), 1.8f, soulSlashDamage);
+        yield return new WaitForSeconds(0.3f);
+        ApplyAoEDamage(transform.position + new Vector3(direction * 1.8f, 0.8f, 0f), 1.9f, soulSlashDamage);
 
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.18f); // Hồi phục nhanh, không bị đứng đơ
         isActing = false;
-        nextSkillTimer = skillCooldown;
+        nextSkillTimer = phase1SkillCooldown;
     }
 
     private IEnumerator ExecuteShadowDash()
@@ -174,6 +201,8 @@ public class LichBossController : EnemyHealth
         isActing = true;
         StopMoving();
         if (anim != null) anim.SetTrigger("ShadowDash");
+        if (dashSound != null && audioSource != null)
+            audioSource.PlayOneShot(dashSound);
 
         float elapsed = 0f;
         while (elapsed < dashDuration)
@@ -186,9 +215,9 @@ public class LichBossController : EnemyHealth
         }
 
         StopMoving();
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.12f);
         isActing = false;
-        nextSkillTimer = skillCooldown;
+        nextSkillTimer = phase1SkillCooldown;
     }
 
     private IEnumerator ExecuteDarkWave()
@@ -196,19 +225,20 @@ public class LichBossController : EnemyHealth
         isActing = true;
         StopMoving();
         if (anim != null) anim.SetTrigger("DarkWave");
+        PlaySkillSound();
 
         yield return new WaitForSeconds(0.45f);
-        // Sóng hắc ám lan ra 3 vị trí phía trước
-        for (int i = 1; i <= 3; i++)
+        // Sóng hắc ám Dark Wave phóng ra 4 gai phía trước
+        for (int i = 1; i <= 4; i++)
         {
             Vector3 wavePos = transform.position + new Vector3(direction * (i * 1.6f), 0.5f, 0f);
             ApplyAoEDamage(wavePos, 1.3f, darkWaveDamage);
             yield return new WaitForSeconds(0.12f);
         }
 
-        yield return new WaitForSeconds(0.35f);
+        yield return new WaitForSeconds(0.18f);
         isActing = false;
-        nextSkillTimer = skillCooldown;
+        nextSkillTimer = phase1SkillCooldown;
     }
 
     // ==========================================
@@ -224,6 +254,7 @@ public class LichBossController : EnemyHealth
         if (anim != null)
         {
             anim.SetTrigger("Transform");
+            PlaySkillSound();
             anim.SetBool("IsPhase2", true);
         }
 
@@ -287,18 +318,47 @@ public class LichBossController : EnemyHealth
         isActing = true;
         StopMoving();
         if (anim != null) anim.SetTrigger("SoulSpike");
+        PlaySkillSound();
 
-        // Cột linh hồn trồi lên từ vị trí người chơi và xung quanh
-        Vector3 playerPos = player != null ? player.position : transform.position + new Vector3(direction * 3f, 0f, 0f);
-        yield return new WaitForSeconds(0.45f);
-
-        for (int i = -1; i <= 1; i++)
+        // 1. Dò tìm chính xác mặt đất dưới chân người chơi
+        Vector3 targetGroundPos = player != null ? player.position : transform.position + new Vector3(direction * 3f, 0f, 0f);
+        if (player != null)
         {
-            Vector3 spikePos = playerPos + new Vector3(i * 1.8f, 0.5f, 0f);
-            ApplyAoEDamage(spikePos, 1.2f, soulSpikeDamage);
+            RaycastHit2D hit = Physics2D.Raycast(player.position + Vector3.up * 0.5f, Vector2.down, 6f, groundLayer);
+            if (hit.collider != null)
+            {
+                targetGroundPos = new Vector3(player.position.x, hit.point.y + 0.1f, 0f);
+            }
         }
 
+        // Chờ Lich gồng tay niệm phép
         yield return new WaitForSeconds(0.4f);
+
+        // 2. Triệu hồi chông linh hồn đâm vọt lên từ mặt đất dưới chân Hiệp Sĩ (3 cột: chính giữa và 2 bên)
+        if (soulSpikePrefab != null)
+        {
+            for (int i = -1; i <= 1; i++)
+            {
+                Vector3 spikePos = targetGroundPos + new Vector3(i * 1.5f, 0f, 0f);
+                GameObject spikeObj = Instantiate(soulSpikePrefab, spikePos, Quaternion.identity);
+                var hazard = spikeObj.GetComponent<SoulPillarHazard>();
+                if (hazard != null)
+                {
+                    hazard.SetDamage(soulSpikeDamage);
+                }
+            }
+        }
+        else
+        {
+            // Dự phòng nếu không có prefab: gây sát thương tại vị trí mặt đất dưới chân Knight
+            for (int i = -1; i <= 1; i++)
+            {
+                Vector3 spikePos = targetGroundPos + new Vector3(i * 1.5f, 0.5f, 0f);
+                ApplyAoEDamage(spikePos, 1.2f, soulSpikeDamage);
+            }
+        }
+
+        yield return new WaitForSeconds(0.45f);
         isActing = false;
         nextSkillTimer = skillCooldown;
     }
@@ -308,6 +368,8 @@ public class LichBossController : EnemyHealth
         isActing = true;
         StopMoving();
         if (anim != null) anim.SetTrigger("PhantomTeleport");
+        if (teleportSound != null && audioSource != null)
+            audioSource.PlayOneShot(teleportSound);
 
         // Để lại bóng ma tại chỗ cũ
         for (int i = 0; i < 2; i++)
@@ -328,9 +390,9 @@ public class LichBossController : EnemyHealth
         // Chém kết liễu sau khi xuất hiện
         ApplyAoEDamage(transform.position + new Vector3(direction * 1.8f, 0.8f, 0f), 1.8f, teleportSlashDamage);
 
-        yield return new WaitForSeconds(0.35f);
+        yield return new WaitForSeconds(0.18f);
         isActing = false;
-        nextSkillTimer = skillCooldown;
+        nextSkillTimer = phase1SkillCooldown;
     }
 
     private IEnumerator ExecuteDeathNova()
@@ -338,15 +400,56 @@ public class LichBossController : EnemyHealth
         isActing = true;
         StopMoving();
         if (anim != null) anim.SetTrigger("DeathNova");
+        PlaySkillSound();
 
-        // Gồng tụ năng lượng 0.5s rồi phát nổ 360 độ
+        // Gồng tụ năng lượng 0.5s rồi phát nổ 360 độ cực đại (bán kính mở rộng thêm gần 2 size lên 5.2m)
         yield return new WaitForSeconds(0.5f);
-        ApplyAoEDamage(transform.position + new Vector3(0f, 0.8f, 0f), 3.4f, deathNovaDamage);
-        KnockbackNearbyPlayers(3.5f, 14f);
+        Vector3 novaCenter = transform.position + new Vector3(0f, 0.8f, 0f);
+        SpawnNovaVFX(novaCenter, deathNovaRadius);
+        ApplyAoEDamage(novaCenter, deathNovaRadius, deathNovaDamage);
+        KnockbackNearbyPlayers(deathNovaRadius + 0.4f, 16f);
 
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.35f);
         isActing = false;
         nextSkillTimer = skillCooldown;
+    }
+
+    private void SpawnNovaVFX(Vector3 center, float maxRadius)
+    {
+        GameObject fxObj = new GameObject("DeathNova_VFX");
+        fxObj.transform.position = center;
+        StartCoroutine(NovaShockwaveRoutine(fxObj, maxRadius));
+    }
+
+    private IEnumerator NovaShockwaveRoutine(GameObject fxObj, float maxRadius)
+    {
+        Texture2D tex = new Texture2D(1, 1);
+        tex.SetPixel(0, 0, Color.white);
+        tex.Apply();
+        Sprite s = Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1f);
+
+        var sr = fxObj.AddComponent<SpriteRenderer>();
+        sr.sprite = s;
+        sr.color = new Color(0.6f, 0.15f, 0.95f, 0.6f);
+        sr.sortingOrder = 45;
+
+        float duration = 0.35f;
+        float elapsed = 0f;
+
+        while (elapsed < duration && fxObj != null)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            float currentScale = Mathf.Lerp(1.0f, maxRadius * 2.2f, t);
+            fxObj.transform.localScale = new Vector3(currentScale, currentScale * 0.75f, 1f);
+
+            Color c = sr.color;
+            c.a = Mathf.Lerp(0.6f, 0f, t);
+            sr.color = c;
+            yield return null;
+        }
+
+        if (fxObj != null) Destroy(fxObj);
     }
 
     private IEnumerator ExecuteSummon()
@@ -354,6 +457,7 @@ public class LichBossController : EnemyHealth
         isActing = true;
         StopMoving();
         if (anim != null) anim.SetTrigger("Summon");
+        PlaySkillSound();
 
         yield return new WaitForSeconds(0.5f);
         if (minionPrefab != null || minionPrefab2 != null)
@@ -373,14 +477,22 @@ public class LichBossController : EnemyHealth
             }
         }
 
-        yield return new WaitForSeconds(0.35f);
+        yield return new WaitForSeconds(0.18f);
         isActing = false;
-        nextSkillTimer = skillCooldown;
+        nextSkillTimer = phase1SkillCooldown;
     }
 
     // ==========================================
     // TIỆN ÍCH HITBOX & DAMAGE
     // ==========================================
+    public void PlaySkillSound()
+    {
+        if (skillSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(skillSound);
+        }
+    }
+
     private void ApplyAoEDamage(Vector2 center, float radius, int dmg)
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(center, radius);
@@ -435,7 +547,31 @@ public class LichBossController : EnemyHealth
             if (col != null) col.enabled = false;
             rb.linearVelocity = Vector2.zero;
             rb.bodyType = RigidbodyType2D.Kinematic;
-            Destroy(gameObject, 2.5f);
+            StartCoroutine(VictorySequenceRoutine());
+            Destroy(gameObject, 3.5f);
+        }
+    }
+
+    private System.Collections.IEnumerator VictorySequenceRoutine()
+    {
+        yield return new WaitForSeconds(2.0f);
+
+        // Kích hoạt bảng chiến thắng Game Win khi tiêu diệt Đại trùm Lich Boss
+        GameEndUI gameEndUI = FindAnyObjectByType<GameEndUI>(FindObjectsInactive.Include);
+        if (gameEndUI != null)
+        {
+            Debug.Log("🏆 [Lich_Boss] ĐẠI TRÙM ĐÃ BỊ HẠ GỤC! KÍCH HOẠT CHIẾN THẮNG!");
+            gameEndUI.ShowWin();
+        }
+        else
+        {
+            // Fallback: Tìm cổng chiến thắng nếu có trong Scene
+            var winPortals = FindObjectsByType<GameWinPortal>(FindObjectsInactive.Include);
+            if (winPortals != null && winPortals.Length > 0)
+            {
+                winPortals[0].gameObject.SetActive(true);
+                winPortals[0].transform.position = transform.position;
+            }
         }
     }
 

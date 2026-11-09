@@ -37,6 +37,11 @@ public class DeathKnightController : EnemyHealth
     [SerializeField] private float hurtDuration = 0.25f;
     [SerializeField] private float escapeCooldown = 5.0f;
 
+    [Header("4. Audio (SFX)")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip attackSound;
+    [SerializeField] private UnityEngine.Audio.AudioMixerGroup sfxMixerGroup;
+
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private Collider2D myCollider;
@@ -64,6 +69,17 @@ public class DeathKnightController : EnemyHealth
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         myCollider = GetComponent<Collider2D>();
+
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
+
+        audioSource.playOnAwake = false;
+        audioSource.loop = false;
+        audioSource.spatialBlend = 0f;
+        if (sfxMixerGroup != null)
+            audioSource.outputAudioMixerGroup = sfxMixerGroup;
     }
 
     private void Start()
@@ -230,6 +246,7 @@ public class DeathKnightController : EnemyHealth
     {
         isAttacking = true;
         StopMoving();
+        PlayAttackSound();
         cooldownTimer = attackCooldown;
         attackTimeoutTimer = 1.4f;
 
@@ -247,6 +264,14 @@ public class DeathKnightController : EnemyHealth
     }
 
     // Animation Event: gọi ở thời điểm vung kiếm Attack 1
+    public void PlayAttackSound()
+    {
+        if (attackSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(attackSound);
+        }
+    }
+
     public void DealSlashDamage()
     {
         DealDamageInArea(attack1Range, attack1Damage);

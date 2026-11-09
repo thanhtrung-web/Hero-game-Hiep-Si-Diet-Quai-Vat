@@ -33,6 +33,11 @@ public class WraithMageController : EnemyHealth
     [SerializeField] private GameObject missilePrefab;
     [SerializeField] private GameObject pillarHazardPrefab;
 
+    [Header("3. Audio (SFX)")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip castSound;
+    [SerializeField] private UnityEngine.Audio.AudioMixerGroup sfxMixerGroup;
+
     private Rigidbody2D rb;
     private Collider2D myCollider;
     private Transform player;
@@ -56,6 +61,17 @@ public class WraithMageController : EnemyHealth
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0f; // Bay lơ lửng, không bị trọng lực kéo
         myCollider = GetComponent<Collider2D>();
+
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
+
+        audioSource.playOnAwake = false;
+        audioSource.loop = false;
+        audioSource.spatialBlend = 0f;
+        if (sfxMixerGroup != null)
+            audioSource.outputAudioMixerGroup = sfxMixerGroup;
     }
 
     private void Start()
@@ -182,6 +198,7 @@ public class WraithMageController : EnemyHealth
     private void StartCastSpell()
     {
         isCasting = true;
+        PlayCastSound();
         StopFlight();
         cooldownTimer = spellCooldown;
 
@@ -197,6 +214,14 @@ public class WraithMageController : EnemyHealth
     }
 
     // Animation Event: Bắn quả cầu ma thuật bay thẳng ngang
+    public void PlayCastSound()
+    {
+        if (castSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(castSound);
+        }
+    }
+
     public void LaunchSoulMissile()
     {
         if (missilePrefab != null && player != null)

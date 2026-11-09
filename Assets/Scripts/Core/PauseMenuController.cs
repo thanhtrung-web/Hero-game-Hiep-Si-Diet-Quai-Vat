@@ -23,7 +23,7 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] private string sfxVolumeParameter = "SFXVolume";
 
     [Header("Exit")]
-    [SerializeField] private string mapChoiceSceneName = "ChoiceMap";
+    [SerializeField] private string mapChoiceSceneName = "ChoiceMapSceen";
 
     private const string MusicVolumeKey = "Settings_MusicVolume";
     private const string SfxVolumeKey = "Settings_SFXVolume";

@@ -5,6 +5,7 @@ public class BossMap4Controller : MonoBehaviour
     [Header("Stats")]
     public float maxHealth = 100f;
     private float currentHealth;
+    public float CurrentHealth => currentHealth;
     public float moveSpeed = 3f;
     public float detectionRange = 10f;
     public float attackRange = 2f;
@@ -17,6 +18,7 @@ public class BossMap4Controller : MonoBehaviour
     public Transform player;
     private Rigidbody2D rb;
     private bool isDead = false;
+    public bool IsDead => isDead;
 
     [Header("Audio (Dùng 1 Audio Source)")]
     public AudioSource audioSource;
@@ -27,6 +29,15 @@ public class BossMap4Controller : MonoBehaviour
 
     // 🔒 CỜ KHÓA TUYỆT ĐỐI: Đảm bảo Idle Sound chỉ kêu đúng 1 LẦN DUY NHẤT
     private bool hasPlayedIdleSound = false;
+
+    private void Awake()
+    {
+        currentHealth = maxHealth;
+        if (GetComponent<BossMap4Health>() == null)
+        {
+            gameObject.AddComponent<BossMap4Health>();
+        }
+    }
 
     void Start()
     {

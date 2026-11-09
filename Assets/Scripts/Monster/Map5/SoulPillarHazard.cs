@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 public class SoulPillarHazard : MonoBehaviour
@@ -34,6 +34,11 @@ public class SoulPillarHazard : MonoBehaviour
             hasDealtDamage = true;
             CheckAndDealDamage();
         }
+    }
+
+    public void SetDamage(int dmg)
+    {
+        damage = dmg;
     }
 
     private void CheckAndDealDamage()
