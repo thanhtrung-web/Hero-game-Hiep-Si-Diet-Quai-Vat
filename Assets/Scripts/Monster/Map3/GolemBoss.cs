@@ -1,9 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 namespace HeroGame.Map3 {
 [RequireComponent(typeof(AudioSource))]
 public class GolemBoss : EnemyHealth {
+ public override bool IsBoss => true;
+ public override string BossTitle => "Cổ Thạch Vương - Ancient Golem";
  [System.Serializable] public class Sequence { public string name; public Sprite[] frames; }
  public Sequence[] sequences;
  public int bossHealth=900;
@@ -33,7 +35,7 @@ public class GolemBoss : EnemyHealth {
  protected override void Awake(){
  soundSource = GetComponent<AudioSource>();
  soundSource.outputAudioMixerGroup = soundMixerGroup;
- CurrentHP=bossHealth; visual=GetComponent<SpriteRenderer>();body=GetComponent<Rigidbody2D>();shape=GetComponent<Collider2D>();home=transform.position;
+ CurrentHP=bossHealth; currentHealth=bossHealth; maxHealth=bossHealth; visual=GetComponent<SpriteRenderer>();body=GetComponent<Rigidbody2D>();shape=GetComponent<Collider2D>();home=transform.position;
  var child=new GameObject("Golem FX");child.transform.SetParent(transform,false);fx=child.AddComponent<SpriteRenderer>();fx.sharedMaterial=visual.sharedMaterial;fx.sortingOrder=visual.sortingOrder+1;
  }
  Sprite[] Frames(string name){foreach(var s in sequences)if(s.name==name)return s.frames;return System.Array.Empty<Sprite>();}
@@ -65,12 +67,13 @@ public class GolemBoss : EnemyHealth {
  var frames=Frames("AttackC_FX");Vector2 p=shape.bounds.center;var victims=new HashSet<KnightController>();float elapsed=0;
  while(elapsed<.9f&&!isDead){float dt=Time.deltaTime;Vector2 next=p+Vector2.right*direction*5*dt;if(Physics2D.Linecast(p,next,groundMask))break;p=next;go.transform.position=p;if(frames.Length>0)sr.sprite=frames[(int)(elapsed*12)%frames.Length];Hit(p,.65f,damage,victims);elapsed+=dt;yield return null;}Destroy(go);}
  IEnumerator Upgrade(){busy=true;upgrading=true;Stop();PlaySound(upgradeSound,true);yield return Play("Upgrade",10);enraged=true;upgrading=false;busy=false;}
- public override void TakeDamage(int amount){if(isDead||amount<=0)return;CurrentHP=Mathf.Max(0,CurrentHP-amount);if(CurrentHP==0){isDead=true;StopAllCoroutines();if(waveObject)Destroy(waveObject);fx.sprite=null;StartCoroutine(Death());return;}
+ public override void TakeDamage(int amount){if(isDead||amount<=0)return;CurrentHP=Mathf.Max(0,CurrentHP-amount); currentHealth = CurrentHP; NotifyDamageTaken(amount); NotifyHealthChanged(currentHealth, maxHealth); SpawnDamagePopup(amount);if(CurrentHP==0){isDead=true;StopAllCoroutines();if(waveObject)Destroy(waveObject);fx.sprite=null;StartCoroutine(Death());return;}
  if(Time.time>=nextHurtSound){nextHurtSound=Time.time+.18f;PlaySound(hurtSound);}
  // Attacks and transformation have poise: damage still applies, animation is not interrupted.
  if(!busy&&Time.time>=stagger){stagger=Time.time+1.5f;StartCoroutine(Hurt());}}
  IEnumerator Hurt(){busy=true;Stop();yield return Play(enraged?"HitB":"HitA",12);busy=false;}
  IEnumerator Death(){Stop();PlaySound(deathSound,true);shape.enabled=false;body.simulated=false;StartCoroutine(Effect("Death_FX",Vector2.zero));yield return Play(enraged||upgrading?"DeathB":"DeathA",9);yield return new WaitForSeconds(2);Destroy(gameObject);}
- void OnGUI(){if(!target||isDead||Vector2.Distance(target.transform.position,transform.position)>detectionRange+3)return;float w=Mathf.Min(500,Screen.width*.55f);Rect r=new Rect((Screen.width-w)/2,24,w,24);GUI.Box(r,"GOLEM"+(enraged?" â€” ENRAGED":""));var old=GUI.color;GUI.color=enraged?Color.red:Color.cyan;GUI.DrawTexture(new Rect(r.x,r.y+26,w*CurrentHP/bossHealth,8),Texture2D.whiteTexture);GUI.color=old;}
+ // Legacy GUI replaced by BossHealthBarUI
+ void LegacyOnGUI(){if(!target||isDead||Vector2.Distance(target.transform.position,transform.position)>detectionRange+3)return;float w=Mathf.Min(500,Screen.width*.55f);Rect r=new Rect((Screen.width-w)/2,24,w,24);GUI.Box(r,"GOLEM"+(enraged?" â€” ENRAGED":""));var old=GUI.color;GUI.color=enraged?Color.red:Color.cyan;GUI.DrawTexture(new Rect(r.x,r.y+26,w*CurrentHP/bossHealth,8),Texture2D.whiteTexture);GUI.color=old;}
 }}
 

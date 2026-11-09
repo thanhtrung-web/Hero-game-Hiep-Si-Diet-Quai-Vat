@@ -14,5 +14,16 @@ public class PersistentHud : MonoBehaviour
 
         instance = this;
         DontDestroyOnLoad(gameObject);
+
+        EnsureBossHealthBar();
+    }
+
+    private void EnsureBossHealthBar()
+    {
+        if (FindAnyObjectByType<BossHealthBarUI>() == null)
+        {
+            GameObject bossBarObj = new GameObject("BossHealthBarUI");
+            bossBarObj.AddComponent<BossHealthBarUI>();
+        }
     }
 }

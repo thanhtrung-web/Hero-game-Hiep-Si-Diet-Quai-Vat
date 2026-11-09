@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 637103227775839599}
+  - component: {fileID: 1054748987428476792}
   - component: {fileID: 4097179631944750650}
   - component: {fileID: 7817238209333681742}
   - component: {fileID: 552970584469316760}
@@ -36,6 +37,103 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1054748987428476792
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7965130596206574050}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 5648443171253266897, guid: 6630ca1a54619ee4899c7c585c6accf3, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!212 &4097179631944750650
 SpriteRenderer:
   serializedVersion: 3
@@ -203,7 +301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89f4dafb765ddd54b8d60a1eab2bbbe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkeletonBossController
-  maxHealth: 450
+  maxHealth: 400
   animator: {fileID: 7817238209333681742}
   patrolScript: {fileID: 0}
   moveSpeed: 2.2
@@ -219,9 +317,9 @@ MonoBehaviour:
   deAggroRange: 12
   attackRange: 2.5
   attackCooldown: 2.2
-  normalAttackDamage: 25
-  heavyAttackDamage: 40
-  minionPrefab: {fileID: 3607489874284767990, guid: cf3bb7a7f2810d94fba369db59a5d092, type: 3}
+  normalAttackDamage: 20
+  heavyAttackDamage: 35
+  minionPrefab: {fileID: 3607489874284767990, guid: 44585b19452471a4c92920daabc64f22, type: 3}
   summonCooldown: 16
   maxMinions: 2
   summonHpThreshold: 0.75
@@ -229,3 +327,9 @@ MonoBehaviour:
   exitPortal: {fileID: 0}
   portalAppearDelay: 1.5
   portalOffsetFromBoss: {x: 1, y: 0.2, z: 0}
+  audioSource: {fileID: 1054748987428476792}
+  attackSound: {fileID: 8300000, guid: e5b7a192410a48b394019a0a50150b03, type: 3}
+  attack1Sound: {fileID: 8300000, guid: e479136d3a34401683b01e43d7bb78ca, type: 3}
+  attack2Sound: {fileID: 8300000, guid: c4a8870858ef4bd891f52ef5d543a510, type: 3}
+  attack3Sound: {fileID: 8300000, guid: b724b3650d244191a7cc588ea323af85, type: 3}
+  sfxMixerGroup: {fileID: 5648443171253266897, guid: 6630ca1a54619ee4899c7c585c6accf3, type: 2}
