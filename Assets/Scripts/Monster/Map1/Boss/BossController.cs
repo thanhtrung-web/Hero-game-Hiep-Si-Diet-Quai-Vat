@@ -1,10 +1,12 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class BossController: EnemyHealth
 {
+    public override bool IsBoss => true;
+    public override string BossTitle => gameObject.name.Contains("Mini") ? "Thủ Lĩnh Yêu Tinh - Goblin Chieftain" : "Chủ Nhân Rừng Thiêng - Forest Guardian";
     public enum BossState
     {
         Patrol,
@@ -421,7 +423,7 @@ public class BossController: EnemyHealth
     {
         if (isDead || damage <= 0) return;
 
-        currentHealth = Mathf.Max(0, currentHealth - damage);
+        currentHealth = Mathf.Max(0, currentHealth - damage); NotifyDamageTaken(damage); NotifyHealthChanged(currentHealth, maxHealth); SpawnDamagePopup(damage);
 
         if (currentHealth == 0)
         {

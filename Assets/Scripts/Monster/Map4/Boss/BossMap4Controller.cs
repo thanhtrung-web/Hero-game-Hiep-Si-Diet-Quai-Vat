@@ -1,38 +1,86 @@
 using UnityEngine;
 
-public class BossMap4Controller : MonoBehaviour
+public class BossMap4Controller : EnemyHealth
 {
     [Header("Stats")]
     public float maxHealth = 100f;
     private float currentHealth;
+    public float CurrentHealth => currentHealth;
     public float moveSpeed = 3f;
     public float detectionRange = 10f;
-    public float attackRange = 2f;
+    public float attackRange = 3.5f;
     public float attackDamage = 20f;
-    public float attackCooldown = 1.5f;
-    private float lastAttackTime;
+    public float attackCooldown = 2.2f;
+    public float hurtCooldown = 2.0f;
+    private float lastAttackTime = -999f;
+    private float lastHurtTime = -999f;
 
     [Header("References")]
-    public Animator animator;
     public Transform player;
     private Rigidbody2D rb;
     private bool isDead = false;
+    public bool IsDead => isDead;
+    private CapsuleCollider2D bossCollider;
 
-    [Header("Audio (Dùng 1 Audio Source)")]
+    [Header("Audio")]
     public AudioSource audioSource;
     public AudioClip attackSound;
     public AudioClip takeDamageSound;
     public AudioClip dieSound;
     public AudioClip idleSound;
 
-    // 🔒 CỜ KHÓA TUYỆT ĐỐI: Đảm bảo Idle Sound chỉ kêu đúng 1 LẦN DUY NHẤT
     private bool hasPlayedIdleSound = false;
+
+    private void Awake()
+    {
+        currentHealth = maxHealth;
+        if (GetComponent<BossMap4Health>() == null)
+        {
+            gameObject.AddComponent<BossMap4Health>();
+        }
+    }
+
+    void Start()
+    protected override void Awake()
+    {
+        if (maxHealth <= 3)
+        {
+            maxHealth = 100;
+        }
+
+        base.Awake();
+
+        rb = GetComponent<Rigidbody2D>();
+        bossCollider = GetComponent<CapsuleCollider2D>();
+
+        if (rb != null)
+        {
+            rb.simulated = true;
+        }
+
+        if (bossCollider != null && bossCollider.size.x > 3.0f)
+        {
+            bossCollider.size = new Vector2(2.5f, bossCollider.size.y);
+        }
+
+        if (attackRange < 3.2f)
+        {
+            attackRange = 3.5f;
+        }
+
+        if (attackCooldown < 2.1f)
+        {
+            attackCooldown = 2.2f;
+        }
+
+        if (hurtCooldown <= 0.1f)
+        {
+            hurtCooldown = 2.0f;
+        }
+    }
 
     void Start()
     {
-        currentHealth = maxHealth;
-        rb = GetComponent<Rigidbody2D>();
-
         if (animator == null)
             animator = GetComponent<Animator>();
 
@@ -50,35 +98,55 @@ public class BossMap4Controller : MonoBehaviour
     {
         if (isDead) return;
 
-        if (player != null)
+        if (player == null)
         {
-            float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null) player = playerObj.transform;
+            if (player == null) return;
+        }
 
-            // 1. Kiểm tra nếu đang trong thời gian hồi chiêu (Cooldown) thì khựng lại chờ
-            if (Time.time < lastAttackTime + attackCooldown)
-            {
-                StopMoving();
-                return;
-            }
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-            // 2. Logic di chuyển & tấn công
-            if (distanceToPlayer <= attackRange)
-            {
-                FacePlayer();
-                Attack();
-            }
-            else if (distanceToPlayer <= detectionRange)
-            {
-                FacePlayer();
-                PlayIdleSoundOnce();
-                MoveTowardsPlayer();
-            }
-            else
-            {
-                SetIdle();
-            }
+        if (Time.time < lastAttackTime + attackCooldown)
+        {
+            StopMoving();
+            return;
+        }
+
+        if (IsPlayerInAttackRange(attackRange))
+        {
+            FacePlayer();
+            Attack();
+        }
+        else if (distanceToPlayer <= detectionRange)
+        {
+            FacePlayer();
+            PlayIdleSoundOnce();
+            MoveTowardsPlayer();
+        }
+        else
+        {
+            SetIdle();
         }
     }
+
+    private bool IsPlayerInAttackRange(float range)
+    {
+        if (player == null) return false;
+
+        float dist2D = Vector2.Distance(transform.position, player.position);
+        float distX = Mathf.Abs(transform.position.x - player.position.x);
+        float distY = Mathf.Abs(transform.position.y - player.position.y);
+
+        if (bossCollider != null)
+        {
+            float edgeDist = Mathf.Sqrt(bossCollider.bounds.SqrDistance(player.position));
+            if (edgeDist <= 1.2f) return true;
+        }
+
+        return dist2D <= range || (distX <= range && distY <= 3.5f);
+    }
+
     void FacePlayer()
     {
         if (player == null) return;
@@ -106,10 +174,9 @@ public class BossMap4Controller : MonoBehaviour
     {
         StopMoving();
 
-        // Đặt lại thời gian tấn công trước khi gọi Trigger để khóa hành động di chuyển
         lastAttackTime = Time.time;
 
-        // Kích hoạt animation tấn công
+        animator.ResetTrigger("IsTakeDmg");
         animator.SetTrigger("IsATK");
 
         if (attackSound != null && audioSource != null)
@@ -117,23 +184,23 @@ public class BossMap4Controller : MonoBehaviour
             audioSource.PlayOneShot(attackSound);
         }
     }
+
     void StopMoving()
     {
         if (rb != null)
             rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
-        animator.SetBool("IsWalking", false);
+        if (animator != null)
+            animator.SetBool("IsWalking", false);
     }
 
-    // 🔊 PHÁT ĐÚNG 1 LẦN KHI NGƯỜI CHƠI TIẾN VÀO GẦN BOSS
     void PlayIdleSoundOnce()
     {
         if (audioSource == null || idleSound == null || player == null) return;
 
-        // Chỉ phát khi người chơi đã tiến vào phạm vi gần Boss (detectionRange)
         if (!hasPlayedIdleSound && Vector2.Distance(transform.position, player.position) <= detectionRange)
         {
             audioSource.PlayOneShot(idleSound);
-            hasPlayedIdleSound = true; // Khóa cờ ngay lập tức, không bao giờ mở lại
+            hasPlayedIdleSound = true;
         }
     }
 
@@ -143,8 +210,7 @@ public class BossMap4Controller : MonoBehaviour
 
         if (player != null)
         {
-            float distance = Vector2.Distance(transform.position, player.position);
-            if (distance <= attackRange + 0.5f)
+            if (IsPlayerInAttackRange(attackRange + 0.8f))
             {
                 player.SendMessage("TakeDamage", attackDamage, SendMessageOptions.DontRequireReceiver);
             }
@@ -156,12 +222,11 @@ public class BossMap4Controller : MonoBehaviour
         StopMoving();
     }
 
-    // Hàm nhận sát thương chính của Boss
-    public void TakeDamage(float damage)
+    public override void TakeDamage(int damage)
     {
-        if (isDead) return;
+        if (isDead || damage <= 0) return;
 
-        currentHealth -= damage;
+        currentHealth = Mathf.Max(0, currentHealth - damage);
 
         if (currentHealth <= 0)
         {
@@ -169,27 +234,32 @@ public class BossMap4Controller : MonoBehaviour
             return;
         }
 
-        animator.SetTrigger("IsTakeDmg");
-        StopMoving();
-
-        if (takeDamageSound != null && audioSource != null)
+        bool isAttackingNow = Time.time < lastAttackTime + 1.1f;
+        if (!isAttackingNow && Time.time >= lastHurtTime + hurtCooldown)
         {
-            audioSource.PlayOneShot(takeDamageSound);
+            lastHurtTime = Time.time;
+            if (animator != null)
+                animator.SetTrigger("IsTakeDmg");
+            StopMoving();
+
+            if (takeDamageSound != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(takeDamageSound);
+            }
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
-        TakeDamage((float)damage);
+        TakeDamage(Mathf.RoundToInt(damage));
     }
 
-    void Die()
+    protected override void Die()
     {
         if (isDead) return;
         isDead = true;
         StopMoving();
 
-        // 1. Reset sạch toàn bộ Trigger tấn công/nhận đòn và ép chuyển sang BossDie
         if (animator != null)
         {
             animator.ResetTrigger("IsATK");
@@ -203,11 +273,9 @@ public class BossMap4Controller : MonoBehaviour
             audioSource.PlayOneShot(dieSound);
         }
 
-        // Vô hiệu hóa va chạm để Player có thể đi xuyên qua xác
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
 
-        // Triệt tiêu vận tốc rơi và khóa trọng lực, chống rơi xuyên bản đồ
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;

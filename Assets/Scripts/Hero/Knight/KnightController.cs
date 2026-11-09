@@ -1,33 +1,47 @@
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerHealth))]
 public class KnightController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 4f;
     [SerializeField] private float sprintSpeed = 7f;
-    [SerializeField] private float jumpForce = 6f;
+    [SerializeField] private float jumpForce = 7.5f;
 
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private int maxHealth = 200;
-    [SerializeField] private float maxStamina = 100f;
+    [SerializeField] private int maxHealth = 300;
+    [SerializeField] private float maxStamina = 150f;
     [SerializeField] private float attackRange = 1.2f;
     [SerializeField] private LayerMask enemyLayer;
-    [SerializeField] private int attack1Damage = 20;
-    [SerializeField] private int attack2Damage = 25;
-    [SerializeField] private int attack3Damage = 35;
-    [SerializeField] private int runAttackDamage = 30;
+    [SerializeField] private int attack1Damage = 10;
+    [SerializeField] private int attack2Damage = 15;
+    [SerializeField] private int attack3Damage = 20;
+    [SerializeField] private int runAttackDamage = 20;
+    [SerializeField] private float attackCooldown = 0.22f;
     [SerializeField] private float staminaRegenRate = 4f;
     [SerializeField] private float sprintStaminaCost = 10f;
+
+    [Header("Audio (SFX Chém gió & Chiến đấu)")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip attack1Sound;
+    [SerializeField] private AudioClip attack2Sound;
+    [SerializeField] private AudioClip attack3Sound;
+    [SerializeField] private AudioClip runAttackSound;
+    [SerializeField] private AudioClip blockSound;
+    [SerializeField] private AudioClip hitSound;
+    [SerializeField] private AudioClip deathSound;
+    [SerializeField] private UnityEngine.Audio.AudioMixerGroup sfxMixerGroup;
 
     private int currentHealth;
     private float currentStamina;
     private bool isStunned;
     private float stunTimer;
     private bool isExhausted; // Khóa chạy khi cạn sạch thể lực, chống giật lùi/flicker
+    private float lastAttackTime = -1f;
 
     // Cho phép các script khác (hoặc UI) đọc máu và thể lực
-    public int CurrentHealth => currentHealth;
-    public int MaxHealth => maxHealth;
+    public int CurrentHealth => playerHealth != null ? playerHealth.CurrentHealth : currentHealth;
+    public int MaxHealth => playerHealth != null ? playerHealth.MaxHealth : maxHealth;
     public float CurrentStamina => currentStamina;
     public float MaxStamina => maxStamina;
 
@@ -35,11 +49,31 @@ public class KnightController : MonoBehaviour
     private bool isDefending;
     private Rigidbody2D rb;
     private Animator anim;
+    private PlayerHealth playerHealth;
+    private bool deathHandled;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        playerHealth = GetComponent<PlayerHealth>();
+
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
+
+        audioSource.playOnAwake = false;
+        audioSource.loop = false;
+        audioSource.spatialBlend = 0f;
+        if (sfxMixerGroup != null)
+            audioSource.outputAudioMixerGroup = sfxMixerGroup;
+    }
+
+    private void PlaySound(AudioClip clip)
+    {
+        if (clip != null && audioSource != null)
+            audioSource.PlayOneShot(clip);
     }
 
     void Start()
@@ -51,6 +85,24 @@ public class KnightController : MonoBehaviour
 
     void Update()
     {
+        // Hết máu (PlayerHealth quyết định, hoặc fallback currentHealth) -> xử lý chết 1 lần rồi dừng điều khiển
+        if ((playerHealth != null && playerHealth.IsDead) || (playerHealth == null && currentHealth <= 0))
+        {
+            Die();
+            return;
+        }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        // DEBUG: bấm H để tự trừ 20 máu (bỏ qua khiên) - chỉ có trong Editor / Development Build
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            if (playerHealth != null)
+                playerHealth.TakeDamage(20);
+            else
+                TakeDamage(20);
+        }
+#endif
+
         // 1. Nếu đang bị Vỡ Khiên Choáng -> Khựng lại 1 giây không thể cử động
         if (isStunned)
         {
@@ -141,7 +193,8 @@ public class KnightController : MonoBehaviour
 
     private void HandleJump()
     {
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+        if (groundCheck != null)
+            isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
 
         if (isDefending) return;
 
@@ -155,12 +208,17 @@ public class KnightController : MonoBehaviour
     {
         if (isDefending) return;
 
-        if (Input.GetKeyDown(KeyCode.J) || Input.GetMouseButton(0))
+        // Chỉ nhận khi vừa bấm phím (GetKeyDown / GetMouseButtonDown), tránh giữ chuột gây spam âm thanh liên tục
+        if (Input.GetKeyDown(KeyCode.J) || Input.GetMouseButtonDown(0))
         {
+            if (Time.time - lastAttackTime < attackCooldown) return;
+            lastAttackTime = Time.time;
+
             // Đòn chém khi đang chạy nhanh
             if (Input.GetKey(KeyCode.LeftShift) && !isExhausted && Mathf.Abs(rb.linearVelocity.x) > 4.5f && isGrounded)
             {
                 anim.SetTrigger("runAttack");
+                PlaySound(runAttackSound);
                 StartCoroutine(DelayedDamage(0.12f, runAttackDamage));
                 return;
             }
@@ -170,18 +228,21 @@ public class KnightController : MonoBehaviour
             {
                 // Combo đòn 2 (25 damage)
                 anim.SetTrigger("attack2");
+                PlaySound(attack2Sound);
                 StartCoroutine(DelayedDamage(0.12f, attack2Damage));
             }
             else if (state.IsName("Knight_Attack2"))
             {
                 // Combo đòn 3 kết liễu (35 damage)
                 anim.SetTrigger("attack3");
+                PlaySound(attack3Sound);
                 StartCoroutine(DelayedDamage(0.15f, attack3Damage));
             }
             else
             {
                 // Đòn chém đầu tiên (20 damage)
                 anim.SetTrigger("attack1");
+                PlaySound(attack1Sound);
                 StartCoroutine(DelayedDamage(0.1f, attack1Damage));
             }
         }
@@ -190,6 +251,7 @@ public class KnightController : MonoBehaviour
     // Hàm quét trúng quái và trừ máu
     public void DealDamageToEnemies(int damage)
     {
+        bool hitAny = false;
         // Tọa độ mũi kiếm vung ra phía trước mặt Hiệp sĩ
         float facingDir = transform.localScale.x != 0 ? Mathf.Sign(transform.localScale.x) : 1f;
         Vector2 attackPos = (Vector2)transform.position + new Vector2(facingDir * 0.9f, 0.2f);
@@ -205,6 +267,7 @@ public class KnightController : MonoBehaviour
                 if (enemy != null)
                 {
                     enemy.TakeDamage(damage);
+                    hitAny = true;
                     Debug.Log($"<color=yellow>TRÚNG ĐÍCH!</color> Hiệp sĩ chém trúng {hit.name}, gây {damage} sát thương!");
                 }
                 else
@@ -214,6 +277,7 @@ public class KnightController : MonoBehaviour
                     if (normalEnemy != null)
                     {
                         normalEnemy.TakeDamage(damage);
+                        hitAny = true;
                         Debug.Log($"<color=yellow>TRÚNG ĐÍCH!</color> Hiệp sĩ chém trúng {hit.name}, gây {damage} sát thương!");
                     }
                     else
@@ -222,12 +286,16 @@ public class KnightController : MonoBehaviour
                         if (boss != null)
                         {
                             boss.TakeDamage(damage);
+                            hitAny = true;
                             Debug.Log($"<color=yellow>TRÚNG ĐÍCH!</color> Hiệp sĩ chém trúng {hit.name}, gây {damage} sát thương!");
                         }
                     }
                 }
             }
         }
+
+        if (hitAny)
+            PlaySound(hitSound);
     }
 
     // Tự động gọi sát thương đồng bộ với vệt chém kiếm
@@ -244,9 +312,10 @@ public class KnightController : MonoBehaviour
         anim.SetBool("isDefending", isDefending);
     }
 
+    // Sát thương từ quái: xử lý khiên trước, phần còn lại chuyển cho PlayerHealth
     public void TakeDamage(int damage = 10)
     {
-        if (currentHealth <= 0) return;
+        if ((playerHealth != null && playerHealth.IsDead) || (playerHealth == null && currentHealth <= 0)) return;
 
         // --- TRƯỜNG HỢP 1: ĐANG GIƠ KHIÊN ĐỠ ---
         if (isDefending)
@@ -265,7 +334,26 @@ public class KnightController : MonoBehaviour
 
                 // Dính 50% sát thương xuyên thủng khiên
                 int bleedDamage = Mathf.Max(1, damage / 2);
-                currentHealth = Mathf.Max(0, currentHealth - bleedDamage);
+                if (playerHealth != null)
+                {
+                    playerHealth.TakeDamage(bleedDamage);
+                    if (playerHealth.IsDead)
+                    {
+                        Die();
+                        return;
+                    }
+                }
+                else
+                {
+                    currentHealth = Mathf.Max(0, currentHealth - bleedDamage);
+                    if (currentHealth <= 0)
+                    {
+                        Die();
+                        return;
+                    }
+                }
+
+                PlaySound(hitSound);
                 anim.SetTrigger("hurt");
 
                 Debug.Log($"<color=red>VỠ KHIÊN!</color> Hiệp sĩ bị choáng 1s và dính {bleedDamage} sát thương!");
@@ -273,6 +361,7 @@ public class KnightController : MonoBehaviour
             else
             {
                 // ĐỠ ĐÒN THÀNH CÔNG: trừ thể lực, KHÔNG MẤT MÁU!
+                PlaySound(blockSound);
                 currentStamina = Mathf.Max(0, currentStamina - staminaCost);
                 Debug.Log($"Đỡ thành công! Tốn {staminaCost:F1} thể lực, còn: {currentStamina:F1}/{maxStamina}");
             }
@@ -280,21 +369,54 @@ public class KnightController : MonoBehaviour
         }
 
         // --- TRƯỜNG HỢP 2: KHÔNG ĐỠ KHIÊN (BỊ ĐÁNH TRỰC DIỆN) ---
-        currentHealth = Mathf.Max(0, currentHealth - damage);
-        anim.SetTrigger("hurt");
-        Debug.Log($"Hiệp sĩ trúng đòn! Mất {damage} máu, còn: {currentHealth}/{maxHealth}");
+        PlaySound(hitSound);
 
-        // Nếu hết máu -> Chết
-        if (currentHealth <= 0)
+        if (playerHealth != null)
         {
-            Die();
+            playerHealth.TakeDamage(damage);
+            if (playerHealth.IsDead)
+            {
+                Die();
+                return;
+            }
         }
+        else
+        {
+            currentHealth = Mathf.Max(0, currentHealth - damage);
+            Debug.Log($"Hiệp sĩ trúng đòn! Mất {damage} máu, còn: {currentHealth}/{maxHealth}");
+            if (currentHealth <= 0)
+            {
+                Die();
+                return;
+            }
+        }
+
+        anim.SetTrigger("hurt");
     }
 
+    // Được gọi khi PlayerHealth báo đã chết (xem Update hoặc TakeDamage)
     public void Die()
     {
+        if (deathHandled) return;
+        deathHandled = true;
+
+        if (deathSound != null)
+            PlaySound(deathSound);
+
         anim.SetTrigger("dead");
         rb.linearVelocity = Vector2.zero;
+        isDefending = false;
+        isStunned = false;
+        gameObject.tag = "Untagged";
         enabled = false;
+    }
+
+    // Nhận Animation Event ở cuối clip Knight_Dead
+    public void OnDeathAnimationFinished()
+    {
+        if (playerHealth != null)
+        {
+            playerHealth.OnDeathAnimationFinished();
+        }
     }
 }
