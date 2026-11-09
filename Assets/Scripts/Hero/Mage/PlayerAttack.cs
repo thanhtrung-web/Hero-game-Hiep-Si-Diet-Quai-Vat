@@ -1,20 +1,40 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
-[RequireComponent(typeof(Animator), typeof(PlayerMana))]
+[RequireComponent(typeof(Animator), typeof(PlayerStamina))]
 public class PlayerAttack : MonoBehaviour
 {
+    [Header("Fireball Damage")]
+    [SerializeField] private int fireballDamage = 30;
+
+    
     [Header("Cooldowns")]
     [SerializeField] private float attackCooldown = 0.6f;
     [SerializeField] private float fireballCooldown = 1.2f;
     [SerializeField] private float flameCooldown = 2f;
 
-    [Header("Mana Costs")]
-    [SerializeField] private float fireballManaCost = 20f;
-    [SerializeField] private float flameManaCost = 30f;
+    // FormerlySerializedAs giữ lại giá trị đã chỉnh trong prefab khi đổi tên biến
+    [Header("Stamina Costs")]
+    [FormerlySerializedAs("fireballManaCost")]
+    [SerializeField] private float fireballStaminaCost = 20f;
+    [FormerlySerializedAs("flameManaCost")]
+    [SerializeField] private float flameStaminaCost = 30f;
+
+    [Header("Attack Damage")]
+    [SerializeField] private int attack1Damage = 20;
+    [SerializeField] private int attack2Damage = 25;
+    
+    [SerializeField] private int flameDamage = 40;
+
+    public int Attack1Damage => attack1Damage;
+    public int Attack2Damage => attack2Damage;
+    public int FireballDamage => fireballDamage;
+    public int FlameDamage => flameDamage;
 
     private Animator animator;
-    private PlayerMana mana;
+    private PlayerStamina stamina;
+    private PlayerHealth health;
 
     private float nextAttackTime;
     private float nextFireballTime;
@@ -23,14 +43,14 @@ public class PlayerAttack : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        mana = GetComponent<PlayerMana>();
+        stamina = GetComponent<PlayerStamina>();
+        health = GetComponent<PlayerHealth>();
     }
 
     private void Update()
     {
-        PlayerHealth health = GetComponent<PlayerHealth>();
         if (health != null && health.IsDead)
-            return; 
+            return;
 
         Keyboard keyboard = Keyboard.current;
 
@@ -52,7 +72,7 @@ public class PlayerAttack : MonoBehaviour
         else if (keyboard.uKey.wasPressedThisFrame &&
                  Time.time >= nextFireballTime)
         {
-            if (!TryUseMana(fireballManaCost))
+            if (!TryUseStamina(fireballStaminaCost))
                 return;
 
             ActivateSkill("CastFireball");
@@ -61,7 +81,7 @@ public class PlayerAttack : MonoBehaviour
         else if (keyboard.iKey.wasPressedThisFrame &&
                  Time.time >= nextFlameTime)
         {
-            if (!TryUseMana(flameManaCost))
+            if (!TryUseStamina(flameStaminaCost))
                 return;
 
             ActivateSkill("Flame");
@@ -69,12 +89,12 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    private bool TryUseMana(float amount)
+    private bool TryUseStamina(float amount)
     {
-        if (mana.TrySpend(amount))
+        if (stamina.TrySpend(amount))
             return true;
 
-        Debug.Log("Not enough mana!", this);
+        Debug.Log("Not enough stamina!", this);
         return false;
     }
 

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Smonter1 Controller
+  m_Controller: {fileID: 9100000, guid: 93a0274bff6e2e44fb3cf8a9505b7d3b, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 06209d018927c584ba3f5772d0540c9f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 03f7fb3546144e9419e972fda8f6fdfb, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 1a1650323eae9a24b824e4467c1d2818, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b879752b4d1cb4c42b51bd02b1f5d424, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 3ecd9b33864260442917f94ace1bce64, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b66153956705eda479139dd0ef86d801, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 69b6c5e013580764b811b9b307701f77, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b66153956705eda479139dd0ef86d801, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 972f42c3890eb58469843e800649baf9, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 6dc5c0a1144bec3468588d434eac3992, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: ed5fa0f85ccc8124e81d10c52ee228e2, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 63345a3fadedd0541abd463007108af9, type: 2}

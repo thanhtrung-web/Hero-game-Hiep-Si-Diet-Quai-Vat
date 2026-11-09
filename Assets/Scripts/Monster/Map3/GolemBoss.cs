@@ -10,12 +10,10 @@ namespace HeroGame.Map3
         public RuntimeAnimatorController fxController;
         [SerializeField] private string bossTitle = "GOLEM";
         [SerializeField, Min(1)] private int bossHealth = 150;
-        public int MaxHealth => bossHealth;
-        public int CurrentHealth { get; private set; }
         public event System.Action<EnemyHealth> Damaged;
         public event System.Action<EnemyHealth> Died;
-        public bool IsBoss => true;
-        public string BossTitle => bossTitle;
+        public override bool IsBoss => true;
+        public override string BossTitle => bossTitle == "GOLEM" ? "Cổ Thạch Vương - Ancient Golem" : bossTitle;
         public float detectionRange = 5, leashRange = 16, speed = 1.5f;
         public float upgradedDetectionRange = 6, upgradedSpeed = 2;
         public int normalDamage = 15, upgradedDamage = 22;
@@ -81,7 +79,8 @@ namespace HeroGame.Map3
             soundSource = GetComponent<AudioSource>();
             soundSource.outputAudioMixerGroup = soundMixerGroup;
             bossAnimator = GetComponent<Animator>();
-            CurrentHealth = MaxHealth;
+            maxHealth = bossHealth;
+            base.Awake();
             visual = GetComponent<SpriteRenderer>();
             body = GetComponent<Rigidbody2D>();
             shape = GetComponent<Collider2D>();
@@ -359,12 +358,16 @@ namespace HeroGame.Map3
         public override void TakeDamage(int amount)
         {
             if (IsDead || amount <= 0) return;
-            CurrentHealth = Mathf.Max(0, CurrentHealth - amount);
+            currentHealth = Mathf.Max(0, currentHealth - amount);
             bool lethal = CurrentHealth == 0;
             isDead = lethal;
+            NotifyDamageTaken(amount);
+            NotifyHealthChanged(currentHealth, maxHealth);
+            SpawnDamagePopup(amount);
             Damaged?.Invoke(this);
             if (lethal)
             {
+                NotifyDeath();
                 Died?.Invoke(this);
                 pendingImpact = null;
                 StopAllCoroutines();
@@ -416,19 +419,6 @@ namespace HeroGame.Map3
             yield return WaitForStateExit(bossAnimator, state, true);
             yield return new WaitForSeconds(2);
             Destroy(gameObject);
-        }
-
-        void OnGUI()
-        {
-            if (!target || isDead || Vector2.Distance(target.transform.position, transform.position) > DetectionRange + 3)
-                return;
-            float width = Mathf.Min(500, Screen.width * .55f);
-            Rect bar = new Rect((Screen.width - width) / 2, 24, width, 24);
-            GUI.Box(bar, enraged ? BossTitle + " - ENRAGED" : BossTitle);
-            var old = GUI.color;
-            GUI.color = enraged ? Color.red : Color.cyan;
-            GUI.DrawTexture(new Rect(bar.x, bar.y + 26, width * CurrentHP / MaxHealth, 8), Texture2D.whiteTexture);
-            GUI.color = old;
         }
     }
 }

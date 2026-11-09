@@ -56,6 +56,11 @@ public class SkeletonController : EnemyHealth
     [Tooltip("Thời gian bị khựng khi trúng đòn (giây)")]
     [SerializeField] private float hurtDuration = 0.25f;
 
+    [Header("4. Audio (SFX)")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip attackSound;
+    [SerializeField] private UnityEngine.Audio.AudioMixerGroup sfxMixerGroup;
+
     // Component nội bộ
     private Rigidbody2D rb;
     private SpriteRenderer sr;
@@ -86,6 +91,17 @@ public class SkeletonController : EnemyHealth
         sr = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         myCollider = GetComponent<Collider2D>();
+
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
+
+        audioSource.playOnAwake = false;
+        audioSource.loop = false;
+        audioSource.spatialBlend = 0f;
+        if (sfxMixerGroup != null)
+            audioSource.outputAudioMixerGroup = sfxMixerGroup;
     }
 
     private void Start()
@@ -312,6 +328,16 @@ public class SkeletonController : EnemyHealth
         // Kích hoạt Trigger: Animator sẽ tự chém Attack 1 rồi nối tiếp sang Attack 2
         if (anim != null)
             anim.SetTrigger("Attack");
+
+        PlayAttackSound();
+    }
+
+    public void PlayAttackSound()
+    {
+        if (attackSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(attackSound);
+        }
     }
 
     // Gây sát thương lên Hiệp sĩ (gọi qua Animation Event ở Attack1 và Attack2)

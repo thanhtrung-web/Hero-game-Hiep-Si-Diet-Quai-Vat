@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4667618502457019015}
   - component: {fileID: 3869201349359975575}
   - component: {fileID: 810000002}
+  - component: {fileID: 1486010003}
   m_Layer: 7
   m_Name: Boss_Golem
   m_TagString: Enemy
@@ -213,10 +214,10 @@ MonoBehaviour:
   slamSound: {fileID: 8300000, guid: a2913dbad9924154a63fe1fa3b62f5f4, type: 3}
   punchSound: {fileID: 8300000, guid: 51b3d1fdf28e4386aa7d4841938a7800, type: 3}
   windupSound: {fileID: 8300000, guid: 6488077701824b68986fae65f07518a5, type: 3}
-  maxHealth: 150
+  maxHealth: 450
   animator: {fileID: 0}
   patrolScript: {fileID: 0}
-  bossHealth: 150
+  bossHealth: 450
   bossTitle: GOLEM
   fxController: {fileID: 9100000, guid: bc4d8c5f6b194b8ab98ddf681f25c78a, type: 2}
   detectionRange: 5
@@ -322,3 +323,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1486010003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7826822675307060920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 282073d2f7ee41b6a17077b1624705f5, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::HeroGame.Map3.GolemPortalUnlock
+  portalObject: {fileID: 0}
