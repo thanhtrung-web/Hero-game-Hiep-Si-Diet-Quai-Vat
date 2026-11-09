@@ -86,17 +86,25 @@ public class EnemyHealthBar : MonoBehaviour
 
     private void CreateVisuals()
     {
-        // 1. Tạo texture pixel 1x1 làm nguồn sprite
         Texture2D tex = new Texture2D(1, 1);
         tex.SetPixel(0, 0, Color.white);
         tex.Apply();
 
-        // Sprite căn giữa cho Khung & Nền
         Sprite centerSprite = Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1f);
-        // Sprite có Pivot bên trái cho Thanh Máu Co Rút (Fill)
         Sprite leftPivotSprite = Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0f, 0.5f), 1f);
 
-        // a) Viền ngoài (Border Frame)
+        int targetSortingLayerID = 0;
+        int targetSortingOrder = 200;
+        if (target != null)
+        {
+            SpriteRenderer targetSr = target.GetComponentInChildren<SpriteRenderer>();
+            if (targetSr != null)
+            {
+                targetSortingLayerID = targetSr.sortingLayerID;
+                targetSortingOrder = targetSr.sortingOrder + 10;
+            }
+        }
+
         GameObject borderObj = new GameObject("Border");
         borderObj.transform.SetParent(transform, false);
         borderObj.transform.localPosition = Vector3.zero;
@@ -104,11 +112,11 @@ public class EnemyHealthBar : MonoBehaviour
         borderSr = borderObj.AddComponent<SpriteRenderer>();
         borderSr.sprite = centerSprite;
         borderSr.color = (target != null && target.IsBoss)
-            ? new Color(0.88f, 0.72f, 0.22f, 0.95f) // Viền vàng hoàng kim cho Boss
+            ? new Color(0.88f, 0.72f, 0.22f, 0.95f)
             : new Color(0.2f, 0.22f, 0.28f, 0.95f);
-        borderSr.sortingOrder = 200;
+        borderSr.sortingLayerID = targetSortingLayerID;
+        borderSr.sortingOrder = targetSortingOrder;
 
-        // b) Nền đen (Background)
         GameObject bgObj = new GameObject("BG");
         bgObj.transform.SetParent(transform, false);
         bgObj.transform.localPosition = Vector3.zero;
@@ -116,9 +124,9 @@ public class EnemyHealthBar : MonoBehaviour
         bgSr = bgObj.AddComponent<SpriteRenderer>();
         bgSr.sprite = centerSprite;
         bgSr.color = new Color(0.08f, 0.08f, 0.12f, 0.9f);
-        bgSr.sortingOrder = 201;
+        bgSr.sortingLayerID = targetSortingLayerID;
+        bgSr.sortingOrder = targetSortingOrder + 1;
 
-        // c) Vệt máu trễ (Lag Bar - Hổ phách/Vàng cam)
         GameObject lagObj = new GameObject("LagFill");
         lagObj.transform.SetParent(transform, false);
         lagObj.transform.localPosition = new Vector3(-barWidth * 0.5f, 0f, 0f);
@@ -126,10 +134,10 @@ public class EnemyHealthBar : MonoBehaviour
         lagSr = lagObj.AddComponent<SpriteRenderer>();
         lagSr.sprite = leftPivotSprite;
         lagSr.color = new Color(1.0f, 0.78f, 0.18f, 0.95f);
-        lagSr.sortingOrder = 202;
+        lagSr.sortingLayerID = targetSortingLayerID;
+        lagSr.sortingOrder = targetSortingOrder + 2;
         lagTransform = lagObj.transform;
 
-        // d) Thanh máu chính (Main HP Fill - Đỏ thẫm rực)
         GameObject fillObj = new GameObject("MainFill");
         fillObj.transform.SetParent(transform, false);
         fillObj.transform.localPosition = new Vector3(-barWidth * 0.5f, 0f, 0f);
@@ -137,7 +145,8 @@ public class EnemyHealthBar : MonoBehaviour
         fillSr = fillObj.AddComponent<SpriteRenderer>();
         fillSr.sprite = leftPivotSprite;
         fillSr.color = new Color(0.92f, 0.18f, 0.22f, 1f);
-        fillSr.sortingOrder = 203;
+        fillSr.sortingLayerID = targetSortingLayerID;
+        fillSr.sortingOrder = targetSortingOrder + 3;
         fillTransform = fillObj.transform;
     }
 
@@ -150,7 +159,6 @@ public class EnemyHealthBar : MonoBehaviour
         currentRatio = newRatio;
         lagPauseTimer = LAG_PAUSE_DURATION;
 
-        // Kích hoạt hiển thị thanh máu khi nhận sát thương
         combatTimer = COMBAT_DURATION;
         targetAlpha = 1.0f;
     }
@@ -178,19 +186,26 @@ public class EnemyHealthBar : MonoBehaviour
             return;
         }
 
-        // 🔒 CHỐNG QUAY NGƯỢC (Anti-Flip): Giữ thanh máu luôn ở vị trí thế giới độc lập,
-        // không bao giờ bị lật ngược khi quái vật quay đầu trái/phải!
-        transform.position = target.transform.position + Vector3.up * heightOffset;
+        Vector3 targetPos = target.transform.position;
+        Collider2D col = target.GetComponent<Collider2D>();
+        if (col != null)
+        {
+            targetPos = new Vector3(col.bounds.center.x, col.bounds.max.y + 0.35f, target.transform.position.z);
+        }
+        else
+        {
+            targetPos += Vector3.up * heightOffset;
+        }
+
+        transform.position = targetPos;
         transform.rotation = Quaternion.identity;
         transform.localScale = Vector3.one;
 
-        // Cập nhật tỷ lệ co giãn của thanh máu chính
         if (fillTransform != null)
         {
             fillTransform.localScale = new Vector3(barWidth * currentRatio, barHeight, 1f);
         }
 
-        // Cập nhật hiệu ứng vệt máu trễ (Catch-up Lag Fill)
         if (lagTransform != null)
         {
             if (lagPauseTimer > 0f)
@@ -209,7 +224,6 @@ public class EnemyHealthBar : MonoBehaviour
             lagTransform.localScale = new Vector3(barWidth * lagRatio, barHeight, 1f);
         }
 
-        // Bộ đếm thời gian tự ẩn khi rời giao tranh (đối với quái thường)
         if (!isDead && target != null && !target.IsBoss)
         {
             if (combatTimer > 0f)
@@ -217,12 +231,11 @@ public class EnemyHealthBar : MonoBehaviour
                 combatTimer -= Time.deltaTime;
                 if (combatTimer <= 0f && currentRatio >= 1.0f)
                 {
-                    targetAlpha = 0f; // Ẩn nếu đầy máu và hết giao tranh
+                    targetAlpha = 0f;
                 }
             }
         }
 
-        // Fade Alpha mượt mà
         if (!Mathf.Approximately(currentAlpha, targetAlpha))
         {
             currentAlpha = Mathf.MoveTowards(currentAlpha, targetAlpha, 4.0f * Time.deltaTime);

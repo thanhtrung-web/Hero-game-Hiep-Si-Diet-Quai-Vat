@@ -14,6 +14,16 @@ public class PlayerSpawner : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField] private CinemachineCamera cinemachineCamera;
+
+    private void Awake()
+    {
+        // Tự động tìm CinemachineCamera trong Scene nếu chưa kéo tay vào Inspector
+        if (cinemachineCamera == null)
+        {
+            cinemachineCamera = FindAnyObjectByType<CinemachineCamera>();
+        }
+    }
+
     private void Start()
     {
         int selected = PlayerPrefs.GetInt("SelectedCharacter", -1);
@@ -29,8 +39,7 @@ public class PlayerSpawner : MonoBehaviour
 
     private void SpawnSelectedCharacter()
     {
-        int selectedCharacter =
-            PlayerPrefs.GetInt(SelectedCharacterKey, 1);
+        int selectedCharacter = PlayerPrefs.GetInt(SelectedCharacterKey, 1);
 
         GameObject selectedPrefab;
 
@@ -60,23 +69,30 @@ public class PlayerSpawner : MonoBehaviour
             : transform.position;
 
         GameObject player = Instantiate(
-        selectedPrefab,
-        position,
-        Quaternion.identity
-    );
+            selectedPrefab,
+            position,
+            Quaternion.identity
+        );
 
         Debug.Log("Spawned Player = " + player.name);
         Debug.Log("Player Transform = " + player.transform);
-        Debug.Log("Camera ref = " + cinemachineCamera);
+
+        // Đảm bảo lấy được CinemachineCamera
+        if (cinemachineCamera == null)
+        {
+            cinemachineCamera = FindAnyObjectByType<CinemachineCamera>();
+        }
 
         if (cinemachineCamera != null)
         {
             cinemachineCamera.Target.TrackingTarget = player.transform;
+            cinemachineCamera.Follow = player.transform;
 
-            Debug.Log(
-                "Camera Target sau khi gán = " +
-                cinemachineCamera.Target.TrackingTarget
-            );
+            Debug.Log("Camera Target sau khi gán = " + player.transform.name);
+        }
+        else
+        {
+            Debug.LogWarning("PlayerSpawner: Không tìm thấy CinemachineCamera trong Scene!");
         }
     }
 }
