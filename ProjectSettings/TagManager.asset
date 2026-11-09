@@ -78,6 +78,9 @@ TagManager:
   - name: Ground
     uniqueID: 1314092469
     locked: 0
+  - name: Item
+    uniqueID: 1840594475
+    locked: 0
   - name: Water
     uniqueID: 3926727799
     locked: 0

@@ -5,9 +5,11 @@ using UnityEngine.UI;
 /// Gan component nay len HealthBarCanvas (con cua Enemy/Boss).
 /// Keo Image Fill vao o Fill Image. Tu tim EnemyHealth o GameObject cha.
 /// </summary>
-[DisallowMultipleComponent]
-public class EnemyHealthBar : MonoBehaviour
+namespace HeroGame.Map1
 {
+    [DisallowMultipleComponent]
+    public class EnemyHealthBar : MonoBehaviour
+    {
     [Header("References")]
     [SerializeField] private EnemyHealth enemyHealth;
     [SerializeField] private Image fillImage;
@@ -42,5 +44,6 @@ public class EnemyHealthBar : MonoBehaviour
 
         if (hideWhenDead && enemyHealth.IsDead)
             gameObject.SetActive(false);
+    }
     }
 }
