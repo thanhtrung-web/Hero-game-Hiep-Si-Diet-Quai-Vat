@@ -257,15 +257,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c39146bf218b944d8f70c9562739ada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
-  fireballDamage: 500
+  fireballDamage: 60
   attackCooldown: 0.6
   fireballCooldown: 1.2
   flameCooldown: 2
   fireballStaminaCost: 20
-  flameStaminaCost: 30
+  flameStaminaCost: 50
   attack1Damage: 15
   attack2Damage: 20
-  flameDamage: 450
+  flameDamage: 100
 --- !u!114 &985049790482964706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,7 +548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b65c89a3b6e47146999ff872ea9c040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlameHitboxDamage
-  damage: 3
+  attackSource: {fileID: 0}
 --- !u!1 &5871227349868534532
 GameObject:
   m_ObjectHideFlags: 0
