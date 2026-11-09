@@ -25,7 +25,6 @@ public class PortalUnlockAfterEnemies : MonoBehaviour
 
     private void Start()
     {
-        // Nếu trong Scene đã có QuestUIController thì nhường toàn bộ việc đếm Boss + mở cổng cho QuestUIController
         if (FindAnyObjectByType<QuestUIController>() != null)
         {
             enabled = false;
@@ -55,7 +54,5 @@ public class PortalUnlockAfterEnemies : MonoBehaviour
 
         if (portalTrigger != null)
             portalTrigger.enabled = true;
-
-        Debug.Log("Đã hạ Boss — cổng xuất hiện!");
     }
 }

@@ -11,7 +11,7 @@ public class TrollController : EnemyHealth
     public float attackCooldown = 1.5f;
     private float lastAttackTime = -99f;
 
-    [Header("Patrol Boundaries (Tùy chọn: Kéo LeftPoint & RightPoint)")]
+    [Header("Patrol Boundaries")]
     public Transform leftLimit;
     public Transform rightLimit;
     public float idleTimeAtPoint = 1.5f;
@@ -19,12 +19,16 @@ public class TrollController : EnemyHealth
     private bool isWaiting = false;
     private bool movingRight = true;
 
-    [Header("Audio (Tùy chọn)")]
+    [Header("Audio")]
     public AudioSource audioSource;
     [Range(0f, 1f)] public float soundVolume = 0.3f;
     public AudioClip attackSound;
     public AudioClip takeDamageSound;
     public AudioClip dieSound;
+
+    [Header("Drop Item")]
+    public GameObject healSmallPrefab;
+    [Range(0f, 1f)] public float dropChance = 0.3f;
 
     private Transform player;
     private SpriteRenderer spriteRenderer;
@@ -36,8 +40,6 @@ public class TrollController : EnemyHealth
         if (maxHealth <= 3)
             maxHealth = 120;
 
-        // Nếu trong Inspector vẫn lưu giá trị attackRange = 1.8 cũ (nhỏ hơn kích thước Collider của Troll),
-        // tự động nâng lên 2.6 để Troll không bị vướng Collider của chính nó khi tiến lại đánh Player
         if (attackRange < 2.5f)
             attackRange = 2.6f;
 
@@ -47,13 +49,11 @@ public class TrollController : EnemyHealth
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
 
-        // Bật Simulated cho Rigidbody2D để nhận sát thương
         if (rb != null)
         {
             rb.simulated = true;
         }
 
-        // Thu gọn CapsuleCollider2D nếu đang bị mặc định quá to (40x42 bao cả khoảng trống quanh chùy)
         CapsuleCollider2D capsule = col as CapsuleCollider2D;
         if (capsule != null && capsule.size.x > 30f)
         {
@@ -66,7 +66,6 @@ public class TrollController : EnemyHealth
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
 
-        // Tự động tìm LeftPoint và RightPoint hoặc PointA và PointB từ Object cha
         Transform groupParent = transform.parent;
         if (groupParent != null)
         {
@@ -82,7 +81,6 @@ public class TrollController : EnemyHealth
             }
         }
 
-        // Tự động tìm Player
         GameObject pObj = GameObject.FindGameObjectWithTag("Player");
         if (pObj != null) player = pObj.transform;
     }
@@ -97,7 +95,6 @@ public class TrollController : EnemyHealth
             if (pObj != null) player = pObj.transform;
         }
 
-        // Đang trong thời gian ra đòn / hồi chiêu thì đứng yên hoàn thành đòn đánh
         if (Time.time < lastAttackTime + attackCooldown)
         {
             SetWalking(false);
@@ -107,7 +104,6 @@ public class TrollController : EnemyHealth
         float distanceToPlayer = player != null ? Vector2.Distance(transform.position, player.position) : Mathf.Infinity;
         bool inAttackRange = IsPlayerInAttackRange(attackRange);
 
-        // 1. TRẠNG THÁI TẤN CÔNG
         if (inAttackRange)
         {
             FacePlayer();
@@ -120,7 +116,6 @@ public class TrollController : EnemyHealth
             if (attackSound != null && audioSource != null)
                 audioSource.PlayOneShot(attackSound, soundVolume);
         }
-        // 2. TRẠNG THÁI ĐUỔI THEO PLAYER
         else if (distanceToPlayer <= agroRange)
         {
             FacePlayer();
@@ -133,7 +128,6 @@ public class TrollController : EnemyHealth
             if (spriteRenderer != null)
                 spriteRenderer.flipX = (direction < 0);
         }
-        // 3. TRẠNG THÁI TUẦN TRA HOẶC ĐỨNG YÊN
         else
         {
             PatrolLogic();
@@ -216,9 +210,6 @@ public class TrollController : EnemyHealth
             animator.SetBool("isMoving", walking);
     }
 
-    // ==========================================
-    // GỌI BẰNG ANIMATION EVENT Ở FRAME ĐÁNH
-    // ==========================================
     public void AnimationAttackHit()
     {
         if (isDead) return;
@@ -226,19 +217,14 @@ public class TrollController : EnemyHealth
         if (IsPlayerInAttackRange(attackRange + 0.8f))
         {
             player.SendMessage("TakeDamage", attackDamage, SendMessageOptions.DontRequireReceiver);
-            Debug.Log("<color=yellow>Troll đánh trúng Player gây " + attackDamage + " sát thương!</color>");
         }
     }
 
-    // ==========================================
-    // NHẬN SÁT THƯƠNG TỪ PLAYER (Ghi đè EnemyHealth)
-    // ==========================================
     public override void TakeDamage(int damage)
     {
         if (isDead || damage <= 0) return;
 
         currentHealth = Mathf.Max(0, currentHealth - damage);
-        Debug.Log("<color=cyan>Troll nhận " + damage + " DMG! Máu còn: " + currentHealth + "</color>");
 
         if (currentHealth <= 0)
         {
@@ -281,6 +267,30 @@ public class TrollController : EnemyHealth
             rb.bodyType = RigidbodyType2D.Kinematic;
         }
 
+        TryDropHealSmall();
+
         Destroy(gameObject, 3.5f);
+    }
+
+    private void TryDropHealSmall()
+    {
+        if (healSmallPrefab == null) return;
+
+        if (Random.value <= dropChance)
+        {
+            Vector3 dropPos = transform.position;
+            if (spriteRenderer != null)
+            {
+                dropPos.y = spriteRenderer.bounds.min.y + 0.6f;
+            }
+
+            GameObject dropped = Instantiate(healSmallPrefab, dropPos, Quaternion.identity);
+            SpriteRenderer itemSr = dropped.GetComponent<SpriteRenderer>();
+            if (itemSr != null && spriteRenderer != null)
+            {
+                itemSr.sortingLayerID = spriteRenderer.sortingLayerID;
+                itemSr.sortingOrder = spriteRenderer.sortingOrder + 1;
+            }
+        }
     }
 }

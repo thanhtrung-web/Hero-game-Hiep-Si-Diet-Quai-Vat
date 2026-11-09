@@ -5,17 +5,17 @@ using UnityEngine.UI;
 
 public class QuestUIController : MonoBehaviour
 {
-    [Header("1. Kéo Text hiển thị vào đây (Lưu sẵn trong Prefab)")]
+    [Header("Text References")]
     [SerializeField] private TMP_Text questTextTMP;
     [SerializeField] private Text questTextLegacy;
 
-    [Header("2. Mục tiêu Boss & Cổng qua màn (Kéo Cha hoặc Con đều được)")]
+    [Header("Target References")]
     [SerializeField] private GameObject bossTarget;
     [SerializeField] private GameObject portalObject;
     [SerializeField] private Collider2D portalTrigger;
     [SerializeField] private SpriteRenderer portalVisual;
 
-    [Header("3. Nội dung & Màu sắc")]
+    [Header("Display Settings")]
     [SerializeField] private string progressFormat = "Cần tiêu diệt {0}/{1} Boss để vượt ải";
     [SerializeField] private string completedFormat = "Đã tiêu diệt {0}/{1} Boss — Mở cổng qua màn!";
     [SerializeField] private Color progressColor = Color.white;
@@ -28,7 +28,6 @@ public class QuestUIController : MonoBehaviour
 
     private void Awake()
     {
-        // Tự động đổi chữ "quái" cũ trong Inspector thành "Boss"
         if (!string.IsNullOrEmpty(progressFormat) && progressFormat.Contains("quái"))
         {
             progressFormat = progressFormat.Replace("quái", "Boss");
@@ -38,7 +37,6 @@ public class QuestUIController : MonoBehaviour
             completedFormat = completedFormat.Replace("quái", "Boss");
         }
 
-        // Tự động tìm Text con nếu quên kéo trong Prefab
         if (questTextTMP == null)
             questTextTMP = GetComponentInChildren<TMP_Text>();
 
@@ -51,7 +49,6 @@ public class QuestUIController : MonoBehaviour
 
     private void AutoAlignTextIntoPanel()
     {
-        // Tìm khung Panel nền để tự động đưa chữ vào chính giữa khung và làm mờ nền đen
         Image panelImage = GetComponentInChildren<Image>();
         if (panelImage != null)
         {
@@ -91,7 +88,6 @@ public class QuestUIController : MonoBehaviour
 
     private void FindAndLockPortal()
     {
-        // Tự động tìm cổng trong Scene nếu chưa kéo tay
         if (portalObject == null)
         {
             PortalUnlockAfterEnemies unlockScript = FindAnyObjectByType<PortalUnlockAfterEnemies>();
@@ -135,8 +131,6 @@ public class QuestUIController : MonoBehaviour
     {
         trackedBosses.Clear();
 
-        // 1. Nếu có kéo Boss (hoặc Object cha "Boss") vào Inspector:
-        // Tự động lấy con Boss thực sự bên trong (ví dụ Boss_Frost nằm trong Boss)
         if (bossTarget != null)
         {
             EnemyHealth childBossHealth = bossTarget.GetComponentInChildren<EnemyHealth>(true);
@@ -157,7 +151,6 @@ public class QuestUIController : MonoBehaviour
             return;
         }
 
-        // 2. Tự động tìm Boss theo các script Boss của từng Map
         BossMap4Controller bossMap4 = FindAnyObjectByType<BossMap4Controller>();
         if (bossMap4 != null && !trackedBosses.Contains(bossMap4.gameObject))
             trackedBosses.Add(bossMap4.gameObject);
@@ -170,7 +163,6 @@ public class QuestUIController : MonoBehaviour
         if (bossMap5 != null && !trackedBosses.Contains(bossMap5.gameObject))
             trackedBosses.Add(bossMap5.gameObject);
 
-        // 3. Tìm thêm bất kỳ đối tượng Enemy nào có chữ "Boss" trong tên (hoặc tên Object cha)
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         for (int i = 0; i < enemies.Length; i++)
         {
@@ -237,7 +229,6 @@ public class QuestUIController : MonoBehaviour
         if (col != null && !col.enabled)
             return true;
 
-        // Nếu boss là một Object rỗng chứa con bên trong và con đã bị Destroy hết
         if (health == null && col == null && boss.transform.childCount == 0)
             return true;
 
@@ -253,8 +244,6 @@ public class QuestUIController : MonoBehaviour
 
         if (portalTrigger != null)
             portalTrigger.enabled = true;
-
-        Debug.Log("Đã tiêu diệt Boss — Cổng qua màn đã mở!");
     }
 
     private void UpdateUI(int killed, int total, bool completed)

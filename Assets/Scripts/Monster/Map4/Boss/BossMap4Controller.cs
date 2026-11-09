@@ -8,21 +8,22 @@ public class BossMap4Controller : EnemyHealth
     public float attackRange = 3.5f;
     public float attackDamage = 20f;
     public float attackCooldown = 2.2f;
+    public float hurtCooldown = 2.0f;
     private float lastAttackTime = -999f;
+    private float lastHurtTime = -999f;
 
     [Header("References")]
     public Transform player;
     private Rigidbody2D rb;
     private CapsuleCollider2D bossCollider;
 
-    [Header("Audio (Dùng 1 Audio Source)")]
+    [Header("Audio")]
     public AudioSource audioSource;
     public AudioClip attackSound;
     public AudioClip takeDamageSound;
     public AudioClip dieSound;
     public AudioClip idleSound;
 
-    // 🔒 CỜ KHÓA TUYỆT ĐỐI: Đảm bảo Idle Sound chỉ kêu đúng 1 LẦN DUY NHẤT
     private bool hasPlayedIdleSound = false;
 
     protected override void Awake()
@@ -37,19 +38,16 @@ public class BossMap4Controller : EnemyHealth
         rb = GetComponent<Rigidbody2D>();
         bossCollider = GetComponent<CapsuleCollider2D>();
 
-        // Đảm bảo Rigidbody2D bật Simulated để nhận va chạm đòn đánh từ Player
         if (rb != null)
         {
             rb.simulated = true;
         }
 
-        // Thu gọn chiều ngang Collider nếu đang quá bè (4.93m) để Player tiếp cận sát thân Boss
         if (bossCollider != null && bossCollider.size.x > 3.0f)
         {
             bossCollider.size = new Vector2(2.5f, bossCollider.size.y);
         }
 
-        // Đảm bảo tầm đánh đủ lớn so với kích thước Collider cao lớn của Boss Frost
         if (attackRange < 3.2f)
         {
             attackRange = 3.5f;
@@ -58,6 +56,11 @@ public class BossMap4Controller : EnemyHealth
         if (attackCooldown < 2.1f)
         {
             attackCooldown = 2.2f;
+        }
+
+        if (hurtCooldown <= 0.1f)
+        {
+            hurtCooldown = 2.0f;
         }
     }
 
@@ -89,14 +92,12 @@ public class BossMap4Controller : EnemyHealth
 
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-        // 1. Kiểm tra nếu đang trong thời gian hồi chiêu (Cooldown) thì khựng lại chờ
         if (Time.time < lastAttackTime + attackCooldown)
         {
             StopMoving();
             return;
         }
 
-        // 2. Logic di chuyển & tấn công
         if (IsPlayerInAttackRange(attackRange))
         {
             FacePlayer();
@@ -122,8 +123,6 @@ public class BossMap4Controller : EnemyHealth
         float distX = Mathf.Abs(transform.position.x - player.position.x);
         float distY = Mathf.Abs(transform.position.y - player.position.y);
 
-        // Do Boss Frost rất cao (size Y ~ 5.8), tâm của Boss nằm cao hơn tâm Player ~1.8m
-        // Nên kiểm tra khoảng cách ngang + biên Collider giúp Boss đánh chuẩn xác khi áp sát
         if (bossCollider != null)
         {
             float edgeDist = Mathf.Sqrt(bossCollider.bounds.SqrDistance(player.position));
@@ -160,10 +159,8 @@ public class BossMap4Controller : EnemyHealth
     {
         StopMoving();
 
-        // Đặt lại thời gian tấn công trước khi gọi Trigger để khóa hành động di chuyển
         lastAttackTime = Time.time;
 
-        // Kích hoạt animation tấn công
         animator.ResetTrigger("IsTakeDmg");
         animator.SetTrigger("IsATK");
 
@@ -181,16 +178,14 @@ public class BossMap4Controller : EnemyHealth
             animator.SetBool("IsWalking", false);
     }
 
-    // 🔊 PHÁT ĐÚNG 1 LẦN KHI NGƯỜI CHƠI TIẾN VÀO GẦN BOSS
     void PlayIdleSoundOnce()
     {
         if (audioSource == null || idleSound == null || player == null) return;
 
-        // Chỉ phát khi người chơi đã tiến vào phạm vi gần Boss (detectionRange)
         if (!hasPlayedIdleSound && Vector2.Distance(transform.position, player.position) <= detectionRange)
         {
             audioSource.PlayOneShot(idleSound);
-            hasPlayedIdleSound = true; // Khóa cờ ngay lập tức, không bao giờ mở lại
+            hasPlayedIdleSound = true;
         }
     }
 
@@ -212,15 +207,11 @@ public class BossMap4Controller : EnemyHealth
         StopMoving();
     }
 
-    // ==========================================
-    // NHẬN SÁT THƯƠNG TỪ PLAYER (Ghi đè EnemyHealth)
-    // ==========================================
     public override void TakeDamage(int damage)
     {
         if (isDead || damage <= 0) return;
 
         currentHealth = Mathf.Max(0, currentHealth - damage);
-        Debug.Log("<color=cyan>Boss Frost nhận " + damage + " DMG! Máu còn: " + currentHealth + "</color>");
 
         if (currentHealth <= 0)
         {
@@ -228,13 +219,18 @@ public class BossMap4Controller : EnemyHealth
             return;
         }
 
-        if (animator != null)
-            animator.SetTrigger("IsTakeDmg");
-        StopMoving();
-
-        if (takeDamageSound != null && audioSource != null)
+        bool isAttackingNow = Time.time < lastAttackTime + 1.1f;
+        if (!isAttackingNow && Time.time >= lastHurtTime + hurtCooldown)
         {
-            audioSource.PlayOneShot(takeDamageSound);
+            lastHurtTime = Time.time;
+            if (animator != null)
+                animator.SetTrigger("IsTakeDmg");
+            StopMoving();
+
+            if (takeDamageSound != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(takeDamageSound);
+            }
         }
     }
 
@@ -249,7 +245,6 @@ public class BossMap4Controller : EnemyHealth
         isDead = true;
         StopMoving();
 
-        // 1. Reset sạch toàn bộ Trigger tấn công/nhận đòn và ép chuyển sang BossDie
         if (animator != null)
         {
             animator.ResetTrigger("IsATK");
@@ -263,11 +258,9 @@ public class BossMap4Controller : EnemyHealth
             audioSource.PlayOneShot(dieSound);
         }
 
-        // Vô hiệu hóa va chạm để Player có thể đi xuyên qua xác
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
 
-        // Triệt tiêu vận tốc rơi và khóa trọng lực, chống rơi xuyên bản đồ
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;

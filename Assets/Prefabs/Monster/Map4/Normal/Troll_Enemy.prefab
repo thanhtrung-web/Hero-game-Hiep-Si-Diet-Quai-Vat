@@ -210,6 +210,8 @@ MonoBehaviour:
   attackSound: {fileID: 8300000, guid: a076539ea31101c4195f5140c0355256, type: 3}
   takeDamageSound: {fileID: 8300000, guid: 8ece1df9864bccc4aa73824f9d41a51e, type: 3}
   dieSound: {fileID: 8300000, guid: d1bcc1dc2ec93ec4892c6e5fffa86052, type: 3}
+  healSmallPrefab: {fileID: 7864394136218673691, guid: 533bc0b18b607ea4ea27acd83c514c92, type: 3}
+  dropChance: 0.3
 --- !u!82 &4886011432529066118
 AudioSource:
   m_ObjectHideFlags: 0
