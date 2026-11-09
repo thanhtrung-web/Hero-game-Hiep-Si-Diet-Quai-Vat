@@ -13,6 +13,10 @@ public class GameWinPortal : MonoBehaviour
         if (player == null || player.IsDead)
             return;
 
-        gameEndUI.ShowWin();
+        if (gameEndUI == null)
+            gameEndUI = FindAnyObjectByType<GameEndUI>(FindObjectsInactive.Include);
+
+        if (gameEndUI != null)
+            gameEndUI.ShowWin();
     }
 }

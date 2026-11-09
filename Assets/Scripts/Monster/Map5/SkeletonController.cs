@@ -1,39 +1,47 @@
 using UnityEngine;
 
+/// <summary>
+/// Điều khiển quái vật Bộ Xương (Skeleton White & Skeleton Yellow) trong Map 5 Phase 1.
+/// Kế thừa từ <see cref="EnemyHealth"/> để liên kết hệ thống thanh máu nổi (Overhead Health Bar) và nảy số sát thương.
+/// Tích hợp máy trạng thái thông minh (FSM): Tuần tra giới hạn lãnh thổ [minPatrolX, maxPatrolX],
+/// Dò mép sàn (chống rớt vực), Dò va chạm tường, Thù địch đuổi theo Hiệp sĩ và tung combo chém kiếm 2 nhát.
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class SkeletonController : EnemyHealth
 {
-    // Các trạng thái của Quái
+    /// <summary>
+    /// Các trạng thái trong máy trạng thái (FSM) của quái Bộ Xương.
+    /// </summary>
     public enum EnemyState
     {
-        Patrol,     // Đi tuần tra bình thường trong vùng [minPatrolX, maxPatrolX]
-        Chase,      // Thù địch: bỏ giới hạn tuần tra, đuổi theo Hiệp sĩ
-        Returning   // Bỏ thù địch: đi bộ trở về vùng lãnh thổ ban đầu
+        Patrol,     // Đi tuần tra bình thường trong vùng giới hạn [minPatrolX, maxPatrolX]
+        Chase,      // Thù địch: Bỏ giới hạn tuần tra, tăng tốc đuổi theo Hiệp sĩ
+        Returning   // Bỏ thù địch: Đi bộ trở về vùng lãnh thổ xuất phát ban đầu
     }
 
-    [Header("1. Movement & Patrol (Tuần tra thông minh)")]
-    [Tooltip("Tốc độ bước đi")]
+    [Header("1. Movement & Patrol (Tuần tra thông minh & Dò địa hình)")]
+    [Tooltip("Tốc độ bước đi khi tuần tra")]
     [SerializeField] private float moveSpeed = 2f;
 
-    [Tooltip("Tốc độ khi đuổi theo Hiệp sĩ")]
+    [Tooltip("Tốc độ khi phát hiện và đuổi theo Hiệp sĩ")]
     [SerializeField] private float chaseSpeed = 3f;
 
-    [Tooltip("Layer mặt đất (Chọn layer Ground)")]
+    [Tooltip("Layer mặt đất dùng để dò sàn và tường (Ground Layer)")]
     [SerializeField] private LayerMask groundLayer;
 
-    [Tooltip("Khoảng cách phía trước để dò mép vực")]
+    [Tooltip("Khoảng cách phía trước bàn chân để bắn tia dò mép vực")]
     [SerializeField] private float ledgeCheckDistance = 0.8f;
 
-    [Tooltip("Độ sâu dò sàn")]
+    [Tooltip("Độ sâu của tia dò mặt đất")]
     [SerializeField] private float groundCheckDepth = 1.0f;
 
-    [Tooltip("Khoảng cách dò bức tường phía trước")]
+    [Tooltip("Khoảng cách tia dò bức tường phía trước")]
     [SerializeField] private float wallCheckDistance = 0.6f;
 
-    [Tooltip("Bán kính tuần tra từ điểm spawn (Ví dụ đứng ở 5, radius = 4 thì đi từ 1 -> 9)")]
+    [Tooltip("Bán kính tuần tra quanh điểm xuất phát (ví dụ đứng ở 5, radius = 4 thì đi từ 1 -> 9)")]
     [SerializeField] private float patrolRadius = 4f;
 
-    [Header("2. Aggro & Combat (Hệ thống thù địch & chiến đấu)")]
+    [Header("2. Aggro & Combat (Hệ thống thù địch & Chiến đấu)")]
     [Tooltip("Khoảng cách phát hiện để BẮT ĐẦU THÙ ĐỊCH và đuổi theo Hiệp sĩ")]
     [SerializeField] private float aggroRange = 4.5f;
 
@@ -49,28 +57,33 @@ public class SkeletonController : EnemyHealth
     [Tooltip("Sát thương mỗi nhát chém")]
     [SerializeField] private int attackDamage = 10;
 
-    [Header("3. Hurt & Knockback (Bị thương)")]
+    [Header("3. Hurt & Knockback (Phản hồi chấn thương & Giật lùi)")]
     [Tooltip("Lực giật lùi khi bị Hiệp sĩ chém trúng")]
     [SerializeField] private float knockbackForce = 3f;
 
-    [Tooltip("Thời gian bị khựng khi trúng đòn (giây)")]
+    [Tooltip("Thời gian bị khựng choáng khi trúng đòn (giây)")]
     [SerializeField] private float hurtDuration = 0.25f;
 
-    [Header("4. Audio (SFX)")]
+    [Header("4. Audio (Âm thanh vung kiếm)")]
+    [Tooltip("AudioSource phát âm thanh")]
     [SerializeField] private AudioSource audioSource;
+
+    [Tooltip("Clip âm thanh khi vung kiếm tấn công")]
     [SerializeField] private AudioClip attackSound;
+
+    [Tooltip("Mixer Group dành cho hiệu ứng âm thanh SFX")]
     [SerializeField] private UnityEngine.Audio.AudioMixerGroup sfxMixerGroup;
 
-    // Component nội bộ
+    // Components nội bộ (Internal Components)
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private Animator anim;
     private Collider2D myCollider;
     private Transform player;
 
-    // Trạng thái quái
+    // Biến trạng thái FSM
     private EnemyState currentState = EnemyState.Patrol;
-    private int direction = 1; // 1 = phải, -1 = trái
+    private int direction = 1; // 1 = nhìn phải, -1 = nhìn trái
     private bool isAttacking = false;
     private bool isHurt = false;
     private float cooldownTimer = 0f;
@@ -82,8 +95,14 @@ public class SkeletonController : EnemyHealth
     private float minPatrolX;
     private float maxPatrolX;
 
+    /// <summary>
+    /// Trạng thái hoạt động hiện tại của quái Bộ Xương.
+    /// </summary>
     public EnemyState CurrentState => currentState;
 
+    /// <summary>
+    /// Khởi tạo các thành phần Rigidbody, SpriteRenderer, Animator, Collider và AudioSource.
+    /// </summary>
     protected override void Awake()
     {
         base.Awake();
@@ -92,6 +111,7 @@ public class SkeletonController : EnemyHealth
         anim = GetComponent<Animator>();
         myCollider = GetComponent<Collider2D>();
 
+        // Tự động kết nối hoặc thêm mới AudioSource
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
@@ -104,6 +124,9 @@ public class SkeletonController : EnemyHealth
             audioSource.outputAudioMixerGroup = sfxMixerGroup;
     }
 
+    /// <summary>
+    /// Thiết lập vùng giới hạn tuần tra và dò tìm mục tiêu Người chơi trong Scene.
+    /// </summary>
     private void Start()
     {
         // Ghi nhận điểm đứng ban đầu làm tâm tuần tra
@@ -114,6 +137,9 @@ public class SkeletonController : EnemyHealth
         FindPlayer();
     }
 
+    /// <summary>
+    /// Vòng lặp cập nhật AI chính: đếm thời gian hồi chiêu, kiểm tra độ cao sàn và điều phối FSM.
+    /// </summary>
     private void Update()
     {
         if (isDead) return;
@@ -245,6 +271,9 @@ public class SkeletonController : EnemyHealth
         }
     }
 
+    /// <summary>
+    /// Xử lý logic tuần tra: đổi hướng khi chạm biên [minPatrolX, maxPatrolX], mép vực hoặc tường.
+    /// </summary>
     private void Patrol()
     {
         // 0. Giới hạn phạm vi tuần tra quanh vị trí ban đầu (ví dụ: 1 -> 5 -> 9)
@@ -274,24 +303,38 @@ public class SkeletonController : EnemyHealth
         MoveForward(moveSpeed);
     }
 
+    /// <summary>
+    /// Di chuyển về phía trước theo hướng hiện tại với tốc độ xác định.
+    /// </summary>
+    /// <param name="speed">Tốc độ di chuyển.</param>
     private void MoveForward(float speed)
     {
         rb.linearVelocity = new Vector2(direction * speed, rb.linearVelocity.y);
         if (anim != null) anim.SetBool("IsMoving", true);
     }
 
+    /// <summary>
+    /// Dừng hoàn toàn di chuyển ngang và chuyển hoạt ảnh sang Idle.
+    /// </summary>
     private void StopMoving()
     {
         rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
         if (anim != null) anim.SetBool("IsMoving", false);
     }
 
+    /// <summary>
+    /// Đảo ngược hướng nhìn và cập nhật sprite.
+    /// </summary>
     private void Flip()
     {
         direction = -direction;
         UpdateFacing();
     }
 
+    /// <summary>
+    /// Xoay mặt về phía mục tiêu với khoảng đệm an toàn (Deadzone) 0.15m để tránh rung giật xoay qua lại.
+    /// </summary>
+    /// <param name="targetX">Tọa độ X cần hướng tới.</param>
     private void FaceTarget(float targetX)
     {
         float diff = targetX - transform.position.x;
@@ -311,13 +354,18 @@ public class SkeletonController : EnemyHealth
         }
     }
 
+    /// <summary>
+    /// Lật sprite qua thuộc tính flipX (Sprite gốc hướng sang phải).
+    /// </summary>
     private void UpdateFacing()
     {
-        // Sprite gốc nhìn phải (flipX = false). Đi trái thì flipX = true.
         if (sr != null)
             sr.flipX = direction < 0;
     }
 
+    /// <summary>
+    /// Bắt đầu chuỗi tấn công combo 2 đòn chém liên hoàn.
+    /// </summary>
     private void StartComboAttack()
     {
         isAttacking = true;
@@ -332,6 +380,9 @@ public class SkeletonController : EnemyHealth
         PlayAttackSound();
     }
 
+    /// <summary>
+    /// Phát âm thanh khi vung kiếm tấn công.
+    /// </summary>
     public void PlayAttackSound()
     {
         if (attackSound != null && audioSource != null)
@@ -340,7 +391,9 @@ public class SkeletonController : EnemyHealth
         }
     }
 
-    // Gây sát thương lên Hiệp sĩ (gọi qua Animation Event ở Attack1 và Attack2)
+    /// <summary>
+    /// Animation Event: Gây sát thương lên Hiệp sĩ (gọi tại các frame chém trúng của Attack 1 và Attack 2).
+    /// </summary>
     public void DealAttackDamage()
     {
         if (isDead) return;
@@ -363,13 +416,18 @@ public class SkeletonController : EnemyHealth
         }
     }
 
-    // Kết thúc đòn đánh combo (gọi ở frame cuối của Attack 2)
+    /// <summary>
+    /// Animation Event: Kết thúc chuỗi đòn tấn công combo (gọi ở frame cuối của Attack 2).
+    /// </summary>
     public void FinishAttack()
     {
         isAttacking = false;
     }
 
-    // Khi Hiệp sĩ chém trúng quái
+    /// <summary>
+    /// Xử lý nhận sát thương từ người chơi: giảm máu, quay mặt phản công, khựng choáng và giật lùi.
+    /// </summary>
+    /// <param name="damage">Lượng sát thương nhận vào.</param>
     public override void TakeDamage(int damage)
     {
         if (isDead) return;
@@ -403,6 +461,9 @@ public class SkeletonController : EnemyHealth
         }
     }
 
+    /// <summary>
+    /// Tìm kiếm Người chơi trong Scene theo thứ tự ưu tiên: KnightController, PlayerHealth hoặc Tag "Player".
+    /// </summary>
     private void FindPlayer()
     {
         // 1. Ưu tiên tìm Hiệp sĩ qua KnightController
@@ -429,7 +490,9 @@ public class SkeletonController : EnemyHealth
         }
     }
 
-    // Vẽ vùng cảm biến trực quan trong Scene
+    /// <summary>
+    /// Vẽ vùng cảm biến trực quan trong Scene của Unity Editor (tầm tuần tra, tầm thù địch, tầm đánh, tia dò vực/tường).
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
         // 1. Vẽ phạm vi tuần tra ban đầu (Màu xanh lá cây)

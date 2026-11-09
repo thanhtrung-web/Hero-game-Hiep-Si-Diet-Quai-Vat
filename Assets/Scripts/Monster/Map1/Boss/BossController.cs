@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -457,11 +457,23 @@ public class BossController: EnemyHealth
         }
     }
 
+    /// <summary>
+    /// Vị trí nơi Boss ngã xuống để cố định vị trí mở Cổng dịch chuyển / Chiến thắng.
+    /// </summary>
+    private Vector3 deathPosition;
+
     protected override void Die()
     {
-        base.Die();
+        if (isDead) return;
+        isDead = true;
 
+        deathPosition = transform.position;
+
+        NotifyDeath();
         StopMoving();
+
+        if (anim != null) anim.SetTrigger("Dead");
+        if (patrolScript != null) patrolScript.enabled = false;
 
         // Vô hiệu hóa va chạm và trọng lực để nằm chết đẹp mắt
         if (myCollider != null) myCollider.enabled = false;
@@ -471,50 +483,102 @@ public class BossController: EnemyHealth
             rb.bodyType = RigidbodyType2D.Kinematic;
         }
 
-        Debug.Log("👑💀 [Skeleton_Boss] ĐÃ BỊ TIÊU DIỆT! CỔNG DỊCH CHUYỂN ĐANG MỞ...");
-        StartCoroutine(OpenExitPortalRoutine());
+        // MiniBoss không mở cổng chiến thắng trừ khi được gán trực tiếp exitPortal
+        bool isMini = gameObject.name.Contains("Mini");
+        if (!isMini || exitPortal != null)
+        {
+            Debug.Log($"👑🌲 [{gameObject.name}] ĐÃ BỊ TIÊU DIỆT! CỔNG CHIẾN THẮNG ĐANG MỞ...");
+            StartCoroutine(OpenExitPortalRoutine());
+        }
+
         Destroy(gameObject, 3.5f);
+    }
+
+    private void OnDestroy()
+    {
+        bool isMini = gameObject.name.Contains("Mini");
+        if (isDead && (!isMini || exitPortal != null))
+        {
+            ActivateExitPortalDirectly();
+        }
     }
 
     private IEnumerator OpenExitPortalRoutine()
     {
         yield return new WaitForSeconds(portalAppearDelay);
+        ActivateExitPortalDirectly();
+    }
 
+    private void ActivateExitPortalDirectly()
+    {
         GameObject portalObj = exitPortal;
 
         // Nếu chưa gán trong Inspector, tự tìm kiếm trong Scene (kể cả object đang bị ẩn / inactive)
         if (portalObj == null)
         {
-            var portals = FindObjectsByType<ScenePortal>(FindObjectsInactive.Include);
-            if (portals != null && portals.Length > 0)
+            // 1. Tìm theo component GameWinPortal (Cổng kết thúc / chiến thắng của Map 1)
+            var winPortals = FindObjectsByType<GameWinPortal>(FindObjectsInactive.Include);
+            if (winPortals != null && winPortals.Length > 0)
             {
-                portalObj = portals[0].gameObject;
+                portalObj = winPortals[0].gameObject;
             }
+            // 2. Tìm theo ScenePortal
             else
             {
-                // Fallback theo tên
-                portalObj = GameObject.Find("Map5_ExitPortal") ?? GameObject.Find("ExitPortal") ?? GameObject.Find("Portal");
+                var scenePortals = FindObjectsByType<ScenePortal>(FindObjectsInactive.Include);
+                if (scenePortals != null && scenePortals.Length > 0)
+                {
+                    portalObj = scenePortals[0].gameObject;
+                }
+                else
+                {
+                    // 3. Fallback theo tên phổ biến của cổng
+                    portalObj = GameObject.Find("PortalEndgame") 
+                             ?? GameObject.Find("Map1_ExitPortal") 
+                             ?? GameObject.Find("ExitPortal") 
+                             ?? GameObject.Find("Portal");
+                }
             }
         }
 
         if (portalObj != null)
         {
             // Luôn đặt cổng xuất hiện ngay cạnh Boss (nơi Boss vừa bị hạ gục)
-            portalObj.transform.position = transform.position + portalOffsetFromBoss;
+            Vector3 basePos = (deathPosition != Vector3.zero) ? deathPosition : transform.position;
+            Vector3 offset = (portalOffsetFromBoss != Vector3.zero) ? portalOffsetFromBoss : new Vector3(1.2f, 0.2f, 0f);
+            Vector3 targetPos = basePos + offset;
+
+            portalObj.transform.position = targetPos;
+
+            var pve = portalObj.GetComponent<PortalVisualEffect>();
+            if (pve != null)
+            {
+                pve.SetBasePosition(targetPos);
+            }
 
             portalObj.SetActive(true);
 
             var srPortal = portalObj.GetComponent<SpriteRenderer>();
-            if (srPortal != null) srPortal.enabled = true;
+            if (srPortal != null)
+            {
+                srPortal.enabled = true;
+                if (srPortal.sortingOrder < 5) srPortal.sortingOrder = 5;
+            }
 
             var colPortal = portalObj.GetComponent<Collider2D>();
             if (colPortal != null) colPortal.enabled = true;
 
-            Debug.Log($"🌀 [Skeleton_Boss] CỔNG QUA MAP 5 PHẦN 2 ĐÃ XUẤT HIỆN TẠI VỊ TRÍ KẾ BÊN BOSS: {portalObj.transform.position}!");
+            var gwp = portalObj.GetComponent<GameWinPortal>();
+            if (gwp != null) gwp.enabled = true;
+
+            var sp = portalObj.GetComponent<ScenePortal>();
+            if (sp != null) sp.enabled = true;
+
+            Debug.Log($"🌀 [{gameObject.name}] CỔNG CHIẾN THẮNG ĐÃ SẴN SÀNG TẠI VỊ TRÍ: {targetPos}!");
         }
         else
         {
-            Debug.LogWarning("⚠️ [Skeleton_Boss] Không tìm thấy ExitPortal hoặc ScenePortal nào trong Scene để kích hoạt!");
+            Debug.LogWarning($"⚠️ [{gameObject.name}] Không tìm thấy PortalEndgame hoặc ExitPortal nào trong Scene để kích hoạt!");
         }
     }
 

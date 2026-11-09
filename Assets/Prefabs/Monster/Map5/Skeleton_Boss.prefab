@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 552970584469316760}
   - component: {fileID: 1566741132286394773}
   - component: {fileID: 2881592218446898393}
+  - component: {fileID: -4209818924203776172}
   m_Layer: 7
   m_Name: Skeleton_Boss
   m_TagString: Enemy
@@ -317,8 +318,8 @@ MonoBehaviour:
   deAggroRange: 12
   attackRange: 2.5
   attackCooldown: 2.2
-  normalAttackDamage: 20
-  heavyAttackDamage: 35
+  normalAttackDamage: 15
+  heavyAttackDamage: 25
   minionPrefab: {fileID: 3607489874284767990, guid: 44585b19452471a4c92920daabc64f22, type: 3}
   summonCooldown: 16
   maxMinions: 2
@@ -333,3 +334,19 @@ MonoBehaviour:
   attack2Sound: {fileID: 8300000, guid: c4a8870858ef4bd891f52ef5d543a510, type: 3}
   attack3Sound: {fileID: 8300000, guid: b724b3650d244191a7cc588ea323af85, type: 3}
   sfxMixerGroup: {fileID: 5648443171253266897, guid: 6630ca1a54619ee4899c7c585c6accf3, type: 2}
+--- !u!114 &-4209818924203776172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7965130596206574050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc58a9255fdefb643a8e80e368ed17e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyItemDropper
+  dropItemPrefab: {fileID: 536016554105737263, guid: bae15528727d0b849a81d60ca93bfa5d, type: 3}
+  dropChance: 1
+  dropOffset: {x: 0, y: 0.4, z: 0}
+  autoLoadDefaultPrefab: 1

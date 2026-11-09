@@ -35,6 +35,12 @@ public class PortalVisualEffect : MonoBehaviour
         initialScale = transform.localScale;
     }
 
+    public void SetBasePosition(Vector3 newWorldPos)
+    {
+        transform.position = newWorldPos;
+        initialLocalPos = transform.localPosition;
+    }
+
     private void OnEnable()
     {
         initialLocalPos = transform.localPosition;
