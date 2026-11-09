@@ -210,7 +210,7 @@ MonoBehaviour:
   chaseSpeed: 3
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   ledgeCheckDistance: 0.8
   groundCheckDepth: 1
   wallCheckDistance: 0.6
