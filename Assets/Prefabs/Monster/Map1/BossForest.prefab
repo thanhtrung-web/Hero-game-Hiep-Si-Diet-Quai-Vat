@@ -228,4 +228,4 @@ MonoBehaviour:
   hurtCooldown: 1.5
   exitPortal: {fileID: 5348102941192837401, guid: f5e545f8a6fee9e4090bf78a95e7dca4, type: 3}
   portalAppearDelay: 1.5
-  portalOffsetFromBoss: {x: 1, y: 0.2, z: 0}
+  portalOffsetFromBoss: {x: 1, y: 1, z: 0}
