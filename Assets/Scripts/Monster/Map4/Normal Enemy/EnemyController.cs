@@ -14,7 +14,7 @@ public class GroupNormalEnemy : MonoBehaviour
     public float maxHealth = 30f;
     private float currentHealth;
 
-    [Header("Patrol Boundaries (Kéo LeftPoint & RightPoint vào đây)")]
+    [Header("Patrol Boundaries")]
     public Transform leftLimit;
     public Transform rightLimit;
     public float idleTimeAtPoint = 1.5f;
@@ -29,11 +29,15 @@ public class GroupNormalEnemy : MonoBehaviour
     private Rigidbody2D rb;
     private bool isDead = false;
 
-    [Header("Audio (Dùng 1 Audio Source)")]
+    [Header("Audio")]
     public AudioSource audioSource;
     public AudioClip attackSound;
     public AudioClip takeDamageSound;
     public AudioClip dieSound;
+
+    [Header("Drop Item")]
+    public GameObject healSmallPrefab;
+    [Range(0f, 1f)] public float dropChance = 0.3f;
 
     void Start()
     {
@@ -45,7 +49,6 @@ public class GroupNormalEnemy : MonoBehaviour
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
 
-        // Tự động tìm điểm LeftPoint và RightPoint từ Object cha nếu quên kéo thả
         Transform groupParent = transform.parent;
         if (groupParent != null)
         {
@@ -63,16 +66,14 @@ public class GroupNormalEnemy : MonoBehaviour
 
         float distanceToPlayer = player != null ? Vector2.Distance(transform.position, player.position) : Mathf.Infinity;
 
-        // --- 1. TRẠNG THÁI TẤN CÔNG ---
         if (distanceToPlayer <= attackRange)
         {
             FacePlayer();
             animator.SetBool("IsWalking", false);
 
-            // Kiểm tra thời gian hồi chiêu để kích hoạt đòn đánh
             if (Time.time >= lastAttackTime + attackCooldown)
             {
-                animator.SetTrigger("IsATK"); // Dùng Trigger để đánh từng nhịp chuẩn xác
+                animator.SetTrigger("IsATK");
                 lastAttackTime = Time.time;
 
                 if (attackSound != null && audioSource != null)
@@ -81,7 +82,6 @@ public class GroupNormalEnemy : MonoBehaviour
                 }
             }
         }
-        // --- 2. TRẠNG THÁI RƯỢT ĐUỔI PLAYER ---
         else if (distanceToPlayer <= agroRange)
         {
             FacePlayer();
@@ -94,7 +94,6 @@ public class GroupNormalEnemy : MonoBehaviour
             if (spriteRenderer != null)
                 spriteRenderer.flipX = (direction < 0);
         }
-        // --- 3. TRẠNG THÁI TUẦN TRA GIỮA A VÀ B ---
         else
         {
             PatrolLogic();
@@ -165,9 +164,6 @@ public class GroupNormalEnemy : MonoBehaviour
         }
     }
 
-    // ==========================================
-    // HÀM GỌI BẰNG ANIMATION EVENT (Gắn vào khung hình chém)
-    // ==========================================
     public void AnimationAttackHit()
     {
         if (isDead) return;
@@ -175,13 +171,9 @@ public class GroupNormalEnemy : MonoBehaviour
         if (player != null && Vector2.Distance(transform.position, player.position) <= attackRange + 0.5f)
         {
             player.SendMessage("TakeDamage", attackDamage, SendMessageOptions.DontRequireReceiver);
-            Debug.Log("<color=yellow>Golem chém trúng Player gây " + attackDamage + " sát thương!</color>");
         }
     }
 
-    // ==========================================
-    // HÀM NHẬN SÁT THƯƠNG TỪ PLAYER
-    // ==========================================
     public void TakeDamage(float amount)
     {
         if (isDead) return;
@@ -199,8 +191,6 @@ public class GroupNormalEnemy : MonoBehaviour
         {
             audioSource.PlayOneShot(takeDamageSound);
         }
-
-        Debug.Log("<color=cyan>Quái nhận " + amount + " DMG! Máu còn: " + currentHealth + "</color>");
     }
 
     public void TakeDamage(int amount)
@@ -226,17 +216,39 @@ public class GroupNormalEnemy : MonoBehaviour
             audioSource.PlayOneShot(dieSound);
         }
 
-        // Vô hiệu hóa va chạm để Player có thể đi xuyên qua xác
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
 
-        // Triệt tiêu vận tốc rơi và khóa trọng lực, chống rơi xuyên bản đồ
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
             rb.bodyType = RigidbodyType2D.Kinematic;
         }
 
+        TryDropHealSmall();
+
         Destroy(gameObject, 2f);
+    }
+
+    private void TryDropHealSmall()
+    {
+        if (healSmallPrefab == null) return;
+
+        if (Random.value <= dropChance)
+        {
+            Vector3 dropPos = transform.position;
+            if (spriteRenderer != null)
+            {
+                dropPos.y = spriteRenderer.bounds.min.y + 0.6f;
+            }
+
+            GameObject dropped = Instantiate(healSmallPrefab, dropPos, Quaternion.identity);
+            SpriteRenderer itemSr = dropped.GetComponent<SpriteRenderer>();
+            if (itemSr != null && spriteRenderer != null)
+            {
+                itemSr.sortingLayerID = spriteRenderer.sortingLayerID;
+                itemSr.sortingOrder = spriteRenderer.sortingOrder + 1;
+            }
+        }
     }
 }

@@ -134,9 +134,9 @@ MonoBehaviour:
   maxHealth: 100
   moveSpeed: 3
   detectionRange: 8
-  attackRange: 2
+  attackRange: 3.5
   attackDamage: 20
-  attackCooldown: 2
+  attackCooldown: 2.2
   animator: {fileID: 0}
   player: {fileID: 0}
   audioSource: {fileID: 4944733536456556032}
@@ -206,7 +206,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -0.017138004}
-  m_Size: {x: 4.9375, y: 5.784276}
+  m_Size: {x: 2.5, y: 5.784276}
   m_Direction: 0
 --- !u!82 &4944733536456556032
 AudioSource:
