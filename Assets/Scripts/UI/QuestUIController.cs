@@ -9,24 +9,35 @@ public class QuestUIController : MonoBehaviour
     [SerializeField] private TMP_Text questTextTMP;
     [SerializeField] private Text questTextLegacy;
 
-    [Header("2. Cổng qua màn (Tùy chọn: Kéo vào hoặc để trống sẽ tự tìm)")]
+    [Header("2. Mục tiêu Boss & Cổng qua màn (Kéo Cha hoặc Con đều được)")]
+    [SerializeField] private GameObject bossTarget;
     [SerializeField] private GameObject portalObject;
     [SerializeField] private Collider2D portalTrigger;
     [SerializeField] private SpriteRenderer portalVisual;
 
     [Header("3. Nội dung & Màu sắc")]
-    [SerializeField] private string progressFormat = "Cần tiêu diệt {0}/{1} quái để vượt ải";
-    [SerializeField] private string completedFormat = "Cần tiêu diệt {0}/{1} quái để vượt ải (Đã mở cổng!)";
+    [SerializeField] private string progressFormat = "Cần tiêu diệt {0}/{1} Boss để vượt ải";
+    [SerializeField] private string completedFormat = "Đã tiêu diệt {0}/{1} Boss — Mở cổng qua màn!";
     [SerializeField] private Color progressColor = Color.white;
     [SerializeField] private Color completedColor = new Color(0.4f, 1f, 0.4f, 1f);
 
-    private readonly List<GameObject> trackedEnemies = new List<GameObject>();
-    private int totalEnemies;
+    private readonly List<GameObject> trackedBosses = new List<GameObject>();
+    private int totalBosses;
     private int lastKilledCount = -1;
     private bool unlocked;
 
     private void Awake()
     {
+        // Tự động đổi chữ "quái" cũ trong Inspector thành "Boss"
+        if (!string.IsNullOrEmpty(progressFormat) && progressFormat.Contains("quái"))
+        {
+            progressFormat = progressFormat.Replace("quái", "Boss");
+        }
+        if (!string.IsNullOrEmpty(completedFormat) && completedFormat.Contains("quái"))
+        {
+            completedFormat = completedFormat.Replace("quái", "Boss");
+        }
+
         // Tự động tìm Text con nếu quên kéo trong Prefab
         if (questTextTMP == null)
             questTextTMP = GetComponentInChildren<TMP_Text>();
@@ -69,7 +80,7 @@ public class QuestUIController : MonoBehaviour
 
     private void Start()
     {
-        RegisterEnemies();
+        RegisterBosses();
         RefreshProgress(forceUpdate: true);
     }
 
@@ -120,39 +131,81 @@ public class QuestUIController : MonoBehaviour
             portalVisual.enabled = false;
     }
 
-    private void RegisterEnemies()
+    private void RegisterBosses()
     {
-        trackedEnemies.Clear();
+        trackedBosses.Clear();
+
+        // 1. Nếu có kéo Boss (hoặc Object cha "Boss") vào Inspector:
+        // Tự động lấy con Boss thực sự bên trong (ví dụ Boss_Frost nằm trong Boss)
+        if (bossTarget != null)
+        {
+            EnemyHealth childBossHealth = bossTarget.GetComponentInChildren<EnemyHealth>(true);
+            if (childBossHealth != null)
+            {
+                trackedBosses.Add(childBossHealth.gameObject);
+            }
+            else
+            {
+                Collider2D childCol = bossTarget.GetComponentInChildren<Collider2D>(true);
+                if (childCol != null)
+                    trackedBosses.Add(childCol.gameObject);
+                else
+                    trackedBosses.Add(bossTarget);
+            }
+
+            totalBosses = trackedBosses.Count;
+            return;
+        }
+
+        // 2. Tự động tìm Boss theo các script Boss của từng Map
+        BossMap4Controller bossMap4 = FindAnyObjectByType<BossMap4Controller>();
+        if (bossMap4 != null && !trackedBosses.Contains(bossMap4.gameObject))
+            trackedBosses.Add(bossMap4.gameObject);
+
+        BossController bossMap1 = FindAnyObjectByType<BossController>();
+        if (bossMap1 != null && !trackedBosses.Contains(bossMap1.gameObject))
+            trackedBosses.Add(bossMap1.gameObject);
+
+        SkeletonBossController bossMap5 = FindAnyObjectByType<SkeletonBossController>();
+        if (bossMap5 != null && !trackedBosses.Contains(bossMap5.gameObject))
+            trackedBosses.Add(bossMap5.gameObject);
+
+        // 3. Tìm thêm bất kỳ đối tượng Enemy nào có chữ "Boss" trong tên (hoặc tên Object cha)
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         for (int i = 0; i < enemies.Length; i++)
         {
-            if (enemies[i] != null && !trackedEnemies.Contains(enemies[i]))
+            GameObject enemy = enemies[i];
+            if (enemy != null && IsBossObject(enemy) && !trackedBosses.Contains(enemy))
             {
-                trackedEnemies.Add(enemies[i]);
+                trackedBosses.Add(enemy);
             }
         }
 
-        totalEnemies = trackedEnemies.Count;
+        totalBosses = trackedBosses.Count;
+    }
+
+    private bool IsBossObject(GameObject obj)
+    {
+        if (obj == null) return false;
+
+        if (obj.name.IndexOf("Boss", System.StringComparison.OrdinalIgnoreCase) >= 0)
+            return true;
+
+        if (obj.transform.parent != null &&
+            obj.transform.parent.name.IndexOf("Boss", System.StringComparison.OrdinalIgnoreCase) >= 0)
+            return true;
+
+        return obj.GetComponent<BossMap4Controller>() != null
+            || obj.GetComponent<BossController>() != null
+            || obj.GetComponent<SkeletonBossController>() != null;
     }
 
     private void RefreshProgress(bool forceUpdate)
     {
-        // Cập nhật nếu có quái sinh thêm trong màn
-        GameObject[] currentEnemies = GameObject.FindGameObjectsWithTag("Enemy");
-        for (int i = 0; i < currentEnemies.Length; i++)
-        {
-            if (currentEnemies[i] != null && !trackedEnemies.Contains(currentEnemies[i]))
-            {
-                trackedEnemies.Add(currentEnemies[i]);
-                totalEnemies = trackedEnemies.Count;
-                forceUpdate = true;
-            }
-        }
-
         int killedCount = 0;
-        for (int i = 0; i < trackedEnemies.Count; i++)
+        for (int i = 0; i < trackedBosses.Count; i++)
         {
-            if (IsEnemyDefeated(trackedEnemies[i]))
+            if (IsBossDefeated(trackedBosses[i]))
             {
                 killedCount++;
             }
@@ -161,8 +214,8 @@ public class QuestUIController : MonoBehaviour
         if (forceUpdate || killedCount != lastKilledCount)
         {
             lastKilledCount = killedCount;
-            bool allDefeated = (totalEnemies == 0) || (killedCount >= totalEnemies);
-            UpdateUI(killedCount, totalEnemies, allDefeated);
+            bool allDefeated = (totalBosses > 0) && (killedCount >= totalBosses);
+            UpdateUI(killedCount, totalBosses, allDefeated);
 
             if (allDefeated && !unlocked)
             {
@@ -171,17 +224,21 @@ public class QuestUIController : MonoBehaviour
         }
     }
 
-    private bool IsEnemyDefeated(GameObject enemy)
+    private bool IsBossDefeated(GameObject boss)
     {
-        if (enemy == null || !enemy.activeInHierarchy)
+        if (boss == null || !boss.activeInHierarchy)
             return true;
 
-        EnemyHealth health = enemy.GetComponent<EnemyHealth>();
+        EnemyHealth health = boss.GetComponentInChildren<EnemyHealth>(true);
         if (health != null && health.IsDead)
             return true;
 
-        Collider2D col = enemy.GetComponent<Collider2D>();
+        Collider2D col = boss.GetComponentInChildren<Collider2D>(true);
         if (col != null && !col.enabled)
+            return true;
+
+        // Nếu boss là một Object rỗng chứa con bên trong và con đã bị Destroy hết
+        if (health == null && col == null && boss.transform.childCount == 0)
             return true;
 
         return false;
@@ -197,7 +254,7 @@ public class QuestUIController : MonoBehaviour
         if (portalTrigger != null)
             portalTrigger.enabled = true;
 
-        Debug.Log("Đã tiêu diệt đủ quái — Cổng qua màn đã mở!");
+        Debug.Log("Đã tiêu diệt Boss — Cổng qua màn đã mở!");
     }
 
     private void UpdateUI(int killed, int total, bool completed)
