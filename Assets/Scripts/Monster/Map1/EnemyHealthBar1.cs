@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// Keo Image Fill vao o Fill Image. Tu tim EnemyHealth o GameObject cha.
 /// </summary>
 [DisallowMultipleComponent]
-public class EnemyHealthBar : MonoBehaviour
+public class EnemyHealthBar1 : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private EnemyHealth enemyHealth;

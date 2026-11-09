@@ -263,8 +263,8 @@ MonoBehaviour:
   flameCooldown: 2
   fireballStaminaCost: 20
   flameStaminaCost: 50
-  attack1Damage: 15
-  attack2Damage: 20
+  attack1Damage: 10
+  attack2Damage: 10
   flameDamage: 100
 --- !u!114 &985049790482964706
 MonoBehaviour:
@@ -292,7 +292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ad9452b47ddace48bd608652972c33b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  maxHealth: 150
+  maxHealth: 250
   currentHealth: 0
   enableDamageTest: 1
 --- !u!114 &723569319140135471
@@ -454,8 +454,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4981dc7f34103a43aa8915fbdf846f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStamina
-  maxStamina: 100
-  regenPerSecond: 4
+  maxStamina: 120
+  regenPerSecond: 8
   sprintCostPerSecond: 10
 --- !u!1 &4681105245973574538
 GameObject:

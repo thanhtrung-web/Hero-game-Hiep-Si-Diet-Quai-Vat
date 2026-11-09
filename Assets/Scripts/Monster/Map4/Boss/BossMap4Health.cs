@@ -17,11 +17,8 @@ public class BossMap4Health : EnemyHealth
             maxHealth = Mathf.RoundToInt(bossController.maxHealth);
             currentHealth = maxHealth;
         }
-    protected override void Awake()
-    {
-        base.Awake();
-        bossController = GetComponent<BossMap4Controller>();
     }
+ 
 
     public override void TakeDamage(int damage)
     {
