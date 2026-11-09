@@ -203,7 +203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70d4e793ea892c244b84ac960f98f436, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossController
-  maxHealth: 100
+  maxHealth: 600
   animator: {fileID: 7817238209333681742}
   patrolScript: {fileID: 0}
   moveSpeed: 2.2
@@ -221,11 +221,11 @@ MonoBehaviour:
   attackCooldown: 2.2
   normalAttackDamage: 25
   heavyAttackDamage: 40
-  minionPrefab: {fileID: 0}
+  minionPrefab: {fileID: 7965130596206574050, guid: 62b3cf6d9d6200146a8a03afdb43c1e6, type: 3}
   summonCooldown: 16
   maxMinions: 2
   summonHpThreshold: 0.75
   hurtCooldown: 1.5
-  exitPortal: {fileID: 0}
+  exitPortal: {fileID: 5348102941192837401, guid: f5e545f8a6fee9e4090bf78a95e7dca4, type: 3}
   portalAppearDelay: 1.5
   portalOffsetFromBoss: {x: 1, y: 0.2, z: 0}

@@ -229,10 +229,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuController
   mapChoiceSceneName: ChoiceMapSceen
-  firstSceneName: Map01_Sceen1
-  map2SceneName: 
-  map3SceneName: 
-  map4SceneName: 
+  firstSceneName: Map01
+  map2SceneName: The Grave
+  map3SceneName: Map3
+  map4SceneName: Map4
   map5SceneName: Map5
   mainMenuSceneName: GameMenuSceen
   mainMenuPanel: {fileID: 0}
@@ -275,7 +275,7 @@ MonoBehaviour:
   mageOutline: {fileID: 671244545}
   knightOutline: {fileID: 1023428959}
   confirmButton: {fileID: 782134509}
-  mainMenu: {fileID: 0}
+  mainMenu: {fileID: 206926894}
 --- !u!1 &241450411
 GameObject:
   m_ObjectHideFlags: 0

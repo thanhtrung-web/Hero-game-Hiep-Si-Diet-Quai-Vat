@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7817238209333681742}
   - component: {fileID: 552970584469316760}
   - component: {fileID: 1566741132286394773}
-  - component: {fileID: 3776923138294965524}
+  - component: {fileID: -711249916507391496}
   m_Layer: 7
   m_Name: MiniBoss
   m_TagString: Enemy
@@ -106,7 +106,7 @@ Animator:
   m_GameObject: {fileID: 7965130596206574050}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: f211ecfe808e6c14699cde4b4a1652d6, type: 2}
+  m_Controller: {fileID: 22100000, guid: 06f6b5326c990014e85a82aa5798b4ea, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -191,7 +191,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.0109162, y: 0.7114429}
   m_EdgeRadius: 0
---- !u!114 &3776923138294965524
+--- !u!114 &-711249916507391496
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,32 +200,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 7965130596206574050}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70d4e793ea892c244b84ac960f98f436, type: 3}
+  m_Script: {fileID: 11500000, guid: 5cf207ba6962aae49b60b92076d30c08, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossController
-  maxHealth: 50
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyControllerFacingLeft
+  maxHealth: 140
   animator: {fileID: 7817238209333681742}
   patrolScript: {fileID: 0}
-  moveSpeed: 2.2
-  chaseSpeed: 3.6
+  moveSpeed: 2
+  chaseSpeed: 3
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  ledgeCheckDistance: 1
-  groundCheckDepth: 1.2
-  wallCheckDistance: 0.8
-  patrolRadius: 6
-  aggroRange: 8.5
-  deAggroRange: 12
-  attackRange: 2.5
-  attackCooldown: 2.2
-  normalAttackDamage: 25
-  heavyAttackDamage: 40
-  minionPrefab: {fileID: 0}
-  summonCooldown: 16
-  maxMinions: 2
-  summonHpThreshold: 0.75
-  hurtCooldown: 1.5
-  exitPortal: {fileID: 0}
-  portalAppearDelay: 1.5
-  portalOffsetFromBoss: {x: 1, y: 0.2, z: 0}
+  ledgeCheckDistance: 0.8
+  groundCheckDepth: 1
+  wallCheckDistance: 0.6
+  patrolRadius: 4
+  aggroRange: 4.5
+  deAggroRange: 5.5
+  attackRange: 1.8
+  attackCooldown: 2
+  attackDamage: 10
+  knockbackForce: 3
+  hurtDuration: 0.25

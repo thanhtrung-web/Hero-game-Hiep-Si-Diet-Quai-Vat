@@ -18,6 +18,7 @@ public class BossMap4Health : EnemyHealth
             currentHealth = maxHealth;
         }
     }
+ 
 
     public override void TakeDamage(int damage)
     {
@@ -26,7 +27,7 @@ public class BossMap4Health : EnemyHealth
         if (bossController != null)
         {
             bossController.TakeDamage(damage);
-            currentHealth = Mathf.Max(0, bossController.CurrentHealth);
+            currentHealth = Mathf.Max(0, Mathf.RoundToInt(bossController.CurrentHealth));
             isDead = bossController.IsDead;
 
             NotifyDamageTaken(damage);

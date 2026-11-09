@@ -526,8 +526,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6c6247b224631a4c83e0bc453b3e107, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawner
-  magePrefab: {fileID: 4543172780508867550, guid: 1478aa17ceaa26e47b1d4ff3aa275a4c, type: 3}
-  knightPrefab: {fileID: 750252173591891550, guid: 99b23fba08a78b14eaab1a24b7198416, type: 3}
+  magePrefab: {fileID: 4543172780508867550, guid: 4ce0be831bdb516428125b5900867a4e, type: 3}
+  knightPrefab: {fileID: 750252173591891550, guid: f5e8ce2f9f6530a44b9ee1196d6177b9, type: 3}
   spawnPoint: {fileID: 695920237}
   cinemachineCamera: {fileID: 67676759}
 --- !u!4 &260381147

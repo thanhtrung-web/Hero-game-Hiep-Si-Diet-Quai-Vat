@@ -6,6 +6,10 @@ public class BossMap4Controller : EnemyHealth
     public override string BossTitle => "Băng Quái Tuyết Sơn - Frost Behemoth";
 
     [Header("Stats")]
+    public float maxHealth = 100f;
+    private float currentHealth;
+    public float CurrentHealth => currentHealth;
+    public int MaxHealth => Mathf.RoundToInt(maxHealth);
     public float moveSpeed = 3f;
     public float detectionRange = 10f;
     public float attackRange = 3.5f;
@@ -18,6 +22,8 @@ public class BossMap4Controller : EnemyHealth
     [Header("References")]
     public Transform player;
     private Rigidbody2D rb;
+    private bool isDead = false;
+    public bool IsDead => isDead;
     private CapsuleCollider2D bossCollider;
 
     [Header("Audio")]
@@ -217,12 +223,11 @@ public class BossMap4Controller : EnemyHealth
         currentHealth = Mathf.Max(0, currentHealth - damage);
 
         NotifyDamageTaken(damage);
-        NotifyHealthChanged(currentHealth, maxHealth);
+        NotifyHealthChanged(Mathf.RoundToInt(currentHealth), Mathf.RoundToInt(maxHealth));
         SpawnDamagePopup(damage);
 
         if (currentHealth <= 0)
         {
-            NotifyDeath();
             Die();
             return;
         }

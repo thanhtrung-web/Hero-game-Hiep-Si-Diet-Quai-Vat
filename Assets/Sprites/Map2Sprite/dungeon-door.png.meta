@@ -1,0 +1,548 @@
+fileFormatVersion: 2
+guid: 10ad2a2957d4aca4baee9d405e291cee
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -473604912863285785
+    second: dungeon-door_0
+  - first:
+      213: -3687519717141716451
+    second: dungeon-door_1
+  - first:
+      213: 5157306708690555253
+    second: dungeon-door_2
+  - first:
+      213: 4928891428602690419
+    second: dungeon-door_3
+  - first:
+      213: 31744673426629122
+    second: dungeon-door_4
+  - first:
+      213: 6084876462268602874
+    second: dungeon-door_5
+  - first:
+      213: 1095922649480586399
+    second: dungeon-door_6
+  - first:
+      213: -5694176822649100235
+    second: dungeon-door_7
+  - first:
+      213: -5507788723112366131
+    second: dungeon-door_8
+  - first:
+      213: -3976190568638408425
+    second: dungeon-door_9
+  - first:
+      213: 5129374305372755420
+    second: dungeon-door_10
+  - first:
+      213: 3028669443310733292
+    second: dungeon-door_11
+  - first:
+      213: -5058125929866603965
+    second: dungeon-door_12
+  - first:
+      213: -6026543710403564910
+    second: dungeon-door_13
+  - first:
+      213: 2917075869425275067
+    second: dungeon-door_14
+  - first:
+      213: 103995885819764440
+    second: dungeon-door_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: dungeon-door_0
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 777
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ed67ec47da6d69f0800000000000000
+      internalID: -473604912863285785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dungeon-door_1
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 777
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d12e485ca5c43dcc0800000000000000
+      internalID: -3687519717141716451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dungeon-door_2
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 777
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5715d31802f629740800000000000000
+      internalID: 5157306708690555253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dungeon-door_3
+      rect:
+        serializedVersion: 2
+        x: 796
+        y: 777
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37bb452d3a0f66440800000000000000
+      internalID: 4928891428602690419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dungeon-door_4
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 521
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 202ea1fbc97c07000800000000000000
+      internalID: 31744673426629122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dungeon-door_5
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 521
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af9d7a347e2d17450800000000000000
+      internalID: 6084876462268602874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dungeon-door_6
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 521
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f94689fd7df753f00800000000000000
+      internalID: 1095922649480586399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dungeon-door_7
+      rect:
+        serializedVersion: 2
+        x: 796
+        y: 521
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 538ecbd49583af0b0800000000000000
+      internalID: -5694176822649100235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dungeon-door_8
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 265
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcf2cfc76576093b0800000000000000
+      internalID: -5507788723112366131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dungeon-door_9
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 265
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7199c0d9ebbb1d8c0800000000000000
+      internalID: -3976190568638408425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dungeon-door_10
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 265
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd552cf01c23f2740800000000000000
+      internalID: 5129374305372755420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dungeon-door_11
+      rect:
+        serializedVersion: 2
+        x: 796
+        y: 265
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce7cd96efcef70a20800000000000000
+      internalID: 3028669443310733292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dungeon-door_12
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 9
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 342db11144dedc9b0800000000000000
+      internalID: -5058125929866603965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dungeon-door_13
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 9
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29ae706ec6a6d5ca0800000000000000
+      internalID: -6026543710403564910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dungeon-door_14
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 9
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb015f34c098b7820800000000000000
+      internalID: 2917075869425275067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dungeon-door_15
+      rect:
+        serializedVersion: 2
+        x: 796
+        y: 9
+        width: 203
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8de936805b7717100800000000000000
+      internalID: 103995885819764440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      dungeon-door_0: -473604912863285785
+      dungeon-door_1: -3687519717141716451
+      dungeon-door_10: 5129374305372755420
+      dungeon-door_11: 3028669443310733292
+      dungeon-door_12: -5058125929866603965
+      dungeon-door_13: -6026543710403564910
+      dungeon-door_14: 2917075869425275067
+      dungeon-door_15: 103995885819764440
+      dungeon-door_2: 5157306708690555253
+      dungeon-door_3: 4928891428602690419
+      dungeon-door_4: 31744673426629122
+      dungeon-door_5: 6084876462268602874
+      dungeon-door_6: 1095922649480586399
+      dungeon-door_7: -5694176822649100235
+      dungeon-door_8: -5507788723112366131
+      dungeon-door_9: -3976190568638408425
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

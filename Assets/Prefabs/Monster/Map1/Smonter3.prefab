@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c11712629d7c83a46ba6b8ee4f10e9ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
-  maxHealth: 60
+  maxHealth: 70
   animator: {fileID: 5082032879021391256}
   patrolScript: {fileID: 0}
   moveSpeed: 2
@@ -233,6 +233,6 @@ MonoBehaviour:
   deAggroRange: 5.5
   attackRange: 1.8
   attackCooldown: 2
-  attackDamage: 10
+  attackDamage: 15
   knockbackForce: 3
   hurtDuration: 0.25

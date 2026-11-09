@@ -217,14 +217,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c11712629d7c83a46ba6b8ee4f10e9ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
-  maxHealth: 3
+  maxHealth: 70
   animator: {fileID: 5082032879021391256}
   patrolScript: {fileID: 0}
   moveSpeed: 2
   chaseSpeed: 3
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   ledgeCheckDistance: 0.8
   groundCheckDepth: 1
   wallCheckDistance: 0.6

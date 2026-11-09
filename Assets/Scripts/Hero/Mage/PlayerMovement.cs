@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     private Animator animator;
     private Rigidbody2D rb;
+    private Collider2D playerCollider;
     private SpriteRenderer spriteRenderer;
     private PlayerHealth playerHealth;
     private PlayerStamina stamina; // [MỚI] thể lực dùng chung
@@ -38,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        playerCollider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         playerHealth = GetComponent<PlayerHealth>();
@@ -173,6 +175,11 @@ public class PlayerMovement : MonoBehaviour
                 groundCheckRadius,
                 groundLayer
             ) != null;
+
+        // Fall back to the body's actual contacts if the small foot probe
+        // misses the CompositeCollider2D seams in the cave tilemap.
+        if (!isGrounded && playerCollider != null)
+            isGrounded = playerCollider.IsTouchingLayers(groundLayer);
 
         Vector2 velocity = rb.linearVelocity;
         float currentSpeed = isRunning ? runSpeed : walkSpeed;
