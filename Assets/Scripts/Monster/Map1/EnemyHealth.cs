@@ -7,8 +7,9 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] protected Animator animator;
     [SerializeField] protected Behaviour patrolScript;
     public bool IsDead => isDead;
-    
 
+    public int MaxHealth => maxHealth;
+    public int CurrentHealth => currentHealth;
     public virtual bool IsBoss => false;
     public virtual string BossTitle => "Quái Vật";
 
