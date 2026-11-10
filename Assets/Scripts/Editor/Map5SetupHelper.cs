@@ -10,8 +10,129 @@ public static class Map5SetupHelper
     {
         SetupMap5Phase1();
         SetupMap5Phase2();
+        SetupAbyss();
+        SetupBossRoomBarrierForMap5Phase2();
+        SetupQuestUI();
+        SetupMonsterItemDrops();
         AssetDatabase.SaveAssets();
-        Debug.Log("✅ [Map5SetupHelper] Đã hoàn tất cài đặt toàn bộ Cổng chuyển cảnh, Boss và Game_End cho Map 5!");
+        Debug.Log("✅ [Map5SetupHelper] Đã hoàn tất cài đặt toàn bộ Cổng chuyển cảnh, Boss, Vực Thẳm, Phong ấn, Quest UI, Rơi Bình Máu và Game_End cho Map 5!");
+    }
+
+    [MenuItem("Tools/Map 5/Setup Monster Health Potion Drops (Cài đặt Tỉ lệ Rơi Bình Máu)")]
+    public static void SetupMonsterItemDropsMenu()
+    {
+        SetupMonsterItemDrops();
+        AssetDatabase.SaveAssets();
+        Debug.Log("🧪 [Map5SetupHelper] Đã thiết lập hoàn tất tỉ lệ rơi bình máu cho tất cả quái vật Map 5!");
+    }
+
+    public static void SetupMonsterItemDrops()
+    {
+        var healSmallPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Item/HealSmall.prefab");
+        var healBigPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Item/HealBig.prefab");
+
+        // 1. Skeleton White: 10% HealSmall
+        ConfigurePrefabDrop("Assets/Prefabs/Monster/Map5/Skeleton_White.prefab", healSmallPrefab, 0.10f);
+
+        // 2. Skeleton Yellow: 20% HealSmall
+        ConfigurePrefabDrop("Assets/Prefabs/Monster/Map5/Skeleton_Yellow.prefab", healSmallPrefab, 0.20f);
+
+        // 3. Skeleton Boss: 100% HealBig (hoặc HealSmall)
+        ConfigurePrefabDrop("Assets/Prefabs/Monster/Map5/Skeleton_Boss.prefab", healBigPrefab != null ? healBigPrefab : healSmallPrefab, 1.0f);
+
+        // 4. Wraith Mage: 30% HealSmall
+        ConfigurePrefabDrop("Assets/Prefabs/Monster/Map5/WraithMage_Mob.prefab", healSmallPrefab, 0.30f);
+
+        // 5. Death Knight: 30% HealSmall
+        ConfigurePrefabDrop("Assets/Prefabs/Monster/Map5/DeathKnight_Mob.prefab", healSmallPrefab, 0.30f);
+    }
+
+    private static void ConfigurePrefabDrop(string prefabPath, GameObject itemPrefab, float chance)
+    {
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+        if (prefab == null) return;
+
+        var dropper = prefab.GetComponent<EnemyItemDropper>();
+        if (dropper == null)
+        {
+            dropper = prefab.AddComponent<EnemyItemDropper>();
+        }
+
+        var so = new SerializedObject(dropper);
+        var itemProp = so.FindProperty("dropItemPrefab");
+        var chanceProp = so.FindProperty("dropChance");
+
+        if (itemProp != null) itemProp.objectReferenceValue = itemPrefab;
+        if (chanceProp != null) chanceProp.floatValue = chance;
+
+        so.ApplyModifiedProperties();
+        EditorUtility.SetDirty(prefab);
+        PrefabUtility.RecordPrefabInstancePropertyModifications(dropper);
+
+        Debug.Log($"🧪 [SetupDrop] {prefab.name} -> Item: {(itemPrefab != null ? itemPrefab.name : "null")}, Tỉ lệ: {chance * 100:0}%");
+    }
+
+    [MenuItem("Tools/Map 5/Setup Quest UI (Thanh Nhiệm Vụ)")]
+    public static void SetupQuestUIMenu()
+    {
+        SetupQuestUI();
+        AssetDatabase.SaveAssets();
+        Debug.Log("📜 [Map5SetupHelper] Đã thiết lập hoàn chỉnh Thanh Nhiệm Vụ (Quest UI) cho cả 2 Phase Map 5!");
+    }
+
+    public static void SetupQuestUI()
+    {
+        SetupQuestUIForMap5Phase1();
+        SetupQuestUIForMap5Phase2();
+    }
+
+    [MenuItem("Tools/Map 5/Setup Boss Room Barrier (Phong Ấn Phòng Boss)")]
+    public static void SetupBossRoomBarrierMenu()
+    {
+        SetupBossRoomBarrierForMap5Phase2();
+        AssetDatabase.SaveAssets();
+        Debug.Log("🛡️ [Map5SetupHelper] Đã thiết lập hoàn chỉnh Phong Ấn Phòng Boss (BossBarrier) cho Map 5 Phase 2!");
+    }
+
+    [MenuItem("Tools/Map 5/Setup Abyss (Vực Thẳm & Rơi Cook)")]
+    public static void SetupAbyss()
+    {
+        SetupAbyssForMap5Phase1();
+        SetupAbyssForMap5Phase2();
+        AssetDatabase.SaveAssets();
+        Debug.Log("🌌 [Map5SetupHelper] Đã thiết lập hoàn chỉnh Vực Thẳm (Abyss Kill Zone & Mảng tối) cho cả 2 Phase Map 5!");
+    }
+
+    private static void SetupAbyssForMap5Phase1()
+    {
+        string scenePath = "Assets/Scenes/Map5/Map5.unity";
+        var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+
+        var existing = Object.FindAnyObjectByType<AbyssKillZone>(FindObjectsInactive.Include);
+        if (existing == null)
+        {
+            var abyssObj = AbyssKillZone.EnsureAbyssInMap5Phase1();
+            Undo.RegisterCreatedObjectUndo(abyssObj, "Add AbyssKillZone to Map5");
+        }
+
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+    }
+
+    private static void SetupAbyssForMap5Phase2()
+    {
+        string scenePath = "Assets/Scenes/Map5/Map5_Phase2.unity";
+        var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+
+        var existing = Object.FindAnyObjectByType<AbyssKillZone>(FindObjectsInactive.Include);
+        if (existing == null)
+        {
+            var abyssObj = AbyssKillZone.EnsureAbyssInMap5Phase2();
+            Undo.RegisterCreatedObjectUndo(abyssObj, "Add AbyssKillZone to Map5_Phase2");
+        }
+
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
     }
 
     private static void SetupMap5Phase1()
@@ -127,6 +248,27 @@ public static class Map5SetupHelper
         }
         playerSpawn.transform.position = spawnCoords;
 
+        // 1b. Cấu hình PlayerSpawner trong Map5_Phase2 để hỗ trợ test độc lập khi mở trực tiếp Scene này
+        var spawner = Object.FindAnyObjectByType<PlayerSpawner>(FindObjectsInactive.Include);
+        if (spawner == null)
+        {
+            var spawnerObj = new GameObject("PlayerSpawner");
+            var ps = spawnerObj.AddComponent<PlayerSpawner>();
+            var magePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Hero/Mage/Player.prefab");
+            var knightPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Hero/Knight/Knight.prefab");
+            var vcam = Object.FindAnyObjectByType<Unity.Cinemachine.CinemachineCamera>();
+
+            var so = new SerializedObject(ps);
+            if (magePrefab != null) so.FindProperty("magePrefab").objectReferenceValue = magePrefab;
+            if (knightPrefab != null) so.FindProperty("knightPrefab").objectReferenceValue = knightPrefab;
+            if (playerSpawn != null) so.FindProperty("spawnPoint").objectReferenceValue = playerSpawn.transform;
+            if (vcam != null) so.FindProperty("cinemachineCamera").objectReferenceValue = vcam;
+            so.ApplyModifiedProperties();
+
+            Undo.RegisterCreatedObjectUndo(spawnerObj, "Add PlayerSpawner to Map5_Phase2");
+            Debug.Log("🎮 [Map5_Phase2] Đã cấu hình PlayerSpawner vào Map5_Phase2 để hỗ trợ test độc lập!");
+        }
+
         // 2. Cấu hình Cổng dịch chuyển vào Screen 2 (tại x: -56.35, y: 1.91)
         var portalObj = GameObject.Find("Map5_ExitPortal") ?? GameObject.Find("Map5_EntrancePortal");
         if (portalObj == null)
@@ -202,6 +344,102 @@ public static class Map5SetupHelper
                 instance.transform.position = new Vector3(31f, -31.5f, 0f);
                 Undo.RegisterCreatedObjectUndo(instance, "Add Lich_Boss to Map5_Phase2");
                 Debug.Log("💀👑 [Map5_Phase2] Đã thêm Lich_Boss Prefab vào Map5_Phase2.unity tại đáy hầm x:31, y:-31.5!");
+            }
+        }
+
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+    }
+
+    private static void SetupBossRoomBarrierForMap5Phase2()
+    {
+        string scenePath = "Assets/Scenes/Map5/Map5_Phase2.unity";
+        var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+
+        var existing = Object.FindAnyObjectByType<BossBarrier>(FindObjectsInactive.Include);
+        if (existing == null)
+        {
+            var barrierObj = GameObject.Find("Map5_BossBarrier");
+            if (barrierObj == null)
+            {
+                barrierObj = new GameObject("Map5_BossBarrier");
+                barrierObj.transform.position = new Vector3(45.5f, -29.2f, 0f);
+                barrierObj.transform.localScale = new Vector3(1.2f, 3.5f, 1f);
+
+                var sr = barrierObj.AddComponent<SpriteRenderer>();
+                var portalSprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/Effects/TempPortal/Portal 1.png");
+                if (portalSprite != null) sr.sprite = portalSprite;
+                sr.color = new Color(0.7f, 0.25f, 1f, 0.85f);
+                sr.sortingOrder = 5;
+
+                // Solid collider chặn người chơi đi qua
+                var col = barrierObj.AddComponent<BoxCollider2D>();
+                col.isTrigger = false;
+                col.size = new Vector2(1f, 1.8f);
+
+                var barrier = barrierObj.AddComponent<BossBarrier>();
+
+                // Gán SFX
+                var hitSfx = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/Map3/39_Block_03.wav");
+                var unlockSfx = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/Preview/Lich_Teleport_OptA_VoidBlink.wav");
+
+                var so = new SerializedObject(barrier);
+                so.FindProperty("autoTrackAllMonsters").boolValue = true;
+                so.FindProperty("barrierTitle").stringValue = "Phong ấn phòng Đại Trùm Lich";
+                if (hitSfx != null) so.FindProperty("barrierHitSound").objectReferenceValue = hitSfx;
+                if (unlockSfx != null) so.FindProperty("barrierUnlockSound").objectReferenceValue = unlockSfx;
+                so.ApplyModifiedProperties();
+
+                // Tạo Prefab tái sử dụng
+                string prefabPath = "Assets/Prefabs/Map/Map5/Map5_BossBarrier.prefab";
+                PrefabUtility.SaveAsPrefabAsset(barrierObj, prefabPath);
+
+                Undo.RegisterCreatedObjectUndo(barrierObj, "Add BossBarrier to Map5_Phase2");
+                Debug.Log("🛡️ [Map5_Phase2] Đã tạo rào chắn phong ấn ma thuật Map5_BossBarrier tại vị trí cửa phòng Boss (x: 45.5, y: -29.2)!");
+            }
+        }
+
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+    }
+
+    private static void SetupQuestUIForMap5Phase1()
+    {
+        string scenePath = "Assets/Scenes/Map5/Map5.unity";
+        var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+
+        var existing = Object.FindAnyObjectByType<QuestUIController>(FindObjectsInactive.Include);
+        if (existing == null)
+        {
+            var questPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UI/Quest.prefab");
+            if (questPrefab != null)
+            {
+                var instance = (GameObject)PrefabUtility.InstantiatePrefab(questPrefab);
+                instance.name = "Quest";
+                Undo.RegisterCreatedObjectUndo(instance, "Add Quest UI to Map5");
+                Debug.Log("📜 [Map5] Đã thêm Quest.prefab vào Map5.unity!");
+            }
+        }
+
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+    }
+
+    private static void SetupQuestUIForMap5Phase2()
+    {
+        string scenePath = "Assets/Scenes/Map5/Map5_Phase2.unity";
+        var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+
+        var existing = Object.FindAnyObjectByType<QuestUIController>(FindObjectsInactive.Include);
+        if (existing == null)
+        {
+            var questPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UI/Quest.prefab");
+            if (questPrefab != null)
+            {
+                var instance = (GameObject)PrefabUtility.InstantiatePrefab(questPrefab);
+                instance.name = "Quest";
+                Undo.RegisterCreatedObjectUndo(instance, "Add Quest UI to Map5_Phase2");
+                Debug.Log("📜 [Map5_Phase2] Đã thêm Quest.prefab vào Map5_Phase2.unity!");
             }
         }
 

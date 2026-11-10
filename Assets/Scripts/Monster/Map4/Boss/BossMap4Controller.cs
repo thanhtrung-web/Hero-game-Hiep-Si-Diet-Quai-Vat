@@ -2,10 +2,15 @@ using UnityEngine;
 
 public class BossMap4Controller : EnemyHealth
 {
+    public override bool IsBoss => true;
+    public override string BossTitle => "Băng Quái Tuyết Sơn - Frost Behemoth";
+
     [Header("Stats")]
     public float maxHealth = 100f;
     private float currentHealth;
     public float CurrentHealth => currentHealth;
+    public int MaxHealth => Mathf.RoundToInt(maxHealth);
+    [Header("Stats")]
     public float moveSpeed = 3f;
     public float detectionRange = 10f;
     public float attackRange = 3.5f;
@@ -31,11 +36,15 @@ public class BossMap4Controller : EnemyHealth
 
     private bool hasPlayedIdleSound = false;
 
+    public override bool IsBoss => true;
+    public override string BossTitle => "FROST GUARDIAN";
+
     protected override void Awake()
     {
         if (maxHealth <= 3)
         {
             maxHealth = 100;
+            maxHealth = 500;
         }
 
         base.Awake();
@@ -218,6 +227,17 @@ public class BossMap4Controller : EnemyHealth
 
         currentHealth = Mathf.Max(0, currentHealth - damage);
 
+        NotifyDamageTaken(damage);
+        NotifyHealthChanged(Mathf.RoundToInt(currentHealth), Mathf.RoundToInt(maxHealth));
+        SpawnDamagePopup(damage);
+        NotifyHealthChanged(currentHealth, maxHealth);
+
+        try
+        {
+            SpawnDamagePopup(damage);
+        }
+        catch { }
+
         if (currentHealth <= 0)
         {
             Die();
@@ -248,7 +268,12 @@ public class BossMap4Controller : EnemyHealth
     {
         if (isDead) return;
         isDead = true;
+
+        NotifyDeath();
         StopMoving();
+        StopMoving();
+
+        NotifyDeath();
 
         if (animator != null)
         {

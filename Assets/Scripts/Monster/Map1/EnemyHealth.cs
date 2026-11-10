@@ -9,7 +9,6 @@ public class EnemyHealth : MonoBehaviour
     public bool IsDead => isDead;
     public int CurrentHealth => currentHealth;
     public int MaxHealth => maxHealth;
-    
 
     public virtual bool IsBoss => false;
     public virtual string BossTitle => "Quái Vật";

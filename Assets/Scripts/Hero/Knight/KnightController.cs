@@ -57,6 +57,10 @@ public class KnightController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         playerHealth = GetComponent<PlayerHealth>();
+        if (GetComponent<PlayerScenePersistence>() == null)
+        {
+            gameObject.AddComponent<PlayerScenePersistence>();
+        }
 
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();

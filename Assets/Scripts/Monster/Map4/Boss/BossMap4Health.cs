@@ -5,7 +5,7 @@ public class BossMap4Health : EnemyHealth
     private BossMap4Controller bossController;
 
     public override bool IsBoss => true;
-    public override string BossTitle => "Băng Quái Tuyết Sơn - Frost Behemoth";
+    public override string BossTitle => "FROST GUARDIAN";
 
     protected override void Awake()
     {
@@ -14,7 +14,8 @@ public class BossMap4Health : EnemyHealth
         bossController = GetComponent<BossMap4Controller>();
         if (bossController != null)
         {
-            maxHealth = Mathf.RoundToInt(bossController.maxHealth);
+            maxHealth = bossController.MaxHealth;
+            maxHealth = Mathf.RoundToInt(bossController.MaxHealth);
             currentHealth = maxHealth;
         }
     }
@@ -26,8 +27,9 @@ public class BossMap4Health : EnemyHealth
 
         if (bossController != null)
         {
-            bossController.TakeDamage((float)damage);
+            bossController.TakeDamage(damage);
             currentHealth = Mathf.Max(0, Mathf.RoundToInt(bossController.CurrentHealth));
+            currentHealth = Mathf.Max(0, bossController.CurrentHealth);
             isDead = bossController.IsDead;
 
             NotifyDamageTaken(damage);
