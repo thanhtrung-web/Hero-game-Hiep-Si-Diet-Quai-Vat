@@ -226,6 +226,15 @@ public class TrollController : EnemyHealth
 
         currentHealth = Mathf.Max(0, currentHealth - damage);
 
+        NotifyDamageTaken(damage);
+        NotifyHealthChanged(currentHealth, maxHealth);
+
+        try
+        {
+            SpawnDamagePopup(damage);
+        }
+        catch { }
+
         if (currentHealth <= 0)
         {
             Die();
@@ -248,6 +257,8 @@ public class TrollController : EnemyHealth
     {
         if (isDead) return;
         isDead = true;
+
+        NotifyDeath();
 
         if (animator != null)
         {

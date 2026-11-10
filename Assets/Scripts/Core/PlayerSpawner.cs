@@ -20,6 +20,15 @@ public class PlayerSpawner : MonoBehaviour
     [Header("Camera")]
     [SerializeField] private CinemachineCamera cinemachineCamera;
 
+    private void Awake()
+    {
+        // Tự động tìm CinemachineCamera trong Scene nếu chưa kéo tay vào Inspector
+        if (cinemachineCamera == null)
+        {
+            cinemachineCamera = FindAnyObjectByType<CinemachineCamera>();
+        }
+    }
+
     private void Start()
     {
         // 1. Nếu đã có nhân vật chuyển từ Scene trước sang (DontDestroyOnLoad), không spawn mới để giữ nguyên máu
@@ -95,10 +104,25 @@ public class PlayerSpawner : MonoBehaviour
         }
 
         Debug.Log("🎮 [PlayerSpawner] Đã spawn nhân vật: " + player.name + " tại vị trí: " + position);
+        Debug.Log("Spawned Player = " + player.name);
+        Debug.Log("Player Transform = " + player.transform);
+
+        // Đảm bảo lấy được CinemachineCamera
+        if (cinemachineCamera == null)
+        {
+            cinemachineCamera = FindAnyObjectByType<CinemachineCamera>();
+        }
 
         if (cinemachineCamera != null)
         {
             cinemachineCamera.Target.TrackingTarget = player.transform;
+            cinemachineCamera.Follow = player.transform;
+
+            Debug.Log("Camera Target sau khi gán = " + player.transform.name);
+        }
+        else
+        {
+            Debug.LogWarning("PlayerSpawner: Không tìm thấy CinemachineCamera trong Scene!");
         }
     }
 }

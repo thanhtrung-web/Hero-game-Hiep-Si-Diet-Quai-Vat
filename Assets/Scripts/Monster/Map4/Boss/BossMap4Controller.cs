@@ -10,6 +10,7 @@ public class BossMap4Controller : EnemyHealth
     private float currentHealth;
     public float CurrentHealth => currentHealth;
     public int MaxHealth => Mathf.RoundToInt(maxHealth);
+    [Header("Stats")]
     public float moveSpeed = 3f;
     public float detectionRange = 10f;
     public float attackRange = 3.5f;
@@ -35,11 +36,15 @@ public class BossMap4Controller : EnemyHealth
 
     private bool hasPlayedIdleSound = false;
 
+    public override bool IsBoss => true;
+    public override string BossTitle => "FROST GUARDIAN";
+
     protected override void Awake()
     {
         if (maxHealth <= 3)
         {
             maxHealth = 100;
+            maxHealth = 500;
         }
 
         base.Awake();
@@ -225,6 +230,13 @@ public class BossMap4Controller : EnemyHealth
         NotifyDamageTaken(damage);
         NotifyHealthChanged(Mathf.RoundToInt(currentHealth), Mathf.RoundToInt(maxHealth));
         SpawnDamagePopup(damage);
+        NotifyHealthChanged(currentHealth, maxHealth);
+
+        try
+        {
+            SpawnDamagePopup(damage);
+        }
+        catch { }
 
         if (currentHealth <= 0)
         {
@@ -259,6 +271,9 @@ public class BossMap4Controller : EnemyHealth
 
         NotifyDeath();
         StopMoving();
+        StopMoving();
+
+        NotifyDeath();
 
         if (animator != null)
         {

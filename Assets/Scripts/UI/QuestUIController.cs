@@ -133,11 +133,28 @@ public class QuestUIController : MonoBehaviour
 
         if (portalObject == null)
         {
-            PortalUnlockAfterEnemies unlockScript = FindAnyObjectByType<PortalUnlockAfterEnemies>();
-            if (unlockScript != null)
+            GameWinPortal winPortal = FindAnyObjectByType<GameWinPortal>();
+            if (winPortal != null)
             {
                 portalObject = unlockScript.gameObject;
                 shouldManagePortal = true;
+                portalObject = winPortal.gameObject;
+            }
+            else
+            {
+                PortalUnlockAfterEnemies unlockScript = FindAnyObjectByType<PortalUnlockAfterEnemies>();
+                if (unlockScript != null)
+                {
+                    portalObject = unlockScript.gameObject;
+                }
+                else
+                {
+                    ScenePortal scenePortal = FindAnyObjectByType<ScenePortal>();
+                    if (scenePortal != null)
+                    {
+                        portalObject = scenePortal.gameObject;
+                    }
+                }
             }
         }
 
@@ -154,6 +171,10 @@ public class QuestUIController : MonoBehaviour
 
             if (portalVisual != null)
                 portalVisual.enabled = false;
+            // Tắt hiệu ứng cổng xoay lơ lửng nếu có khi cổng đang bị khóa
+            PortalVisualEffect pve = portalObject.GetComponentInChildren<PortalVisualEffect>(true);
+            if (pve != null)
+                pve.enabled = false;
         }
     }
 
@@ -481,6 +502,13 @@ public class QuestUIController : MonoBehaviour
 
         if (portalTrigger != null)
             portalTrigger.enabled = true;
+
+        if (portalObject != null)
+        {
+            PortalVisualEffect pve = portalObject.GetComponentInChildren<PortalVisualEffect>(true);
+            if (pve != null)
+                pve.enabled = true;
+        }
     }
 
     private void SetDisplayText(string content, Color color)

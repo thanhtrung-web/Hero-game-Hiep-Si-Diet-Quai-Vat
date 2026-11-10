@@ -21,19 +21,49 @@ public class GameEndUI : MonoBehaviour
         gameEnded = false;
         IsGameEnded = false;
 
+        AutoDetectNextMap();
         ResolvePanels();
         SetupCanvas();
 
-        // Luôn luôn ẩn các panel kết thúc game ngay lập tức khi Scene vừa nạp
         if (gameWin != null)
             gameWin.SetActive(false);
         if (gameLose != null)
             gameLose.SetActive(false);
     }
 
+    private void AutoDetectNextMap()
+    {
+        if (!string.IsNullOrEmpty(nextMapScene)) return;
+
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (currentScene.Contains("Map4"))
+        {
+            nextMapScene = "Map5";
+        }
+        else if (currentScene.Contains("Map1"))
+        {
+            nextMapScene = "The Grave";
+        }
+        else if (currentScene.Contains("Map2") || currentScene.Contains("Grave") || currentScene.Contains("BossRoom"))
+        {
+            nextMapScene = "Map3";
+        }
+        else if (currentScene.Contains("Map3"))
+        {
+            nextMapScene = "Map4";
+        }
+        else if (currentScene.Equals("Map5", StringComparison.OrdinalIgnoreCase))
+        {
+            nextMapScene = "Map5_Phase2";
+        }
+        else if (currentScene.Contains("Map5_Phase2"))
+        {
+            nextMapScene = "ChoiceMapSceen";
+        }
+    }
+
     private void Start()
     {
-        // Kiểm tra an toàn một lần nữa tại Start để không bị bất kỳ script nào khác bật nhầm
         if (!gameEnded)
         {
             if (gameWin != null && gameWin.activeSelf)
@@ -48,35 +78,21 @@ public class GameEndUI : MonoBehaviour
         if (gameLose == null)
         {
             Transform t = transform.Find("GameLose");
-            if (t == null && transform.parent != null) t = transform.parent.Find("GameLose");
             if (t != null) gameLose = t.gameObject;
         }
 
         if (gameWin == null)
         {
             Transform t = transform.Find("GameWin");
-            if (t == null && transform.parent != null) t = transform.parent.Find("GameWin");
             if (t != null) gameWin = t.gameObject;
         }
     }
 
     private void SetupCanvas()
     {
-        Canvas canvas = GetComponentInParent<Canvas>(true);
+        Canvas canvas = GetComponent<Canvas>();
         if (canvas == null)
-        {
-            canvas = gameObject.GetComponent<Canvas>();
-            if (canvas == null) canvas = gameObject.AddComponent<Canvas>();
-        }
-
-        // Nếu Canvas đang nằm trong một GameObject rỗng (ví dụ "UI" trong Map 1), đưa ra Root
-        if (canvas.transform.parent != null && canvas.transform.parent.name == "UI")
-        {
-            canvas.transform.SetParent(null, false);
-        }
-
-        if (!canvas.gameObject.activeSelf)
-            canvas.gameObject.SetActive(true);
+            canvas = gameObject.AddComponent<Canvas>();
 
         canvas.enabled = true;
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -117,6 +133,7 @@ public class GameEndUI : MonoBehaviour
         gameEnded = true;
         IsGameEnded = true;
 
+        AutoDetectNextMap();
         ResolvePanels();
         SetupCanvas();
         HideHUD();
@@ -176,19 +193,16 @@ public class GameEndUI : MonoBehaviour
 
     private void HideHUD()
     {
-        // 1. Tắt Canvas của PauseMenu/HUD để không bị đè lên Game Over UI
-        PauseMenuController pauseMenu = FindAnyObjectByType<PauseMenuController>(FindObjectsInactive.Include);
-        if (pauseMenu != null)
+        PersistentHud persistentHud = FindAnyObjectByType<PersistentHud>();
+        if (persistentHud != null)
         {
-            Canvas canvas = pauseMenu.GetComponentInParent<Canvas>();
-            if (canvas != null)
-            {
-                canvas.enabled = false;
-                return;
-            }
+            Canvas c = persistentHud.GetComponent<Canvas>();
+            if (c != null)
+                c.enabled = false;
+            else
+                persistentHud.gameObject.SetActive(false);
         }
 
-        // 2. Tìm theo tên GameObject "HUD" nếu có
         GameObject hud = GameObject.Find("HUD");
         if (hud != null)
         {
@@ -215,6 +229,8 @@ public class GameEndUI : MonoBehaviour
 
     public void NextMap()
     {
+        AutoDetectNextMap();
+
         if (string.IsNullOrEmpty(nextMapScene))
         {
             Debug.LogWarning("Chua cau hinh Next Map Scene!");
@@ -249,10 +265,10 @@ public class GameEndUI : MonoBehaviour
         }
         else
         {
-            var health = FindAnyObjectByType<PlayerHealth>();
-            if (health != null && health.gameObject.scene.name == "DontDestroyOnLoad")
+            KnightController knight = FindFirstObjectByType<KnightController>();
+            if (knight != null && knight.gameObject.scene.name == "DontDestroyOnLoad")
             {
-                Destroy(health.transform.root.gameObject);
+                Destroy(knight.transform.root.gameObject);
             }
         }
     }
