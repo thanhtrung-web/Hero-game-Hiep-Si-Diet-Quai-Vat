@@ -1,0 +1,509 @@
+fileFormatVersion: 2
+guid: c9e774e77075b314cb8c33fc88bc2446
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7823341082811057131
+    second: WraithMage_Transparent_0
+  - first:
+      213: 9095567099953272273
+    second: WraithMage_Transparent_1
+  - first:
+      213: -68838375796081885
+    second: WraithMage_Transparent_2
+  - first:
+      213: 8958053055859620417
+    second: WraithMage_Transparent_3
+  - first:
+      213: 2897460173734183532
+    second: WraithMage_Transparent_4
+  - first:
+      213: -3706608904617894073
+    second: WraithMage_Transparent_5
+  - first:
+      213: 7689825554504495080
+    second: WraithMage_Transparent_6
+  - first:
+      213: 986341273147986589
+    second: WraithMage_Transparent_7
+  - first:
+      213: -1457162085668633725
+    second: WraithMage_Transparent_8
+  - first:
+      213: 6444671733939918870
+    second: WraithMage_Transparent_9
+  - first:
+      213: -6375084296297885707
+    second: WraithMage_Transparent_10
+  - first:
+      213: 5463738973939901790
+    second: WraithMage_Transparent_11
+  - first:
+      213: -6241758981962334111
+    second: WraithMage_Transparent_12
+  - first:
+      213: -2680145734416011950
+    second: WraithMage_Transparent_13
+  - first:
+      213: -907415528646331050
+    second: WraithMage_Transparent_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: WraithMage_Transparent_0
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 367
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51cb35a2cb8ed6390800000000000000
+      internalID: -7823341082811057131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WraithMage_Transparent_1
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 367
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d5d1774612f93e70800000000000000
+      internalID: 9095567099953272273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WraithMage_Transparent_2
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 359
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32b72c7acdf6b0ff0800000000000000
+      internalID: -68838375796081885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WraithMage_Transparent_3
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 359
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14a7d91eac5615c70800000000000000
+      internalID: 8958053055859620417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WraithMage_Transparent_4
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 347
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6284463da8d53820800000000000000
+      internalID: 2897460173734183532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WraithMage_Transparent_5
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 347
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74f53f6f6da7f8cc0800000000000000
+      internalID: -3706608904617894073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WraithMage_Transparent_6
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 335
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ef26f0799fb7ba60800000000000000
+      internalID: 7689825554504495080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WraithMage_Transparent_7
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 335
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d92da4d792030bd00800000000000000
+      internalID: 986341273147986589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WraithMage_Transparent_8
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 311
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 383cd8fadce17cbe0800000000000000
+      internalID: -1457162085668633725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WraithMage_Transparent_9
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 19
+        width: 186
+        height: 306
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6185d73fbc2107950800000000000000
+      internalID: 6444671733939918870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WraithMage_Transparent_10
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 323
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ff4ef1fb962787a0800000000000000
+      internalID: -6375084296297885707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WraithMage_Transparent_11
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 323
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e55252f06a913db40800000000000000
+      internalID: 5463738973939901790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WraithMage_Transparent_12
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 323
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1600882b641d069a0800000000000000
+      internalID: -6241758981962334111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WraithMage_Transparent_13
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 323
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25dead197a53ecad0800000000000000
+      internalID: -2680145734416011950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WraithMage_Transparent_14
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 79
+        width: 62
+        height: 238
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 655bc5762663863f0800000000000000
+      internalID: -907415528646331050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      WraithMage_Transparent_0: -7823341082811057131
+      WraithMage_Transparent_1: 9095567099953272273
+      WraithMage_Transparent_10: -6375084296297885707
+      WraithMage_Transparent_11: 5463738973939901790
+      WraithMage_Transparent_12: -6241758981962334111
+      WraithMage_Transparent_13: -2680145734416011950
+      WraithMage_Transparent_14: -907415528646331050
+      WraithMage_Transparent_2: -68838375796081885
+      WraithMage_Transparent_3: 8958053055859620417
+      WraithMage_Transparent_4: 2897460173734183532
+      WraithMage_Transparent_5: -3706608904617894073
+      WraithMage_Transparent_6: 7689825554504495080
+      WraithMage_Transparent_7: 986341273147986589
+      WraithMage_Transparent_8: -1457162085668633725
+      WraithMage_Transparent_9: 6444671733939918870
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

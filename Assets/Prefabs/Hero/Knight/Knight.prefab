@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2995099898765908123}
   - component: {fileID: 1593998082646927699}
   - component: {fileID: 110776992763673447}
+  - component: {fileID: 9811000000000001}
   m_Layer: 6
   m_Name: Knight
   m_TagString: Player
@@ -145,7 +146,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  maxHealth: 300
+  maxHealth: 500
   maxStamina: 150
   attackRange: 2
   enemyLayer:
@@ -238,7 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ad9452b47ddace48bd608652972c33b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  maxHealth: 300
+  maxHealth: 500
   currentHealth: 0
   enableDamageTest: 1
 --- !u!82 &110776992763673447
@@ -338,6 +339,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &9811000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750252173591891550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4b176d70c2a98e44aa662b832010ea1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerScenePersistence
 --- !u!1 &3467404405153820958
 GameObject:
   m_ObjectHideFlags: 0

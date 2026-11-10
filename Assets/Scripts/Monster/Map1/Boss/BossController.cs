@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -508,11 +508,23 @@ public class BossController : EnemyHealth
         }
     }
 
+    /// <summary>
+    /// Vị trí nơi Boss ngã xuống để cố định vị trí mở Cổng dịch chuyển / Chiến thắng.
+    /// </summary>
+    private Vector3 deathPosition;
+
     protected override void Die()
     {
-        base.Die();
+        if (isDead) return;
+        isDead = true;
 
+        deathPosition = transform.position;
+
+        NotifyDeath();
         StopMoving();
+
+        if (anim != null) anim.SetTrigger("Dead");
+        if (patrolScript != null) patrolScript.enabled = false;
 
         // Vô hiệu hóa va chạm và trọng lực để nằm chết đẹp mắt
         if (myCollider != null) myCollider.enabled = false;
@@ -522,16 +534,35 @@ public class BossController : EnemyHealth
             rb.bodyType = RigidbodyType2D.Kinematic;
         }
 
-        Debug.Log("👑💀 [Skeleton_Boss] ĐÃ BỊ TIÊU DIỆT! CỔNG DỊCH CHUYỂN ĐANG MỞ...");
-        StartCoroutine(OpenExitPortalRoutine());
+        // MiniBoss không mở cổng chiến thắng trừ khi được gán trực tiếp exitPortal
+        bool isMini = gameObject.name.Contains("Mini");
+        if (!isMini || exitPortal != null)
+        {
+            Debug.Log($"👑🌲 [{gameObject.name}] ĐÃ BỊ TIÊU DIỆT! CỔNG CHIẾN THẮNG ĐANG MỞ...");
+            StartCoroutine(OpenExitPortalRoutine());
+        }
+
         // Boss phải tồn tại đủ lâu để coroutine kịp mở Portal.
         Destroy(gameObject, Mathf.Max(3.5f, Mathf.Max(0f, portalAppearDelay) + 0.5f));
+    }
+
+    private void OnDestroy()
+    {
+        bool isMini = gameObject.name.Contains("Mini");
+        if (isDead && (!isMini || exitPortal != null))
+        {
+            ActivateExitPortalDirectly();
+        }
     }
 
     private IEnumerator OpenExitPortalRoutine()
     {
         yield return new WaitForSeconds(Mathf.Max(0f, portalAppearDelay));
+        ActivateExitPortalDirectly();
+    }
 
+    private void ActivateExitPortalDirectly()
+    {
         // Nếu Portal chưa được gán khi Start, tìm thử lần cuối.
         if (exitPortal == null)
             PrepareExitPortal();
@@ -540,19 +571,34 @@ public class BossController : EnemyHealth
         {
             Debug.LogWarning("[BossController] Boss chết nhưng không tìm thấy PortalEndgame. " +
                 "Kiểm tra ô Exit Portal trong Inspector.");
-            yield break;
+            return;
         }
 
-        // Giữ hành vi cũ: Portal hiện ngay cạnh nơi Boss bị hạ.
-        exitPortal.transform.position = transform.position + portalOffsetFromBoss;
+        // Giữ hành vi: Portal hiện ngay cạnh nơi Boss bị hạ.
+        Vector3 basePos = (deathPosition != Vector3.zero) ? deathPosition : transform.position;
+        Vector3 targetPos = basePos + portalOffsetFromBoss;
+        exitPortal.transform.position = targetPos;
+
+        var pve = exitPortal.GetComponent<PortalVisualEffect>();
+        if (pve != null)
+        {
+            pve.SetBasePosition(targetPos);
+        }
+
+        exitPortal.SetActive(true);
 
         SpriteRenderer portalSprite = exitPortal.GetComponent<SpriteRenderer>();
-        if (portalSprite != null) portalSprite.enabled = true;
+        if (portalSprite != null)
+        {
+            portalSprite.enabled = true;
+            if (portalSprite.sortingOrder < 5) portalSprite.sortingOrder = 5;
+        }
 
         Collider2D portalCollider = exitPortal.GetComponent<Collider2D>();
         if (portalCollider != null) portalCollider.enabled = true;
 
-        exitPortal.SetActive(true);
+        var gwp = exitPortal.GetComponent<GameWinPortal>();
+        if (gwp != null) gwp.enabled = true;
 
         if (!exitPortal.activeInHierarchy)
         {

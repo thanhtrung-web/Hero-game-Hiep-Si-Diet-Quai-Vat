@@ -14,6 +14,7 @@ public class BossMap4Health : EnemyHealth
         bossController = GetComponent<BossMap4Controller>();
         if (bossController != null)
         {
+            maxHealth = bossController.MaxHealth;
             maxHealth = Mathf.RoundToInt(bossController.MaxHealth);
             currentHealth = maxHealth;
         }
@@ -27,6 +28,7 @@ public class BossMap4Health : EnemyHealth
         if (bossController != null)
         {
             bossController.TakeDamage(damage);
+            currentHealth = Mathf.Max(0, Mathf.RoundToInt(bossController.CurrentHealth));
             currentHealth = Mathf.Max(0, bossController.CurrentHealth);
             isDead = bossController.IsDead;
 
