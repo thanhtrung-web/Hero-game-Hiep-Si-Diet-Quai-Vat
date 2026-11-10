@@ -244,7 +244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a65498eaa4f86124c8b71e0dd12ab636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeroGame.Map3.CaveEnemyHealth
-  maxHealth: 3
+  maxHealth: 45
   animator: {fileID: 0}
   patrolScript: {fileID: 0}
 --- !u!114 &810000001

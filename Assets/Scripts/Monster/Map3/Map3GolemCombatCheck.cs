@@ -1,7 +1,6 @@
 #if UNITY_EDITOR
 using System;
 using System.Linq;
-using System.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -43,7 +42,7 @@ public class Map3GolemCombatCheck : MonoBehaviour
     {
         try
         {
-            var boss = UnityEngine.Object.FindAnyObjectByType<CaveEnemy>();
+            var boss = UnityEngine.Object.FindAnyObjectByType<GolemBoss>();
             var knight = UnityEngine.Object.FindAnyObjectByType<KnightController>();
             if (!boss || !knight) throw new Exception("Missing test actors");
             if (knight.CurrentHealth <= 0) return; // Wait for Start.
@@ -58,26 +57,26 @@ public class Map3GolemCombatCheck : MonoBehaviour
                 var scale = knight.transform.localScale; scale.x = -Mathf.Abs(scale.x); knight.transform.localScale = scale;
                 Physics2D.SyncTransforms(); positioned = true;
                 deadline = Time.realtimeSinceStartupAsDouble + 45;
-                boss.debugAttack = true;
             }
             if (knight.CurrentHealth < knight.MaxHealth)
             {
-                if (knight.MaxHealth - knight.CurrentHealth != 30) throw new Exception("Expected one natural boss hit of 30");
+                if (knight.MaxHealth - knight.CurrentHealth != boss.normalDamage) throw new Exception("Expected one natural boss normal hit");
                 int hp = knight.CurrentHealth;
-                boss.DealAttackHit(); boss.DealAttackHit();
+                boss.OnAttackImpact(); boss.OnAttackImpact();
                 if (knight.CurrentHealth != hp) throw new Exception("Repeated event dealt duplicate damage");
-                var health = boss.GetComponent<CaveEnemyHealth>();
-                var field = typeof(EnemyHealth).GetField("currentHealth", BindingFlags.Instance | BindingFlags.NonPublic);
-                int before = (int)field.GetValue(health);
+                int before = boss.CurrentHP;
                 knight.DealDamageToEnemies(20);
-                if ((int)field.GetValue(health) != before - 20) throw new Exception("Knight must deal exactly 20 damage to boss");
-                health.TakeDamage(10000);
-                if (!health.IsDead || boss.State != CaveEnemyState.Dead || boss.GetComponent<Collider2D>().enabled)
-                    throw new Exception("Boss death did not disable hitbox");
-                Debug.Log("GOLEM_COMBAT_PASSED: natural animation hit=30; duplicate events=0; Knight hit=20; death state and collider OK");
+                if (boss.CurrentHP != before - 20) throw new Exception("Knight hit did not remove 20 HP");
+                int deathCount = 0;
+                boss.Died += _ => deathCount++;
+                boss.TakeDamage(10000);
+                boss.TakeDamage(10000);
+                if (!boss.IsDead || deathCount != 1 || boss.GetComponent<Collider2D>().enabled)
+                    throw new Exception("Boss death handling failed");
+                Debug.Log("GOLEM_COMBAT_PASSED");
                 Finish(0); return;
             }
-            if (Time.realtimeSinceStartupAsDouble > deadline) throw new Exception("Boss attack check timed out; state=" + boss.State
+            if (Time.realtimeSinceStartupAsDouble > deadline) throw new Exception("Boss attack check timed out"
                 + ", boss=" + boss.transform.position + ", knight=" + knight.transform.position
                 + ", boss collider=" + boss.GetComponent<Collider2D>().bounds
                 + ", knight collider=" + knight.GetComponent<Collider2D>().bounds

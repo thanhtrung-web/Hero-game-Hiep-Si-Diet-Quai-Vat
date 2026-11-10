@@ -219,7 +219,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &5277961696218824185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,7 +363,7 @@ MonoBehaviour:
   gameWin: {fileID: 3006035426078683914}
   gameLose: {fileID: 3695479126387508584}
   mainMenuScene: ChoiceMapSceen
-  nextMapScene: 
+  nextMapScene: Map4
 --- !u!1 &3006035426078683914
 GameObject:
   m_ObjectHideFlags: 0
