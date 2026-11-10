@@ -687,29 +687,70 @@ public class LichBossController : EnemyHealth
             return;
         }
 
-        if (isDead)
+    }
+
+    private bool victoryTriggered = false;
+
+    /// <summary>
+    /// Xử lý khi Đại Trùm Lich bị tiêu diệt: Tắt va chạm, dừng chuyển động, phát hoạt cảnh Dead
+    /// và kích hoạt chuỗi hiển thị bảng chiến thắng Game Win (GameEndUI.ShowWin).
+    /// Không gọi base.Die() để tránh bị Destroy 1.5s làm ngắt coroutine chiến thắng trước khi mở bảng Game Win.
+    /// </summary>
+    protected override void Die()
+    {
+        if (isDead) return;
+        isDead = true;
+
+        NotifyDeath();
+        StopMoving();
+
+        if (anim != null)
         {
-            var col = GetComponent<Collider2D>();
-            if (col != null) col.enabled = false;
+            anim.ResetTrigger("Attack1");
+            anim.ResetTrigger("Attack2");
+            anim.ResetTrigger("Attack3");
+            anim.ResetTrigger("Cast");
+            anim.SetTrigger("Dead");
+        }
+
+        var col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;
+
+        if (rb != null)
+        {
             rb.linearVelocity = Vector2.zero;
             rb.bodyType = RigidbodyType2D.Kinematic;
-            StartCoroutine(VictorySequenceRoutine());
-            Destroy(gameObject, 3.5f);
+        }
+
+        Debug.Log("🏆👑 [Lich_Boss] ĐẠI TRÙM ĐÃ BỊ HẠ GỤC! CHUẨN BỊ KÍCH HOẠT CHIẾN THẮNG...");
+        StartCoroutine(VictorySequenceRoutine());
+        Destroy(gameObject, 4.0f);
+    }
+
+    private void OnDestroy()
+    {
+        if (isDead)
+        {
+            TriggerVictoryDirectly();
         }
     }
 
-    /// <summary>
-    /// Coroutine kích hoạt bảng kết thúc chiến thắng (GameEndUI) sau khi Đại trùm Lich ngã xuống.
-    /// </summary>
     private System.Collections.IEnumerator VictorySequenceRoutine()
     {
         yield return new WaitForSeconds(2.0f);
+        TriggerVictoryDirectly();
+    }
+
+    private void TriggerVictoryDirectly()
+    {
+        if (victoryTriggered) return;
+        victoryTriggered = true;
 
         // Kích hoạt bảng chiến thắng Game Win khi tiêu diệt Đại trùm Lich Boss
         GameEndUI gameEndUI = FindAnyObjectByType<GameEndUI>(FindObjectsInactive.Include);
         if (gameEndUI != null)
         {
-            Debug.Log("🏆 [Lich_Boss] ĐẠI TRÙM ĐÃ BỊ HẠ GỤC! KÍCH HOẠT CHIẾN THẮNG!");
+            Debug.Log("🏆 [Lich_Boss] ĐẠI TRÙM ĐÃ BỊ HẠ GỤC! KÍCH HOẠT CHIẾN THẮNG (GameEndUI.ShowWin())!");
             gameEndUI.ShowWin();
         }
         else

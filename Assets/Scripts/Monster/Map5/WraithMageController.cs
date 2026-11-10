@@ -7,6 +7,8 @@ using UnityEngine;
 /// Sở hữu trí tuệ nhân tạo đánh xa cơ động (Kiting AI): Bay lơ lửng, duy trì cự ly lý tưởng với Hiệp sĩ,
 /// Bắn đạn ma thuật tử linh (Soul Missile), Triệu hồi cột gai tử linh dưới chân người chơi (Twin Soul Pillars),
 /// và Dịch chuyển lùi gấp khi bị áp sát quá gần (Escape).
+/// Tích hợp cơ chế kiểm soát tầm nhìn theo cao độ (trục Y), tầm nhìn thực (Line of Sight) và phạm vi lãnh thổ (Leash)
+/// để triệt để chống hiện tượng đánh xuyên tầng, bắn xuyên sàn gạch hoặc hội đồng người chơi từ tầng trên/dưới.
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class WraithMageController : EnemyHealth
@@ -34,17 +36,26 @@ public class WraithMageController : EnemyHealth
     [SerializeField] private float hoverHeight = 0.15f;
 
     [Tooltip("Bán kính tuần tra quanh điểm xuất phát ban đầu")]
-    [SerializeField] private float patrolRadius = 5.0f;
+    [SerializeField] private float patrolRadius = 4.5f;
 
-    [Tooltip("Layer mặt đất dùng để dò vị trí chân người chơi khi cắm bẫy")]
+    [Tooltip("Layer mặt đất dùng để dò vị trí chân người chơi và kiểm tra chắn tầm nhìn (Line of Sight)")]
     [SerializeField] private LayerMask groundLayer;
 
     [Header("2. Combat & Ranged Spells (Phép thuật & Tầm bắn xa)")]
-    [Tooltip("Tầm phát hiện người chơi để chuyển sang trạng thái chiến đấu")]
-    [SerializeField] private float aggroRange = 7.5f;
+    [Tooltip("Tầm phát hiện người chơi theo phương ngang để chuyển sang trạng thái chiến đấu")]
+    [SerializeField] private float aggroRange = 6.5f;
 
     [Tooltip("Khoảng cách người chơi chạy thoát khiến pháp sư hủy thù địch")]
-    [SerializeField] private float deAggroRange = 9.5f;
+    [SerializeField] private float deAggroRange = 8.5f;
+
+    [Tooltip("Giới hạn chênh lệch độ cao (trục Y) tối đa để phát hiện người chơi (chống đánh xuyên tầng trên/dưới)")]
+    [SerializeField] private float maxVerticalRange = 2.5f;
+
+    [Tooltip("Giới hạn khoảng cách tối đa có thể truy đuổi tính từ điểm xuất phát ban đầu (Leash Distance)")]
+    [SerializeField] private float maxChaseDistanceFromSpawn = 7.5f;
+
+    [Tooltip("Kiểm tra tầm nhìn không bị cản bởi tường hoặc trần/sàn gạch (Line of Sight)")]
+    [SerializeField] private bool requireLineOfSight = true;
 
     [Tooltip("Khoảng cách giữ cự ly an toàn lý tưởng (Kiting Distance)")]
     [SerializeField] private float idealDistance = 4.5f;
@@ -91,7 +102,8 @@ public class WraithMageController : EnemyHealth
     private float hurtTimer = 0f;
     private float escapeCooldownTimer = 0f;
 
-    // Giới hạn tuần tra và hiệu ứng nhấp nhô
+    // Giới hạn tuần tra, mốc xuất phát gốc và hiệu ứng nhấp nhô
+    private Vector2 spawnPosition;
     private float spawnX;
     private float minPatrolX;
     private float maxPatrolX;
@@ -125,7 +137,8 @@ public class WraithMageController : EnemyHealth
     /// </summary>
     private void Start()
     {
-        spawnX = transform.position.x;
+        spawnPosition = transform.position;
+        spawnX = spawnPosition.x;
         minPatrolX = spawnX - patrolRadius;
         maxPatrolX = spawnX + patrolRadius;
 
@@ -133,7 +146,7 @@ public class WraithMageController : EnemyHealth
     }
 
     /// <summary>
-    /// Vòng lặp cập nhật AI chính: tính toán nhấp nhô lơ lửng, giữ cự ly Kiting và điều phối phép thuật.
+    /// Vòng lặp cập nhật AI chính: tính toán nhấp nhô lơ lửng, kiểm tra cao độ, cản tầm nhìn, giữ cự ly Kiting và điều phối phép thuật.
     /// </summary>
     private void Update()
     {
@@ -161,12 +174,15 @@ public class WraithMageController : EnemyHealth
         hoverOffset = Mathf.Sin(Time.time * 2.5f) * hoverHeight;
 
         float horizontalDist = player != null ? Mathf.Abs(transform.position.x - player.position.x) : float.MaxValue;
+        float verticalDist = player != null ? Mathf.Abs(transform.position.y - player.position.y) : float.MaxValue;
+        float distFromSpawn = Mathf.Abs(transform.position.x - spawnPosition.x);
 
         // Điều phối máy trạng thái FSM
         switch (currentState)
         {
             case MageState.Patrol:
-                if (horizontalDist <= aggroRange)
+                // Chỉ kích hoạt thù địch nếu người chơi nằm cùng tầng sàn và không bị tường/sàn gạch che khuất
+                if (CanDetectPlayer(out _, out _))
                 {
                     currentState = MageState.Chase;
                 }
@@ -177,8 +193,37 @@ public class WraithMageController : EnemyHealth
                 break;
 
             case MageState.Chase:
-                // Người chơi chạy xa khỏi tầm deAggro -> Quay về tuần tra
-                if (horizontalDist > deAggroRange)
+                // Kiểm tra điều kiện bỏ thù địch (De-Aggro):
+                // 1. Người chơi đã chết
+                // 2. Người chơi chạy quá xa theo chiều ngang (> deAggroRange)
+                // 3. Người chơi nhảy/chạy sang tầng khác (verticalDist > maxVerticalRange + 1.2m)
+                // 4. Pháp sư bay quá xa khỏi lãnh thổ xuất phát ban đầu (> maxChaseDistanceFromSpawn)
+                // 5. Tầm nhìn bị che khuất bởi tường hoặc sàn/trần đất gạch
+                bool playerDead = false;
+                if (player != null)
+                {
+                    var ph = player.GetComponent<PlayerHealth>();
+                    if (ph != null && ph.IsDead) playerDead = true;
+                }
+
+                bool shouldDeAggro = player == null ||
+                                     playerDead ||
+                                     horizontalDist > deAggroRange ||
+                                     verticalDist > maxVerticalRange + 1.2f ||
+                                     distFromSpawn > maxChaseDistanceFromSpawn;
+
+                if (!shouldDeAggro && requireLineOfSight && groundLayer.value != 0 && player != null)
+                {
+                    Vector2 startPos = (Vector2)transform.position + Vector2.up * 0.3f;
+                    Vector2 endPos = (Vector2)player.position + Vector2.up * 0.3f;
+                    RaycastHit2D hit = Physics2D.Linecast(startPos, endPos, groundLayer);
+                    if (hit.collider != null)
+                    {
+                        shouldDeAggro = true;
+                    }
+                }
+
+                if (shouldDeAggro)
                 {
                     currentState = MageState.Patrol;
                     break;
@@ -186,8 +231,8 @@ public class WraithMageController : EnemyHealth
 
                 FaceTarget(player.position.x);
 
-                // Nếu Hiệp sĩ áp sát quá nguy hiểm (< 2.0m) -> Kích hoạt Escape (cuộn áo biến lùi)
-                if (horizontalDist < escapeTriggerDist && escapeCooldownTimer <= 0f)
+                // Nếu Hiệp sĩ áp sát quá nguy hiểm (< 2.0m cùng tầng) -> Kích hoạt Escape (cuộn áo biến lùi)
+                if (horizontalDist < escapeTriggerDist && verticalDist < 1.8f && escapeCooldownTimer <= 0f)
                 {
                     TriggerEscape();
                     break;
@@ -204,8 +249,15 @@ public class WraithMageController : EnemyHealth
                 }
                 else if (horizontalDist > idealDistance + 1.0f)
                 {
-                    // Quá xa -> Bay tới gần hơn để vào tầm ngắm
-                    FlyTowards(player.position.x, flySpeed);
+                    // Quá xa -> Bay tới gần hơn để vào tầm ngắm (vẫn giữ trong giới hạn leash)
+                    if (distFromSpawn < maxChaseDistanceFromSpawn)
+                    {
+                        FlyTowards(player.position.x, flySpeed);
+                    }
+                    else
+                    {
+                        StopFlight();
+                    }
                 }
                 else
                 {
@@ -217,7 +269,51 @@ public class WraithMageController : EnemyHealth
     }
 
     /// <summary>
-    /// Xử lý logic bay tuần tra qua lại trong phạm vi bán kính cho phép.
+    /// Kiểm tra người chơi có nằm trong tầm mắt, cùng tầng sàn và không bị tường/sàn cản trở hay không.
+    /// </summary>
+    private bool CanDetectPlayer(out float hDist, out float vDist)
+    {
+        hDist = float.MaxValue;
+        vDist = float.MaxValue;
+
+        if (player == null) return false;
+
+        // 1. Kiểm tra người chơi đã chết chưa
+        var pHealth = player.GetComponent<PlayerHealth>();
+        if (pHealth != null && pHealth.IsDead) return false;
+
+        hDist = Mathf.Abs(transform.position.x - player.position.x);
+        vDist = Mathf.Abs(transform.position.y - player.position.y);
+
+        // 2. Chống đánh xuyên tầng: chênh lệch độ cao Y không được vượt quá maxVerticalRange
+        if (vDist > maxVerticalRange)
+            return false;
+
+        // 3. Nằm trong cự ly tầm nhìn ngang
+        if (hDist > aggroRange)
+            return false;
+
+        // 4. Không đi quá xa khỏi lãnh thổ điểm xuất phát ban đầu
+        if (Mathf.Abs(transform.position.x - spawnPosition.x) > maxChaseDistanceFromSpawn)
+            return false;
+
+        // 5. Kiểm tra tầm nhìn có bị sàn/tường gạch che khuất không (Line of sight)
+        if (requireLineOfSight && groundLayer.value != 0)
+        {
+            Vector2 start = (Vector2)transform.position + Vector2.up * 0.3f;
+            Vector2 end = (Vector2)player.position + Vector2.up * 0.3f;
+            RaycastHit2D hit = Physics2D.Linecast(start, end, groundLayer);
+            if (hit.collider != null)
+            {
+                return false; // Bị sàn hoặc tường gạch ngăn cản tầm nhìn
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Xử lý logic bay tuần tra qua lại trong phạm vi bán kính cho phép và tự kéo về độ cao gốc.
     /// </summary>
     private void Patrol()
     {
@@ -225,7 +321,13 @@ public class WraithMageController : EnemyHealth
         else if (transform.position.x >= maxPatrolX && direction == 1) direction = -1;
 
         UpdateFacing();
-        rb.linearVelocity = new Vector2(direction * flySpeed * 0.6f, hoverOffset);
+
+        // Bay mượt mà trở lại độ cao gốc nếu bị lệch trục Y do truy đuổi hoặc né đòn trước đó
+        float targetY = spawnPosition.y + hoverOffset;
+        float currentY = transform.position.y;
+        float moveY = Mathf.Clamp((targetY - currentY) * 2.5f, -flySpeed * 0.5f, flySpeed * 0.5f);
+
+        rb.linearVelocity = new Vector2(direction * flySpeed * 0.6f, moveY);
         if (animator != null) animator.SetBool("IsMoving", true);
     }
 
@@ -237,7 +339,15 @@ public class WraithMageController : EnemyHealth
     private void FlyTowards(float targetX, float speed)
     {
         int moveDir = (targetX > transform.position.x) ? 1 : -1;
-        rb.linearVelocity = new Vector2(moveDir * speed, hoverOffset);
+
+        // Nhẹ nhàng điều chỉnh độ cao theo người chơi nhưng không vượt quá chênh lệch an toàn
+        float targetY = (player != null && Mathf.Abs(player.position.y - spawnPosition.y) <= maxVerticalRange)
+            ? player.position.y + 0.8f + hoverOffset
+            : spawnPosition.y + hoverOffset;
+
+        float moveY = Mathf.Clamp((targetY - transform.position.y) * 2.0f, -speed * 0.6f, speed * 0.6f);
+
+        rb.linearVelocity = new Vector2(moveDir * speed, moveY);
         if (animator != null) animator.SetBool("IsMoving", true);
     }
 
@@ -277,6 +387,13 @@ public class WraithMageController : EnemyHealth
     /// </summary>
     private void StartCastSpell()
     {
+        // Re-check để không niệm phép vu vơ nếu người chơi đã sang tầng khác
+        if (!CanDetectPlayer(out _, out _))
+        {
+            currentState = MageState.Patrol;
+            return;
+        }
+
         isCasting = true;
         PlayCastSound();
         StopFlight();
@@ -311,6 +428,14 @@ public class WraithMageController : EnemyHealth
     {
         if (missilePrefab != null && player != null)
         {
+            // Kiểm tra an toàn: Không bắn nếu người chơi đã chạy sang tầng khác hoặc ra quá xa
+            float verticalDist = Mathf.Abs(transform.position.y - player.position.y);
+            float horizontalDist = Mathf.Abs(transform.position.x - player.position.x);
+            if (verticalDist > maxVerticalRange + 1.2f || horizontalDist > deAggroRange)
+            {
+                return;
+            }
+
             float shootDir = (player.position.x >= transform.position.x) ? 1.0f : -1.0f;
             direction = (int)shootDir;
             UpdateFacing();
@@ -329,11 +454,20 @@ public class WraithMageController : EnemyHealth
 
     /// <summary>
     /// Animation Event: Dò tìm mặt sàn và triệu hồi cột gai tử linh dưới chân người chơi.
+    /// Chỉ cho phép triệu hồi nếu người chơi ở cùng tầng sàn, không triệu hồi xuyên tầng trần/sàn.
     /// </summary>
     public void CastTwinSoulPillars()
     {
         if (player != null)
         {
+            // Kiểm tra an toàn: Không triệu hồi nếu người chơi ở tầng khác hoặc ra quá xa
+            float verticalDist = Mathf.Abs(transform.position.y - player.position.y);
+            float horizontalDist = Mathf.Abs(transform.position.x - player.position.x);
+            if (verticalDist > maxVerticalRange + 1.2f || horizontalDist > deAggroRange)
+            {
+                return;
+            }
+
             FaceTarget(player.position.x);
 
             Vector3 targetGroundPos = player.position;
@@ -411,7 +545,13 @@ public class WraithMageController : EnemyHealth
 
         if (player != null)
         {
-            currentState = MageState.Chase;
+            float verticalDist = Mathf.Abs(transform.position.y - player.position.y);
+            // Chỉ thù địch đuổi theo nếu cùng tầng đất
+            if (verticalDist <= maxVerticalRange + 1.2f)
+            {
+                currentState = MageState.Chase;
+            }
+
             int hitFrom = (player.position.x > transform.position.x) ? 1 : -1;
             rb.linearVelocity = new Vector2(-hitFrom * 2.0f, 1.0f);
         }
@@ -436,5 +576,25 @@ public class WraithMageController : EnemyHealth
     {
         GameObject p = GameObject.FindGameObjectWithTag("Player");
         if (p != null) player = p.transform;
+    }
+
+    /// <summary>
+    /// Hiển thị phạm vi tuần tra, tầm nhìn theo độ cao và giới hạn truy đuổi trong Scene view.
+    /// </summary>
+    private void OnDrawGizmosSelected()
+    {
+        Vector3 center = Application.isPlaying ? (Vector3)spawnPosition : transform.position;
+
+        // 1. Tầm phát hiện theo chiều ngang và chiều cao (Khung vàng)
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(center, new Vector3(aggroRange * 2f, maxVerticalRange * 2f, 0f));
+
+        // 2. Phạm vi tuần tra (Đoạn thẳng xanh dương)
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(new Vector3(center.x - patrolRadius, center.y, 0f), new Vector3(center.x + patrolRadius, center.y, 0f));
+
+        // 3. Giới hạn truy đuổi tối đa (Đoạn thẳng đỏ mận)
+        Gizmos.color = new Color(1f, 0f, 0.5f, 0.5f);
+        Gizmos.DrawLine(new Vector3(center.x - maxChaseDistanceFromSpawn, center.y - 0.2f, 0f), new Vector3(center.x + maxChaseDistanceFromSpawn, center.y - 0.2f, 0f));
     }
 }

@@ -248,6 +248,27 @@ public static class Map5SetupHelper
         }
         playerSpawn.transform.position = spawnCoords;
 
+        // 1b. Cấu hình PlayerSpawner trong Map5_Phase2 để hỗ trợ test độc lập khi mở trực tiếp Scene này
+        var spawner = Object.FindAnyObjectByType<PlayerSpawner>(FindObjectsInactive.Include);
+        if (spawner == null)
+        {
+            var spawnerObj = new GameObject("PlayerSpawner");
+            var ps = spawnerObj.AddComponent<PlayerSpawner>();
+            var magePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Hero/Mage/Player.prefab");
+            var knightPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Hero/Knight/Knight.prefab");
+            var vcam = Object.FindAnyObjectByType<Unity.Cinemachine.CinemachineCamera>();
+
+            var so = new SerializedObject(ps);
+            if (magePrefab != null) so.FindProperty("magePrefab").objectReferenceValue = magePrefab;
+            if (knightPrefab != null) so.FindProperty("knightPrefab").objectReferenceValue = knightPrefab;
+            if (playerSpawn != null) so.FindProperty("spawnPoint").objectReferenceValue = playerSpawn.transform;
+            if (vcam != null) so.FindProperty("cinemachineCamera").objectReferenceValue = vcam;
+            so.ApplyModifiedProperties();
+
+            Undo.RegisterCreatedObjectUndo(spawnerObj, "Add PlayerSpawner to Map5_Phase2");
+            Debug.Log("🎮 [Map5_Phase2] Đã cấu hình PlayerSpawner vào Map5_Phase2 để hỗ trợ test độc lập!");
+        }
+
         // 2. Cấu hình Cổng dịch chuyển vào Screen 2 (tại x: -56.35, y: 1.91)
         var portalObj = GameObject.Find("Map5_ExitPortal") ?? GameObject.Find("Map5_EntrancePortal");
         if (portalObj == null)
